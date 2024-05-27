@@ -2,7 +2,7 @@
     Usable ESP32 pins (in order): 14, 27, 26, 25, 33, 32
     Ref: https://lastminuteengineers.com/esp32-pinout-reference
 
-    Assigned pin (in order): RELAY, HX711_DOUT, HX711_SCK, DHT
+    Assigned pin (in order): RELAY_FAN, HX711_DT, HX711_SCK, DHT22, RELAY_HEATER, DHT11_CONTROL
 
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
@@ -16,6 +16,10 @@
 /* scheduler code */
 const int period = 1000; // in ms
 unsigned long time_now = 0;
+
+/* Relay code */
+#define relay_heat 14
+#define relay_fan 33
 
 /* DHT22 code */
 #define DHTPIN 25
@@ -38,6 +42,13 @@ float weight = 0; // weight data
 void setup() {
     Serial.begin(9600); delay(10);
     Serial.println(); Serial.println("Starting...");
+
+    pinMode(relay_heat, OUTPUT);
+    pinMode(relay_fan, OUTPUT);
+
+    //debug
+    digitalWrite(relay_heat, HIGH);
+    digitalWrite(relay_fan, HIGH);
 
     EEPROM.begin(512); // fetch the calibration value from eeprom
     unsigned long stabilizingTime = 2000;
@@ -79,21 +90,36 @@ void loop() {
     }
 
     if(millis() >= time_now + period){
-        Serial.print(F("humidity:"));
-        Serial.print(hum);
-        Serial.print(F(", temperature:"));
-        Serial.print(tem);
+        Serial.print(F(">humidity:"));
+        Serial.println(hum);
+        Serial.print(F(">temperature:"));
+        Serial.println(tem);
 
-        Serial.print(", weight:");
+        Serial.print(">weight:");
         Serial.println(weight);
         
         time_now = millis();
     }
 
-    // receive comand from serial terminal, send 't' to initiate tare operation:
+    // receive comand from serial terminal
     if (Serial.available() > 0) {
         char inByte = Serial.read();
-        if (inByte == 't') loadCell.tareNoDelay();
+
+        switch(inByte) {
+            case 't': // set tare
+                loadCell.tareNoDelay();
+                break;
+            case 'i': // enable fan and heater
+                digitalWrite(relay_heat, LOW);
+                digitalWrite(relay_fan, LOW);
+                Serial.println("Fan and heater turned ON.");
+                break;
+            case 'o': // disable fan and heater
+                digitalWrite(relay_heat, HIGH);
+                digitalWrite(relay_fan, HIGH);
+                Serial.println("Fan and heater turned OFF.");
+                break;
+        }
     }
 
     // check if last tare operation is complete
