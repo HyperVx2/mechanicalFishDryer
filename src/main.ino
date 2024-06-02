@@ -2,7 +2,7 @@
     Usable ESP32 pins (in order): 14, 27, 26, 25, 33, 32
     Ref: https://lastminuteengineers.com/esp32-pinout-reference
 
-    Assigned pin (in order): RELAY_FAN, HX711_DT, HX711_SCK, DHT22, RELAY_HEATER, DHT11_CONTROL
+    Assigned pin (in order): RELAY_HEATER, HX711_DT, HX711_SCK, DHT22, RELAY_FANq, DHT11_CONTROL
 
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
@@ -18,8 +18,8 @@ const int period = 1000; // in ms
 unsigned long time_now = 0;
 
 /* Relay code */
-#define relay_heat 14
-#define relay_fan 33
+#define relay_heat 33
+#define relay_fan 14
 
 /* DHT22 code */
 #define DHTPIN 25
@@ -118,6 +118,10 @@ void loop() {
                 digitalWrite(relay_heat, HIGH);
                 digitalWrite(relay_fan, HIGH);
                 Serial.println("Fan and heater turned OFF.");
+                break;
+            case 'q':
+                digitalWrite(relay_fan, LOW);
+                Serial.println("Fan turned ON.");
                 break;
         }
     }
