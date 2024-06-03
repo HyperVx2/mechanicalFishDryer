@@ -17,11 +17,16 @@
 
 /* Webserver code */
 // network credentials
-const char* ssid = "MFD_ESP32";
-const char* password = "mfDOOM1234";
-// IP Address details
-IPAddress local_ip(192,168,1,1);
-IPAddress gateway(192,168,1,1);
+const char* ssid = "Alpha 9004";
+const char* password = "WarayPassword123";
+
+const char* softap_ssid = "MFD_ESP32";
+const char* softap_password = "mfDOOM1234";
+
+// IP Address details for softAP
+IPAddress local_ip(192,168,0,225);
+IPAddress gateway(192,168,0,254);
+IPAddress softap_gateway(192,168,0,225);
 IPAddress subnet(255,255,255,0);
 
 WebServer server(80);
@@ -86,11 +91,40 @@ void setup() {
 
     attachInterrupt(digitalPinToInterrupt(HX711_dout), dataReadyISR, FALLING);
 
-    /* Webserver code */
-    WiFi.softAP(ssid, password);
-    WiFi.softAPConfig(local_ip, gateway, subnet);
-    delay(100);
+    /* Network code */
+    WiFi.config(local_ip, gateway, subnet);
+    WiFi.begin(ssid, password);
+
+    // Check the status of WiFi connection.
+    int tryCount = 0;
+    while (WiFi.status() != WL_CONNECTED && tryCount < 10) {
+        delay(1000);
+        Serial.println("Connecting to WiFi...");
+        tryCount++;
+    }
+
+    if(WiFi.status() == WL_CONNECTED) {
+        // If connection successful show IP address in serial monitor
+        Serial.print("Connected to WiFi network with IP Address: ");
+        Serial.println(WiFi.localIP());
+    } else {
+        // If WiFi is not connected then start AP
+        Serial.println("Starting ESP32 as softAP...");
+        // Configure static IP Address
+        if (!WiFi.softAPConfig(local_ip, softap_gateway, subnet)) {
+            Serial.println("SoftAP Configuration failed.");
+            return;
+        }
+        // Start softAP
+        if(!WiFi.softAP(softap_ssid, softap_password)) {
+            Serial.println("SoftAP failed to start.");
+            return;
+        }
+        Serial.print("Access Point IP address: ");
+        Serial.println(WiFi.softAPIP());
+    }
     
+    /* Webserver code */
     server.on("/", handle_OnConnect);
     server.on("/toggleHeat", handle_ToggleHeat);
     server.on("/toggleFan", handle_ToggleFan);
