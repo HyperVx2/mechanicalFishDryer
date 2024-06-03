@@ -34,7 +34,7 @@ HX711_ADC loadCell(HX711_dout, HX711_sck);
 
 const int calVal_eepromAddress = 0;
 unsigned long t = 0;
-volatile boolean newDataReady;
+volatile boolean weight_newDataReady;
 
 float weightCalValue = 229.63; // todo: change value
 float weight = 0; // weight data
@@ -76,7 +76,7 @@ void setup() {
 /* interrupt routune for HX711 */
 void dataReadyISR() {
     if (loadCell.update()) {
-        newDataReady = 1;
+        weight_newDataReady = 1;
     }
 }
 
@@ -84,50 +84,57 @@ void loop() {
     hum = dht.readHumidity();
     tem = dht.readTemperature();
     
-    if (newDataReady) {
+    if (weight_newDataReady) {
         weight = loadCell.getData();
-        newDataReady = 0;
+        weight_newDataReady = 0;
     }
 
     if(millis() >= time_now + period){
-        Serial.print(F(">humidity:"));
-        Serial.println(hum);
-        Serial.print(F(">temperature:"));
-        Serial.println(tem);
-
-        Serial.print(">weight:");
-        Serial.println(weight);
-        
+        serialPlotterData();
         time_now = millis();
     }
 
     // receive comand from serial terminal
     if (Serial.available() > 0) {
         char inByte = Serial.read();
-
-        switch(inByte) {
-            case 't': // set tare
-                loadCell.tareNoDelay();
-                break;
-            case 'i': // enable fan and heater
-                digitalWrite(relay_heat, LOW);
-                digitalWrite(relay_fan, LOW);
-                Serial.println("Fan and heater turned ON.");
-                break;
-            case 'o': // disable fan and heater
-                digitalWrite(relay_heat, HIGH);
-                digitalWrite(relay_fan, HIGH);
-                Serial.println("Fan and heater turned OFF.");
-                break;
-            case 'q':
-                digitalWrite(relay_fan, LOW);
-                Serial.println("Fan turned ON.");
-                break;
-        }
+        readSerialCMD(inByte);
     }
 
     // check if last tare operation is complete
     if (loadCell.getTareStatus() == true) {
         Serial.println("Tare complete");
+    }
+}
+
+void serialPlotterData()
+{
+    Serial.print(F(">humidity:"));
+    Serial.println(hum);
+    Serial.print(F(">temperature:"));
+    Serial.println(tem);
+
+    Serial.print(">weight:");
+    Serial.println(weight);
+}
+
+void readSerialCMD(char inByte) {
+    switch (inByte) {
+    case 't': // set tare
+        loadCell.tareNoDelay();
+        break;
+    case 'i': // enable fan and heater
+        digitalWrite(relay_heat, LOW);
+        digitalWrite(relay_fan, LOW);
+        Serial.println("Fan and heater turned ON.");
+        break;
+    case 'o': // disable fan and heater
+        digitalWrite(relay_heat, HIGH);
+        digitalWrite(relay_fan, HIGH);
+        Serial.println("Fan and heater turned OFF.");
+        break;
+    case 'q':
+        digitalWrite(relay_fan, LOW);
+        Serial.println("Fan turned ON.");
+        break;
     }
 }
