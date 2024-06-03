@@ -14,6 +14,7 @@
 #include <EEPROM.h>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <Firebase_ESP_Client.h>
 
 /* Webserver code */
 // network credentials
@@ -28,11 +29,42 @@ IPAddress local_ip(192,168,0,225);
 IPAddress gateway(192,168,0,254);
 IPAddress softap_gateway(192,168,0,225);
 IPAddress subnet(255,255,255,0);
+IPAddress dns(1,1,1,1);
 
 WebServer server(80);
 
+/* Firebase code */
+// Provide the token generation process info.
+#include "addons/TokenHelper.h"
+// Provide the RTDB payload printing info and other helper functions.
+#include "addons/RTDBHelper.h"
+
+// Insert Firebase project API Key
+#define API_KEY "AIzaSyDUBltSuZFcg9h6sAUF8cTl0mUKaHh-i6E"
+
+// Insert Authorized Email and Corresponding Password
+#define USER_EMAIL "foo@bar.com"
+#define USER_PASSWORD "foobar123"
+
+// Insert RTDB URLefine the RTDB URL
+#define DATABASE_URL "https://mechfishdryer-default-rtdb.asia-southeast1.firebasedatabase.app/"
+
+// Define Firebase objects
+FirebaseData fbdo;
+FirebaseAuth auth;
+FirebaseConfig config;
+
+// Variable to save USER UID
+String uid;
+
+// Variables to save database paths
+String databasePath; 
+String tempPath;
+String humPath;
+String weightPath;
+
 /* scheduler code */
-const int period = 1000; // in ms
+unsigned int oneSecPeriod = 1000; // 1sec reading
 unsigned long time_now = 0;
 
 /* Relay code */
@@ -46,7 +78,7 @@ bool relay_fan_status = HIGH;
 #define DHTPIN 25
 DHT dht(DHTPIN, DHT22); // using DHT22 sensor
 
-float hum = 0, tem = 0; //humidity, temperature data
+float hum, tem; //humidity, temperature data
 
 /* HX711_ADC code */
 const int HX711_dout = 27;
@@ -57,8 +89,109 @@ const int calVal_eepromAddress = 0;
 unsigned long t = 0;
 volatile boolean weight_newDataReady;
 
-float weightCalValue = 229.63; // todo: change value
-float weight = 0; // weight data
+float weightCalValue = 258.80; // todo: change value
+float weight; // weight data
+
+void initFirebase()
+{
+    // Assign the api key (required)
+    config.api_key = API_KEY;
+
+    // Assign the user sign in credentials
+    auth.user.email = USER_EMAIL;
+    auth.user.password = USER_PASSWORD;
+
+    // Assign the RTDB URL (required)
+    config.database_url = DATABASE_URL;
+
+    Firebase.reconnectWiFi(true);
+    fbdo.setResponseSize(4096);
+
+    // Assign the callback function for the long running token generation task */
+    config.token_status_callback = tokenStatusCallback; //see addons/TokenHelper.h
+
+    // Assign the maximum retry of token generation
+    config.max_token_generation_retry = 5;
+
+    // Initialize the library with the Firebase authen and config
+    Firebase.begin(&config, &auth);
+
+    // Getting the user UID might take a few seconds
+    Serial.println("Getting User UID");
+    while ((auth.token.uid) == "") {
+          Serial.print('.');
+          delay(1000);
+    }
+    // Print user UID
+    uid = auth.token.uid.c_str();
+    Serial.print("User UID: ");
+    Serial.println(uid);
+
+    // Update database path
+    databasePath = "/UsersData/" + uid;
+
+    // Update database path for sensor readings
+    tempPath = databasePath + "/temperature"; // --> UsersData/<user_uid>/temperature
+    humPath = databasePath + "/humidity"; // --> UsersData/<user_uid>/humidity
+    weightPath = databasePath + "/weight"; // --> UsersData/<user_uid>/weight
+}
+
+void sendFloat(String path, float value)
+{
+    if (Firebase.RTDB.setFloat(&fbdo, path.c_str(), value))
+    {
+        Serial.print("Writing value: ");
+        Serial.print (value);
+        Serial.print(" on the following path: ");
+        Serial.println(path);
+        Serial.println("PASSED");
+        Serial.println("PATH: " + fbdo.dataPath());
+        Serial.println("TYPE: " + fbdo.dataType());
+   }
+    else
+    {
+        Serial.println("FAILED");
+        Serial.println("REASON: " + fbdo.errorReason());
+    }
+}
+
+/* start WiFi function */
+void initWiFi() {
+    WiFi.config(local_ip, gateway, subnet, dns);
+    WiFi.begin(ssid, password);
+
+    // Check the status of WiFi connection.
+    int tryCount = 0;
+    Serial.println("Connecting to WiFi..");
+    while (WiFi.status() != WL_CONNECTED && tryCount < 10) {
+        Serial.print('.');
+        tryCount++;
+        delay(1000);
+    }
+
+    if (WiFi.status() == WL_CONNECTED) {
+        // If connection successful show IP address in serial monitor
+        Serial.print("Connected to WiFi network with IP Address: ");
+        Serial.println(WiFi.localIP());
+        initFirebase(); // Initialize Firebase
+    }
+    else {
+        // If WiFi is not connected then start AP
+        Serial.println("Starting ESP32 as softAP...");
+        // Configure static IP Address
+        if (!WiFi.softAPConfig(local_ip, softap_gateway, subnet)) {
+            Serial.println("SoftAP Configuration failed.");
+            return;
+        }
+        // Start softAP
+        if (!WiFi.softAP(softap_ssid, softap_password)) {
+            Serial.println("SoftAP failed to start.");
+            return;
+        }
+        Serial.print("Access Point IP address: ");
+        Serial.println(WiFi.softAPIP());
+    }
+}
 
 void setup() {
     Serial.begin(9600); delay(10);
@@ -92,38 +225,8 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(HX711_dout), dataReadyISR, FALLING);
 
     /* Network code */
-    WiFi.config(local_ip, gateway, subnet);
-    WiFi.begin(ssid, password);
+    initWiFi();
 
-    // Check the status of WiFi connection.
-    int tryCount = 0;
-    while (WiFi.status() != WL_CONNECTED && tryCount < 10) {
-        delay(1000);
-        Serial.println("Connecting to WiFi...");
-        tryCount++;
-    }
-
-    if(WiFi.status() == WL_CONNECTED) {
-        // If connection successful show IP address in serial monitor
-        Serial.print("Connected to WiFi network with IP Address: ");
-        Serial.println(WiFi.localIP());
-    } else {
-        // If WiFi is not connected then start AP
-        Serial.println("Starting ESP32 as softAP...");
-        // Configure static IP Address
-        if (!WiFi.softAPConfig(local_ip, softap_gateway, subnet)) {
-            Serial.println("SoftAP Configuration failed.");
-            return;
-        }
-        // Start softAP
-        if(!WiFi.softAP(softap_ssid, softap_password)) {
-            Serial.println("SoftAP failed to start.");
-            return;
-        }
-        Serial.print("Access Point IP address: ");
-        Serial.println(WiFi.softAPIP());
-    }
-    
     /* Webserver code */
     server.on("/", handle_OnConnect);
     server.on("/toggleHeat", handle_ToggleHeat);
@@ -153,8 +256,9 @@ void loop() {
         weight_newDataReady = 0;
     }
 
-    if(millis() >= time_now + period){
-        serialPlotData();
+    if(millis() >= time_now + oneSecPeriod){
+        //serialPlotData();
+        sendToFirebase();
         time_now = millis();
     }
 
@@ -167,6 +271,17 @@ void loop() {
     // check if last tare operation is complete
     if (loadCell.getTareStatus() == true) {
         Serial.println("Tare complete");
+    }
+}
+
+void sendToFirebase()
+{
+    if (Firebase.ready())
+    {
+        // Send readings to database:
+        sendFloat(tempPath, tem);
+        sendFloat(humPath, hum);
+        sendFloat(weightPath, weight);
     }
 }
 
