@@ -12,6 +12,19 @@
 #include <DHT.h>
 #include <HX711_ADC.h>
 #include <EEPROM.h>
+#include <WiFi.h>
+#include <WebServer.h>
+
+/* Webserver code */
+// network credentials
+const char* ssid = "MFD_ESP32";
+const char* password = "mfDOOM1234";
+// IP Address details
+IPAddress local_ip(192,168,1,1);
+IPAddress gateway(192,168,1,1);
+IPAddress subnet(255,255,255,0);
+
+WebServer server(80);
 
 /* scheduler code */
 const int period = 1000; // in ms
@@ -20,6 +33,9 @@ unsigned long time_now = 0;
 /* Relay code */
 #define relay_heat 33
 #define relay_fan 14
+
+bool relay_heat_status = HIGH;
+bool relay_fan_status = HIGH;
 
 /* DHT22 code */
 #define DHTPIN 25
@@ -45,10 +61,8 @@ void setup() {
 
     pinMode(relay_heat, OUTPUT);
     pinMode(relay_fan, OUTPUT);
-
-    //debug
-    digitalWrite(relay_heat, HIGH);
-    digitalWrite(relay_fan, HIGH);
+    digitalWrite(relay_heat, relay_heat_status);
+    digitalWrite(relay_fan, relay_fan_status);
 
     EEPROM.begin(512); // fetch the calibration value from eeprom
     unsigned long stabilizingTime = 2000;
@@ -71,6 +85,20 @@ void setup() {
     }
 
     attachInterrupt(digitalPinToInterrupt(HX711_dout), dataReadyISR, FALLING);
+
+    /* Webserver code */
+    WiFi.softAP(ssid, password);
+    WiFi.softAPConfig(local_ip, gateway, subnet);
+    delay(100);
+    
+    server.on("/", handle_OnConnect);
+    server.on("/toggleHeat", handle_ToggleHeat);
+    server.on("/toggleFan", handle_ToggleFan);
+    server.on("/toggleBoth", handle_ToggleBoth);
+    server.onNotFound(handle_NotFound);
+
+    server.begin();
+    Serial.println("HTTP server started.");
 }
 
 /* interrupt routune for HX711 */
@@ -81,6 +109,8 @@ void dataReadyISR() {
 }
 
 void loop() {
+    server.handleClient();
+
     hum = dht.readHumidity();
     tem = dht.readTemperature();
     
@@ -90,7 +120,7 @@ void loop() {
     }
 
     if(millis() >= time_now + period){
-        serialPlotterData();
+        serialPlotData();
         time_now = millis();
     }
 
@@ -106,8 +136,35 @@ void loop() {
     }
 }
 
-void serialPlotterData()
-{
+void changeRelayState(int opt = 3) {
+    // LOW = enable ; HIGH = disable
+    // opt 0 = heat ; opt 1 = fan ; opt 2 = both ; opt 3 = none
+    if (opt == 0 || opt == 2) {
+        if (relay_heat_status == HIGH) {
+            digitalWrite(relay_heat, LOW);
+            relay_heat_status = LOW;
+            Serial.println("Heater toggled off.");
+        } else {
+            digitalWrite(relay_heat, HIGH);
+            relay_heat_status = HIGH;
+            Serial.println("Heater toggled on.");
+        }
+    }
+
+    if (opt == 1 || opt == 2) {
+        if (relay_fan_status == HIGH) {
+            digitalWrite(relay_fan, LOW);
+            relay_fan_status = LOW;
+            Serial.println("Fan toggled off.");
+        } else {
+            digitalWrite(relay_fan, HIGH);
+            relay_fan_status = HIGH;
+            Serial.println("Fan toggled off.");
+        }
+    }
+}
+
+void serialPlotData() {
     Serial.print(F(">humidity:"));
     Serial.println(hum);
     Serial.print(F(">temperature:"));
@@ -122,19 +179,70 @@ void readSerialCMD(char inByte) {
     case 't': // set tare
         loadCell.tareNoDelay();
         break;
-    case 'i': // enable fan and heater
-        digitalWrite(relay_heat, LOW);
-        digitalWrite(relay_fan, LOW);
-        Serial.println("Fan and heater turned ON.");
+    case 'i': // toggle heater
+        changeRelayState(0);
         break;
-    case 'o': // disable fan and heater
-        digitalWrite(relay_heat, HIGH);
-        digitalWrite(relay_fan, HIGH);
-        Serial.println("Fan and heater turned OFF.");
+    case 'o': //  toggle fan
+        changeRelayState(1);
         break;
-    case 'q':
-        digitalWrite(relay_fan, LOW);
-        Serial.println("Fan turned ON.");
+    case 'p': // toggle both
+        changeRelayState(2);
         break;
     }
+}
+
+/* Webserver functions */
+void handle_OnConnect() {
+    server.send(200, "text/html", SendHTML(relay_heat_status, relay_fan_status));
+}
+
+void handle_ToggleHeat() {
+    changeRelayState(0);
+    server.send(200, "text/html", SendHTML(relay_heat_status, relay_fan_status));
+}
+
+void handle_ToggleFan() {
+    changeRelayState(1);
+    server.send(200, "text/html", SendHTML(relay_heat_status, relay_fan_status));
+}
+
+void handle_ToggleBoth() {
+    changeRelayState(2);
+    server.send(200, "text/html", SendHTML(relay_heat_status, relay_fan_status));
+}
+
+void handle_NotFound() {
+    server.send(404, "text/plain", "Not found");
+}
+
+String SendHTML(uint8_t heat, uint8_t fan) {
+    String ptr = "<!DOCTYPE html> <html>\n";
+    ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
+    ptr += "<title>Mechanical Fish Dryer Control Page</title>\n";
+
+    ptr +="<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
+    ptr +="body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 50px;}\n";
+    ptr +=".button {display: block;width: 80px;background-color: #3498db;border: none;color: white;padding: 13px 30px;text-decoration: none;font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}\n";
+    ptr +=".button-on {background-color: #3498db;}\n";
+    ptr +=".button-on:active {background-color: #2980b9;}\n";
+    ptr +=".button-off {background-color: #34495e;}\n";
+    ptr +=".button-off:active {background-color: #2c3e50;}\n";
+    ptr +="p {font-size: 14px;color: #888;margin-bottom: 10px;}\n";
+    ptr +="</style>\n";
+    ptr += "<body>\n";
+    ptr += "<h1>MFD Control Page</h1>\n";
+
+    if(heat)
+    {ptr +="<p>Heater Status: ON</p><a class=\"button button-off\" href=\"/toggleHeat\">OFF</a>\n";}
+    else
+    {ptr +="<p>Heater Status: OFF</p><a class=\"button button-on\" href=\"/toggleHeat\">ON</a>\n";}
+    if(fan)
+    {ptr +="<p>Fan Status: ON</p><a class=\"button button-off\" href=\"/toggleFan\">OFF</a>\n";}
+    else
+    {ptr +="<p>Fan Status: OFF</p><a class=\"button button-on\" href=\"/toggleFan\">ON</a>\n";}
+    ptr +="<p>Toggle Both</p><a class=\"button button-on\" href=\"/toggleBoth\">TOGGLE</a>\n";
+    
+    ptr += "</body>\n";
+    ptr += "</html>\n";
+    return ptr;
 }
