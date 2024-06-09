@@ -7,29 +7,63 @@
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
     Ref 3 (scheduler): https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
+    Ref 4 (InfluxDB/MQTT): https://randomnerdtutorials.com/esp8266-and-node-red-with-mqtt/
+
+    Host: chadaPi.local (10.42.0.1)
+    Ports: 8086=InfluxDB, 1880=NodeRED, 1883=MQTT
 */
 
 #include <DHT.h>
 #include <HX711_ADC.h>
 #include <EEPROM.h>
 #include <WiFi.h>
+#include <PubSubClient.h>
+#include <InfluxDbClient.h>
+#include <InfluxDbCloud.h>
+
+#define DEVICE "ESP32"
 
 /* WiFi */
 // network credentials
-const char* ssid = "MFD_rPi4";
+const char* ssid = "SMFDS_rPi4";
 const char* password = "foobar123";
 
 // softAP credentials
-const char* softap_ssid = "MFD_ESP32";
+const char* softap_ssid = "SMFDS_ESP32";
 const char* softap_password = "foobar123";
 
 // IP Address details
-IPAddress local_ip(10,42,0,10);
+IPAddress local_ip(10,42,0,2);
 IPAddress gateway(10,42,0,1);
-IPAddress softap_gateway(10,42,0,10);
+IPAddress softap_gateway(10,42,0,2);
 IPAddress subnet(255,255,255,0);
 IPAddress primaryDNS(1,1,1,1);
-IPAddress secondaryDNS(1,0,0,1);
+
+/* InfluxDB code */
+#define INFLUXDB_URL "http://chadapi.local:8086"
+#define INFLUXDB_TOKEN "ZKDnjcrUdwZCAyKvKAESfJKH5R-pm-qWxA-92b_czeIYRvdFqGsmjbNLf7jI-AXgAzQcxJp54LW6Y98w1REl-g=="
+#define INFLUXDB_ORG "38eada219db754ed"
+#define INFLUXDB_BUCKET "mfds_machine"
+
+/* MQTT broker code */
+// MQTT broker credentials (set to NULL if not required)
+const char* MQTT_username = "chada"; 
+const char* MQTT_password = "foobar123"; 
+
+// Change the variable to your Raspberry Pi IP address, so it connects to your MQTT broker
+const char* mqtt_server = "chadapi.local";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+// Time zone info
+#define TZ_INFO "UTC8"
+
+// Declare InfluxDB client instance with preconfigured InfluxCloud certificate
+InfluxDBClient clientDB(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
+
+// Data point
+Point sensorReadings("measurements");
 
 /* scheduler code */
 unsigned int oneSecPeriod = 1000; // 1sec reading
@@ -38,9 +72,6 @@ unsigned long time_now = 0;
 /* Relay code */
 #define relay_heat 33
 #define relay_fan 14
-
-bool relay_heat_status = HIGH;
-bool relay_fan_status = HIGH;
 
 /* DHT22 code */
 #define DHTPIN 25
@@ -63,17 +94,18 @@ float weight; // weight data
 /* start WiFi function */
 void wifiInit()
 {
-    WiFi.config(local_ip, gateway, subnet, primaryDNS, secondaryDNS);
+    WiFi.config(local_ip, gateway, subnet, primaryDNS);
     WiFi.begin(ssid, password);
 
     // Check the status of WiFi connection.
     int tryCount = 0;
-    Serial.println("Connecting to WiFi..");
+    Serial.print("Connecting to WiFi..");
     while (WiFi.status() != WL_CONNECTED && tryCount < 10)
     {
         Serial.print('.');
         tryCount++;
         delay(1000);
+        Serial.println(" ");
     }
 
     if (WiFi.status() == WL_CONNECTED)
@@ -101,16 +133,76 @@ void wifiInit()
     }
 }
 
+// This function is executed when some device publishes a message to a topic that your ESP32 is subscribed to
+void callback(String topic, byte* message, unsigned int length) {
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
+  Serial.print(". Message: ");
+  String messageTemp;
+  
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)message[i]);
+    messageTemp += (char)message[i];
+  }
+  Serial.println();
+
+  if(topic=="machine/heater"){
+      Serial.print("Changing heater to ");
+      if(messageTemp == "on"){
+        digitalWrite(relay_heat, LOW);
+        Serial.print("ON");
+      }
+      else if(messageTemp == "off"){
+        digitalWrite(relay_heat, HIGH);
+        Serial.print("OFF");
+      }
+  } else if (topic=="machine/fan"){
+      Serial.print("Changing fan to ");
+      if(messageTemp == "on"){
+        digitalWrite(relay_fan, LOW);
+        Serial.print("ON");
+      }
+      else if(messageTemp == "off"){
+        digitalWrite(relay_fan, HIGH);
+        Serial.print("OFF");
+      }
+  }
+  Serial.println();
+}
+
+// This functions reconnects your ESP8266 to your MQTT broker
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect
+    if (client.connect("ESP32", MQTT_username, MQTT_password)) {
+      Serial.println("connected");  
+      // Subscribe or resubscribe to a topic
+      client.subscribe("machine/heater");
+      client.subscribe("machine/fan");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
 void setup()
 {
     Serial.begin(9600); delay(10);
     Serial.println(); Serial.println("Starting...");
 
+    /* init relay module */
     pinMode(relay_heat, OUTPUT);
     pinMode(relay_fan, OUTPUT);
-    digitalWrite(relay_heat, relay_heat_status);
-    digitalWrite(relay_fan, relay_fan_status);
+    digitalWrite(relay_heat, HIGH);
+    digitalWrite(relay_fan, HIGH);
 
+    /* init hx711/dht22 */
     EEPROM.begin(512); // fetch the calibration value from eeprom
     unsigned long stabilizingTime = 2000;
     boolean _tare = true;  //set this to false if you don't want tare to be performed in the next step
@@ -136,8 +228,29 @@ void setup()
 
     attachInterrupt(digitalPinToInterrupt(HX711_dout), dataReadyISR, FALLING);
 
-    /* Network code */
+    /* init wifi */
     wifiInit();
+
+    // Accurate time is necessary for certificate validation and writing in batches
+    // For the fastest time sync find NTP servers in your area: https://www.pool.ntp.org/zone/
+    // Syncing progress and the time will be printed to Serial.
+    timeSync(TZ_INFO, "0.us.pool.ntp.org");
+
+    /* init InfluxDB */
+    // Check server connection
+    if (clientDB.validateConnection())
+    {
+          Serial.print("Connected to InfluxDB: ");
+          Serial.println(clientDB.getServerUrl());
+    } else
+    {
+          Serial.print("InfluxDB connection failed: ");
+          Serial.println(clientDB.getLastErrorMessage());
+    }
+
+    /* init MQTT */
+    client.setServer(mqtt_server, 1883);
+    client.setCallback(callback);
 }
 
 /* interrupt routune for HX711 */
@@ -149,28 +262,34 @@ void dataReadyISR()
     }
 }
 
-void loop() {
-    hum = dht.readHumidity();
-    tem = dht.readTemperature();
-    
-    if (weight_newDataReady)
-    {
-        weight = loadCell.getData();
-        weight_newDataReady = 0;
-    }
+void loop()
+{
+    if (!client.connected()) {
+    reconnect();
+  }
+  if(!client.loop())
+    client.connect("ESP32", MQTT_username, MQTT_password);
 
     if(millis() >= time_now + oneSecPeriod)
-    {
-        //serialPlotData();
-        wifiRecon();
-        time_now = millis();
-    }
+    { 
+        tem = dht.readTemperature();
+        hum = dht.readHumidity();
 
-    // receive comand from serial terminal
-    if (Serial.available() > 0)
-    {
-        char inByte = Serial.read();
-        readSerialCMD(inByte);
+        if (weight_newDataReady)
+        {
+            weight = loadCell.getData();
+            weight_newDataReady = 0;
+        }
+
+        //serialPlotData();
+        sendToInfluxDB();
+        client.publish("machine/temperature", String(tem).c_str());
+        client.publish("machine/humidity", String(hum).c_str());
+        client.publish("machine/weight", String(weight).c_str());
+
+        wifiRecon();
+
+        time_now = millis();
     }
 
     // check if last tare operation is complete
@@ -191,39 +310,22 @@ void wifiRecon()
 }
 }
 
+void sendToInfluxDB()
+{
+    // Add readings as fields to point
+    sensorReadings.addField("temperature", tem);
+    sensorReadings.addField("humidity", hum);
+    sensorReadings.addField("weight", weight);
 
-void changeRelayState(int opt = 3) {
-    // LOW = enable ; HIGH = disable
-    // opt 0 = heat ; opt 1 = fan ; opt 2 = both ; opt 3 = none
-    if (opt == 0 || opt == 2)
-    {
-        if (relay_heat_status == HIGH)
-        {
-            digitalWrite(relay_heat, LOW);
-            relay_heat_status = LOW;
-            Serial.println("Heater toggled off.");
-        } else
-        {
-            digitalWrite(relay_heat, HIGH);
-            relay_heat_status = HIGH;
-            Serial.println("Heater toggled on.");
-        }
-    }
+    // Print what are we exactly writing
+    Serial.print("Writing: ");
+    Serial.println(clientDB.pointToLineProtocol(sensorReadings));
+    
+    // Write point into buffer
+    clientDB.writePoint(sensorReadings);
 
-    if (opt == 1 || opt == 2)
-    {
-        if (relay_fan_status == HIGH)
-        {
-            digitalWrite(relay_fan, LOW);
-            relay_fan_status = LOW;
-            Serial.println("Fan toggled off.");
-        } else
-        {
-            digitalWrite(relay_fan, HIGH);
-            relay_fan_status = HIGH;
-            Serial.println("Fan toggled off.");
-        }
-    }
+    // Clear fields for next usage. Tags remain the same.
+    sensorReadings.clearFields();
 }
 
 void serialPlotData()
@@ -235,22 +337,4 @@ void serialPlotData()
 
     Serial.print(">weight:");
     Serial.println(weight);
-}
-
-void readSerialCMD(char inByte)
-{
-    switch (inByte) {
-    case 't': // set tare
-        loadCell.tareNoDelay();
-        break;
-    case 'i': // toggle heater
-        changeRelayState(0);
-        break;
-    case 'o': //  toggle fan
-        changeRelayState(1);
-        break;
-    case 'p': // toggle both
-        changeRelayState(2);
-        break;
-    }
 }
