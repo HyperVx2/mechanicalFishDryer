@@ -41,9 +41,9 @@ IPAddress primaryDNS(1,1,1,1);
 
 /* InfluxDB code */
 #define INFLUXDB_URL "http://chadapi.local:8086"
-#define INFLUXDB_TOKEN "ZKDnjcrUdwZCAyKvKAESfJKH5R-pm-qWxA-92b_czeIYRvdFqGsmjbNLf7jI-AXgAzQcxJp54LW6Y98w1REl-g=="
-#define INFLUXDB_ORG "38eada219db754ed"
-#define INFLUXDB_BUCKET "mfds_machine"
+#define INFLUXDB_TOKEN "r_imaCxprc_D9T5cGtEYN3xuaBGKB1nwh2F98DsmNOOakny1TZvx8h22Px_1LV8fS2IcAsx6C-FV-5NcOVVB3g=="
+#define INFLUXDB_ORG "d969eda8d1eb6600"
+#define INFLUXDB_BUCKET "SMFDS_data"
 
 /* MQTT broker code */
 // MQTT broker credentials (set to NULL if not required)
