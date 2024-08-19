@@ -2,19 +2,24 @@
     Usable ESP32 pins (in order): 14, 27, 26, 25, 33, 32
     Ref: https://lastminuteengineers.com/esp32-pinout-reference
 
-    Assigned pin (in order): RELAY_HEATER, HX711_DT, HX711_SCK, DHT22, RELAY_FANq, DHT11_CONTROL
+    Assigned pin (in order): RELAY_HEATER, HX711_DT, HX711_SCK, DHT22, RELAY_FAN, DHT11_CONTROL
 
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
     Ref 3 (scheduler): https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
-
-    Host: chadaPi.local (10.42.0.1)
-    Ports: 8086=InfluxDB, 1880=NodeRED, 1883=MQTT
+    Ref 4 (wifi manager): https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver/
 */
 
+#include <Arduino.h>
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncTCP.h>
+#include "LittleFS.h"
 #include <DHT.h>
 #include <HX711_ADC.h>
 #include <EEPROM.h>
+
+#include "ESP32_WiFi_Manager.ino"
 
 #define DEVICE "ESP32"
 
@@ -80,6 +85,8 @@ void setup()
     }
 
     attachInterrupt(digitalPinToInterrupt(HX711_dout), dataReadyISR, FALLING);
+
+    setupWifiManager();
 }
 
 /* interrupt routune for HX711 */
