@@ -11,32 +11,24 @@
 */
 
 #include <Arduino.h>
-#include <WiFi.h>
-#include <ESPAsyncWebServer.h>
-#include <AsyncTCP.h>
-#include "LittleFS.h"
 #include <DHT.h>
 #include <HX711_ADC.h>
 #include <EEPROM.h>
 
-#include "ESP32_WiFi_Manager.ino"
-
-#define DEVICE "ESP32"
-
-/* scheduler code */
+// scheduler code
 unsigned int oneSecPeriod = 1000; // 1sec reading
 unsigned long time_now = 0;
 
-/* Relay code */
+// Relay code
 #define relay_heat 33
 #define relay_fan 14
 
-/* DHT22 code */
+// DHT22 code
 #define DHTPIN 25
 DHT dht(DHTPIN, DHT22); // using DHT22 sensor
 float hum, tem; //humidity, temperature data
 
-/* HX711_ADC code */
+// HX711_ADC code
 const int HX711_dout = 27;
 const int HX711_sck = 26;
 HX711_ADC loadCell(HX711_dout, HX711_sck);
@@ -49,18 +41,17 @@ float weightCalValue = 258.80; // todo: change value
 float weight; // weight data
 
 
-void setup()
-{
+void setup() {
     Serial.begin(115200); delay(10);
     Serial.println(); Serial.println("Starting...");
 
-    /* init relay module */
+    // init relay module
     pinMode(relay_heat, OUTPUT);
     pinMode(relay_fan, OUTPUT);
     digitalWrite(relay_heat, HIGH);
     digitalWrite(relay_fan, HIGH);
 
-    /* init hx711/dht22 */
+    // init hx711/dht22
     EEPROM.begin(512); // fetch the calibration value from eeprom
     unsigned long stabilizingTime = 2000;
     boolean _tare = true;  //set this to false if you don't want tare to be performed in the next step
@@ -69,44 +60,34 @@ void setup()
     loadCell.begin();
 
     loadCell.start(stabilizingTime, _tare);
-    if (isnan(hum) || isnan(tem))
-    {
+    if (isnan(hum) || isnan(tem)) {
         Serial.println(F("Timeout, check DHT22 wiring and pin designations."));
         while (1);
     }
-    if (loadCell.getTareTimeoutFlag())
-    {
+    if (loadCell.getTareTimeoutFlag()) {
         Serial.println("Timeout, check MCU>HX711 wiring and pin designations.");
         while (1);
-    } else
-    {
+    } else {
         loadCell.setCalFactor(weightCalValue);
         Serial.println("Startup is complete.");
     }
 
     attachInterrupt(digitalPinToInterrupt(HX711_dout), dataReadyISR, FALLING);
-
-    setupWifiManager();
 }
 
-/* interrupt routune for HX711 */
-void dataReadyISR()
-{
-    if (loadCell.update())
-    {
+// interrupt routune for HX711
+void dataReadyISR() {
+    if (loadCell.update()) {
         weight_newDataReady = 1;
     }
 }
 
-void loop()
-{
-    if(millis() >= time_now + oneSecPeriod)
-    { 
+void loop() {
+    if(millis() >= time_now + oneSecPeriod) { 
         tem = dht.readTemperature();
         hum = dht.readHumidity();
 
-        if (weight_newDataReady)
-        {
+        if (weight_newDataReady) {
             weight = loadCell.getData();
             weight_newDataReady = 0;
         }
@@ -116,14 +97,12 @@ void loop()
     }
 
     // check if last tare operation is complete
-    if (loadCell.getTareStatus() == true)
-    {
+    if (loadCell.getTareStatus() == true) {
         Serial.println("Tare complete");
     }
 }
 
-void serialPlotData()
-{
+void serialPlotData() {
     Serial.print(F(">humidity:"));
     Serial.println(hum);
     Serial.print(F(">temperature:"));
