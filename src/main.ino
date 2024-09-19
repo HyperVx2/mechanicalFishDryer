@@ -7,13 +7,27 @@
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
     Ref 3 (scheduler): https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
-    Ref 4 (wifi manager): https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver/
+    Ref 4 (dashboard): https://github.com/lkoepsel/Dashboard
 */
 
 #include <Arduino.h>
 #include <DHT.h>
 #include <HX711_ADC.h>
 #include <EEPROM.h>
+#include <LittleFS.h>
+#include <WiFi.h>
+#include <WiFiAP.h>
+#include <ESPAsyncWebServer.h>
+#include <Arduino_JSON.h>
+
+#include "serve.h"
+#include "card_0.h"
+#include "card_1.h"
+#include "card_2.h"
+#include "card_3.h"
+
+// Serial Port Constants and Variables
+#define SERIAL_BAUD 921600
 
 // scheduler code
 unsigned int oneSecPeriod = 1000; // 1sec reading
@@ -22,11 +36,12 @@ unsigned long time_now = 0;
 // Relay code
 #define relay_heat 33
 #define relay_fan 14
+bool dryerStatus = false;
 
 // DHT22 code
 #define DHTPIN 25
 DHT dht(DHTPIN, DHT22); // using DHT22 sensor
-float hum, tem; //humidity, temperature data
+float humidity, temperature; //humidity, temperature data
 
 // HX711_ADC code
 const int HX711_dout = 27;
@@ -40,10 +55,26 @@ volatile boolean weight_newDataReady;
 float weightCalValue = 258.80; // todo: change value
 float weight; // weight data
 
+// Access Point Constants and Variables
+const char *ssid = "SMFDS_ESP32";
+const char *password = "foobar123";
+
+// Create AsyncWebServer 
+#define WEB_PORT 80
+AsyncWebServer server(WEB_PORT);
+
+// Create an Event Source on /events
+AsyncEventSource events("/events");
 
 void setup() {
-    Serial.begin(115200); delay(10);
+    Serial.begin(SERIAL_BAUD); delay(10);
     Serial.println(); Serial.println("Starting...");
+
+    // Initialize SPIFFS
+    if(!LittleFS.begin(true)) {
+        Serial.println("An Error has occured while mounting LittleFS");
+        return;
+    }
 
     // init relay module
     pinMode(relay_heat, OUTPUT);
@@ -60,7 +91,7 @@ void setup() {
     loadCell.begin();
 
     loadCell.start(stabilizingTime, _tare);
-    if (isnan(hum) || isnan(tem)) {
+    if (isnan(humidity) || isnan(temperature)) {
         Serial.println(F("Timeout, check DHT22 wiring and pin designations."));
         while (1);
     }
@@ -73,6 +104,26 @@ void setup() {
     }
 
     attachInterrupt(digitalPinToInterrupt(HX711_dout), dataReadyISR, FALLING);
+
+    // Initialize WIFI AP
+    WiFi.softAP(ssid, password);
+    IPAddress myIP = WiFi.softAPIP();
+    Serial.print("AP IP address: ");
+    Serial.println(myIP);
+
+    events.onConnect([](AsyncEventSourceClient *client){
+      if(client->lastId()){
+        Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
+      }
+      // send event with message "hello!", id current millis
+      // and set reconnect delay to 1 second
+      client->send("hello!", NULL, millis(), 10000);
+    });
+    server.addHandler(&events);
+
+    Serial.println("Server started.");
+    serve(&server);
+    server.begin();
 }
 
 // interrupt routune for HX711
@@ -84,8 +135,8 @@ void dataReadyISR() {
 
 void loop() {
     if(millis() >= time_now + oneSecPeriod) { 
-        tem = dht.readTemperature();
-        hum = dht.readHumidity();
+        //temperature = dht.readTemperature();
+        //humidity = dht.readHumidity();
 
         if (weight_newDataReady) {
             weight = loadCell.getData();
@@ -104,9 +155,9 @@ void loop() {
 
 void serialPlotData() {
     Serial.print(F(">humidity:"));
-    Serial.println(hum);
+    Serial.println(humidity);
     Serial.print(F(">temperature:"));
-    Serial.println(tem);
+    Serial.println(temperature);
 
     Serial.print(">weight:");
     Serial.println(weight);

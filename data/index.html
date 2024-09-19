@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script src="./gauge.min.js"></script>
+  </head>
+  <body>
+    <div class="topnav">
+      <h1>Dashboard</h1>
+    </div>
+    <div class="content">
+      <div class="card-grid">
+
+        <!-- Card 0 -->
+        <div class="card">
+          <p class="card-title">
+            <img src = "lightbulb.svg" alt="Light Bulb image"/>
+            Built-in LED</p>
+          <p>
+            <a href="on0"><button class="button-on">
+              <i><img src = "switch-closed.svg" alt="closed switch image "/></i>
+            </button></a>
+            <a href="off0"><button class="button-off">
+              <i><img src = "switch-open.svg" alt="open switch image"/></i>
+            </button></a>
+          </p>
+          <p class="state">State: %STATE0%</p>
+        </div>
+        <!-- End of Card 0 -->
+
+        <!-- Card 1 -->
+        <div class="card">
+          <p class="card-title">
+            <img src = "lightbulb.svg" alt="Light Bulb image"/>
+            LED 1</p>
+          <p>
+            <a href="on1"><button class="button-on">
+              <i><img src = "switch-closed.svg" alt="closed switch image "/></i>
+            </button></a>
+            <a href="off1"><button class="button-off">
+              <i><img src = "switch-open.svg" alt="open switch image"/></i>
+            </button></a>
+          </p>
+          <p class="state">State: %STATE1%</p>
+        </div>
+        <!-- End of Card 1 -->
+
+        <!-- Card 2 -->
+        <div class="card">
+          <p class="card-title">
+            <img src = "lightbulb.svg" alt="Light Bulb image"/>
+            LED 2</p>
+              <p><input type="range" onchange="updateSliderPWM(this)" id="pwmSlider" min="0" max="255" value="%SLIDERVALUE%" step="1" class="slider"></p>
+              <p><span id="textSliderValue">%SLIDERVALUE%</span></p>
+        </div>
+        <!-- End of Card 2 -->
+
+        <!-- Card 3 -->
+        <div class="card">
+          <p class="card-title">Temperature</p>
+          <canvas id="gauge-temperature"></canvas>
+          <p class="card-title">Temperature</p>
+          <canvas id="gauge-humidity"></canvas>
+        </div>
+        <!-- End of Card 3 -->
+
+        <!-- Card 4 -->
+        <div class="card">
+          <h2>ESP DS18B20 Server</h2>
+          <p>
+            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
+            <span class="ds-labels">Temperature Celsius</span> 
+            <span id="temperaturec">%TEMPERATUREC%</span>
+            <sup class="units">&deg;C</sup>
+          </p>
+          <p>
+            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
+            <span class="ds-labels">Temperature Fahrenheit</span>
+            <span id="temperaturef">%TEMPERATUREF%</span>
+            <sup class="units">&deg;F</sup>
+          </p>
+        </div>
+        <!-- End of Card 4 -->
+
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
