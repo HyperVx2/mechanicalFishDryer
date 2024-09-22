@@ -8,12 +8,12 @@ JSONVar readings;
 // Get Sensor Readings and return JSON object
 // todo change to actual readings
 String getSensorReadings(){
-  // readings["temperature"] = String(temperature);
-  readings["temperature"] = "30.0";
-  // readings["humidity"] =  String(humidity);
-  readings["humidity"] =  "90.0";
-  // readings["weight"] = String(weight);
-  readings["weight"] = "40.0";
+  readings["temperature"] = String(temperature);
+  //readings["temperature"] = "30.0";
+  readings["humidity"] =  String(humidity);
+  //readings["humidity"] =  "90.0";
+  readings["weight"] = String(weight);
+  //readings["weight"] = "40.0";
   String jsonString = JSON.stringify(readings);
   return jsonString;
 }

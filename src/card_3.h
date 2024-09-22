@@ -6,6 +6,7 @@
 #include "processor.h"
 #include <Arduino_JSON.h>
 
+extern float humidity, temperature, weight;
 String getSensorReadings();
 
 void card_3(AsyncWebServer *server);

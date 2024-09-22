@@ -135,8 +135,8 @@ void dataReadyISR() {
 
 void loop() {
     if(millis() >= time_now + oneSecPeriod) { 
-        //temperature = dht.readTemperature();
-        //humidity = dht.readHumidity();
+        temperature = dht.readTemperature();
+        humidity = dht.readHumidity();
 
         if (weight_newDataReady) {
             weight = loadCell.getData();
