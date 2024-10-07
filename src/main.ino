@@ -52,7 +52,7 @@ const int calVal_eepromAddress = 0;
 unsigned long t = 0;
 volatile boolean weight_newDataReady;
 
-float weightCalValue = 258.80; // todo: change value
+float weightCalValue = 300; // todo: change value
 float weight; // weight data
 
 // Access Point Constants and Variables
@@ -143,7 +143,7 @@ void loop() {
             weight_newDataReady = 0;
         }
 
-        //serialPlotData();
+        serialPlotData();
         time_now = millis();
     }
 
