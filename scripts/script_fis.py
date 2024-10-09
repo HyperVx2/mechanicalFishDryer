@@ -4,12 +4,13 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import time
 from datetime import datetime, timedelta
+import threading  # For running the temperature check concurrently
 
 # URLs for sensor readings and relay control
 BASE_URL = "http://192.168.4.1"
 READINGS_URL = f"{BASE_URL}/readings"
-HEATER_ON_URL = f"{BASE_URL}/on0"
-HEATER_OFF_URL = f"{BASE_URL}/off0"
+HEATER_ON_URL = f"{BASE_URL}/on2"
+HEATER_OFF_URL = f"{BASE_URL}/off2"
 FAN_ON_URL = f"{BASE_URL}/on1"
 FAN_OFF_URL = f"{BASE_URL}/off1"
 
@@ -39,7 +40,7 @@ class DryingSession:
         self.drying_counter = 0
         self.low_humidity_repeats = 0
         self.humidity_value = 0
-        self.fixed_drying_time_minutes = 150  # 2 hours and 30 minutes
+        self.fixed_drying_time_minutes = 360  # 6 hours 
         self.log_entries = []
 
     def fetch_readings(self):
@@ -89,7 +90,7 @@ class DryingSession:
         self.low_humidity_repeats = 0
         self.control_heater("on")
         self.control_fan("on")
-        print(f"Drying session started for {self.fish_name} with a fixed initial drying time of 2 hours and 30 minutes")
+        print(f"Drying session started for {self.fish_name} with a fixed initial drying time of 6 hours")
         self.log(f"Drying session started for {self.fish_name}")
 
     def end_drying_session(self):
@@ -100,13 +101,51 @@ class DryingSession:
         self.log(f"Drying session ended for {self.fish_name}")
         self.save_log()
 
+    def check_temperature_and_control_heater(self):
+        """
+        Check temperature every 5 minutes and control the heater:
+        - If temperature >= 65, turn off the heater.
+        - If temperature <= 50, turn on the heater.
+        """
+        try:
+            while self.session_active:
+                readings = self.fetch_readings()  # Fetch the sensor readings
+                if readings and "temperature" in readings:
+                    temperature = float(readings["temperature"])
+
+                    if temperature >= 65:
+                        self.control_heater("off")
+                        print(f"Temperature is {temperature}°C, turning heater OFF.")
+                        self.log(f"Temperature is {temperature}°C, heater turned OFF.")
+                    elif temperature <= 58:
+                        self.control_heater("on")
+                        print(f"Temperature is {temperature}°C, turning heater ON.")
+                        self.log(f"Temperature is {temperature}°C, heater turned ON.")
+                    else:
+                        print(f"Temperature is {temperature}°C, no action needed.")
+                        self.log(f"Temperature is {temperature}°C, heater state unchanged.")
+                else:
+                    print("Error: No temperature data available.")
+                    self.log("Error: No temperature data available.")
+
+                time.sleep(1 * 60)  # Wait for 1.. minutes before next check
+
+        except KeyboardInterrupt:
+            print("Temperature monitoring interrupted by user.")
+            self.log("Temperature monitoring interrupted by user.")
+            self.end_drying_session()
+
     def run(self):
         self.start_drying_session()
         fixed_end_time = datetime.now() + timedelta(minutes=self.fixed_drying_time_minutes)
         print(f"Initial fixed drying period until: {fixed_end_time.strftime('%Y-%m-%d %H:%M:%S')}")
         self.log(f"Fixed drying period until: {fixed_end_time.strftime('%Y-%m-%d %H:%M:%S')}")
-        
-        # Run fixed drying session for 2 hours 30 minutes (15-minute intervals for printing readings)
+
+        # Start the temperature monitoring in a separate thread
+        temperature_thread = threading.Thread(target=self.check_temperature_and_control_heater)
+        temperature_thread.start()
+
+        # Run fixed drying session for 6 hours (15-minute intervals for printing readings)
         start_time = datetime.now()
         try:
             while (datetime.now() - start_time).total_seconds() < self.fixed_drying_time_minutes * 60:
@@ -115,7 +154,7 @@ class DryingSession:
                 if readings:
                     print(f"Readings: {readings}")
                     self.log(f"Readings: {readings}")
-            
+
             # Now begin the fuzzy logic-based drying session
             while self.session_active:
                 time.sleep(5)  # Fetch data every 5 seconds
@@ -157,7 +196,7 @@ class DryingSession:
 def main():
     # Ask user for the name of the fish
     fish_name = input("Hello! Please name the fish you are drying: ")
-    
+
     # Ask if they want to start the drying process
     start_drying = input(f"Okay we're drying {fish_name}! Start now? (y/n): ").strip().lower()
     while start_drying not in ["y", "n"]:
