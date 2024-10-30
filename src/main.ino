@@ -27,7 +27,7 @@
 #include "card_3.h"
 
 // Serial Port Constants and Variables
-#define SERIAL_BAUD 921600
+#define SERIAL_BAUD 9600
 
 // scheduler code
 unsigned int oneSecPeriod = 1000; // 1sec reading
