@@ -1,0 +1,23 @@
+[2024-10-25 00:58:12] Drying session started for sapsap using 2 layers with (55, 60)°C temperature range
+[2024-10-25 00:58:13] Temperature 27.3°C, heater turned on
+[2024-10-25 00:59:14] Temperature 29.5°C, heater turned on
+[2024-10-25 01:00:12] Reminder: 3 minutes remaining until the session ends.
+[2024-10-25 01:00:15] Temperature 34.6°C, heater turned on
+[2024-10-25 01:01:16] Temperature 39.5°C, heater turned on
+[2024-10-25 01:02:17] Temperature 43.7°C, heater turned on
+[2024-10-25 01:03:12] Reminder: 2 minutes remaining until the session ends.
+[2024-10-25 01:03:12] Sensor readings: {'temperature': '46.90', 'humidity': '35.20', 'weight': '-4.26'}
+[2024-10-25 01:03:18] Temperature 47.3°C, heater turned on
+[2024-10-25 01:03:31] Humidity 33.8%, additional drying time 8.818698071842654 minutes
+[2024-10-25 01:04:19] Temperature 50.2°C, heater turned on
+[2024-10-25 01:05:20] Temperature 52.8°C, heater turned on
+[2024-10-25 01:07:12] Reminder: 1 minutes remaining until the session ends.
+[2024-10-25 01:09:23] Temperature 60.6°C, heater turned off
+[2024-10-25 01:10:24] Temperature 60.4°C, heater turned off
+[2024-10-25 01:12:26] Humidity 25.5%, additional drying time 2.255661231884058 minutes
+[2024-10-25 01:12:26] Temperature 52.4°C, heater turned on
+[2024-10-25 01:13:27] Temperature 50.6°C, heater turned on
+[2024-10-25 01:14:28] Temperature 52.8°C, heater turned on
+[2024-10-25 01:14:47] Humidity 24.9%, additional drying time 2.234191930287053 minutes
+[2024-10-25 01:14:48] Drying session ended at 2024-10-25 01:14:47. Fan turned on for 1 more minutes.
+[2024-10-25 01:15:48] Fan turned off after 1 minutes.

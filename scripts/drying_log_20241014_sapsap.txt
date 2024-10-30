@@ -1,0 +1,146 @@
+[2024-10-13 21:40:30] Drying session started for sapsap using 3 layers with (58, 64)°C temperature range
+[2024-10-13 21:40:30] Temperature 56.6°C, heater turned on
+[2024-10-13 21:41:30] Temperature 55.4°C, heater turned on
+[2024-10-13 21:42:30] Temperature 57.6°C, heater turned on
+[2024-10-13 21:45:30] Sensor readings: {'temperature': '65.50', 'humidity': '17.60', 'weight': '44.58'}
+[2024-10-13 21:45:31] Temperature 65.5°C, heater turned off
+[2024-10-13 21:46:31] Temperature 66.5°C, heater turned off
+[2024-10-13 21:49:38] Temperature 56.4°C, heater turned on
+[2024-10-13 21:50:32] Sensor readings: {'temperature': '54.70', 'humidity': '25.90', 'weight': '30.27'}
+[2024-10-13 21:50:39] Temperature 54.7°C, heater turned on
+[2024-10-13 21:51:39] Temperature 56.8°C, heater turned on
+[2024-10-13 21:54:49] Temperature 65.2°C, heater turned off
+[2024-10-13 23:07:26] Temperature 29.1°C, heater turned on
+[2024-10-13 23:08:26] Temperature 30.6°C, heater turned on
+[2024-10-13 23:09:26] Temperature 35.0°C, heater turned on
+[2024-10-13 23:10:27] Temperature 39.6°C, heater turned on
+[2024-10-13 23:11:27] Temperature 43.8°C, heater turned on
+[2024-10-13 23:11:47] Sensor readings: {'temperature': '45.00', 'humidity': '41.90', 'weight': '43.12'}
+[2024-10-13 23:12:27] Temperature 47.3°C, heater turned on
+[2024-10-13 23:13:27] Temperature 50.3°C, heater turned on
+[2024-10-13 23:14:28] Temperature 53.0°C, heater turned on
+[2024-10-13 23:15:28] Temperature 55.4°C, heater turned on
+[2024-10-13 23:16:29] Temperature 57.5°C, heater turned on
+[2024-10-13 23:16:47] Sensor readings: {'temperature': '58.10', 'humidity': '23.40', 'weight': '52.65'}
+[2024-10-13 23:20:29] Temperature 64.4°C, heater turned off
+[2024-10-13 23:21:29] Temperature 64.8°C, heater turned off
+[2024-10-13 23:21:47] Sensor readings: {'temperature': '64.20', 'humidity': '18.10', 'weight': '48.32'}
+[2024-10-13 23:23:30] Temperature 58.0°C, heater turned on
+[2024-10-13 23:24:30] Temperature 55.5°C, heater turned on
+[2024-10-13 23:25:30] Temperature 56.7°C, heater turned on
+[2024-10-13 23:26:47] Sensor readings: {'temperature': '60.00', 'humidity': '21.20', 'weight': '41.64'}
+[2024-10-13 23:28:31] Temperature 64.0°C, heater turned off
+[2024-10-13 23:29:31] Temperature 64.9°C, heater turned off
+[2024-10-13 23:31:47] Sensor readings: {'temperature': '57.60', 'humidity': '22.50', 'weight': '34.89'}
+[2024-10-13 23:32:31] Temperature 55.0°C, heater turned on
+[2024-10-13 23:33:31] Temperature 53.3°C, heater turned on
+[2024-10-13 23:34:31] Temperature 55.1°C, heater turned on
+[2024-10-13 23:36:47] Sensor readings: {'temperature': '61.60', 'humidity': '20.00', 'weight': '43.85'}
+[2024-10-13 23:38:32] Temperature 65.5°C, heater turned off
+[2024-10-13 23:39:32] Temperature 66.3°C, heater turned off
+[2024-10-13 23:41:47] Sensor readings: {'temperature': '58.80', 'humidity': '21.40', 'weight': '34.43'}
+[2024-10-13 23:42:32] Temperature 55.9°C, heater turned on
+[2024-10-13 23:43:32] Temperature 54.1°C, heater turned on
+[2024-10-13 23:44:33] Temperature 56.0°C, heater turned on
+[2024-10-13 23:46:47] Sensor readings: {'temperature': '62.40', 'humidity': '19.20', 'weight': '43.17'}
+[2024-10-13 23:47:33] Temperature 64.2°C, heater turned off
+[2024-10-13 23:48:33] Temperature 65.2°C, heater turned off
+[2024-10-13 23:51:34] Temperature 55.2°C, heater turned on
+[2024-10-13 23:51:47] Sensor readings: {'temperature': '54.40', 'humidity': '25.10', 'weight': '31.55'}
+[2024-10-13 23:52:34] Temperature 53.5°C, heater turned on
+[2024-10-13 23:53:34] Temperature 55.4°C, heater turned on
+[2024-10-13 23:56:47] Sensor readings: {'temperature': '64.20', 'humidity': '18.00', 'weight': '44.25'}
+[2024-10-13 23:57:35] Temperature 65.9°C, heater turned off
+[2024-10-13 23:58:43] Temperature 66.6°C, heater turned off
+[2024-10-14 00:01:43] Temperature 55.7°C, heater turned on
+[2024-10-14 00:01:48] Sensor readings: {'temperature': '55.40', 'humidity': '24.10', 'weight': '31.37'}
+[2024-10-14 00:02:43] Temperature 53.9°C, heater turned on
+[2024-10-14 00:03:44] Temperature 55.8°C, heater turned on
+[2024-10-14 00:06:44] Temperature 64.0°C, heater turned off
+[2024-10-14 00:06:48] Sensor readings: {'temperature': '64.20', 'humidity': '17.90', 'weight': '43.92'}
+[2024-10-14 00:07:44] Temperature 65.2°C, heater turned off
+[2024-10-14 00:10:44] Temperature 55.4°C, heater turned on
+[2024-10-14 00:11:45] Temperature 53.6°C, heater turned on
+[2024-10-14 00:11:48] Sensor readings: {'temperature': '53.70', 'humidity': '26.00', 'weight': '32.79'}
+[2024-10-14 00:12:45] Temperature 55.5°C, heater turned on
+[2024-10-14 00:16:45] Temperature 66.0°C, heater turned off
+[2024-10-14 00:16:48] Sensor readings: {'temperature': '66.10', 'humidity': '16.50', 'weight': '44.82'}
+[2024-10-14 00:17:45] Temperature 66.7°C, heater turned off
+[2024-10-14 00:18:46] Temperature 64.1°C, heater turned off
+[2024-10-14 00:20:46] Temperature 56.3°C, heater turned on
+[2024-10-14 00:21:46] Temperature 54.5°C, heater turned on
+[2024-10-14 00:21:48] Sensor readings: {'temperature': '54.50', 'humidity': '25.20', 'weight': '32.94'}
+[2024-10-14 00:22:46] Temperature 56.2°C, heater turned on
+[2024-10-14 00:25:47] Temperature 64.4°C, heater turned off
+[2024-10-14 00:26:47] Temperature 65.4°C, heater turned off
+[2024-10-14 00:26:48] Sensor readings: {'temperature': '65.40', 'humidity': '16.70', 'weight': '41.86'}
+[2024-10-14 00:29:47] Temperature 55.5°C, heater turned on
+[2024-10-14 00:30:47] Temperature 53.8°C, heater turned on
+[2024-10-14 00:31:48] Temperature 55.6°C, heater turned on
+[2024-10-14 00:31:48] Sensor readings: {'temperature': '55.60', 'humidity': '24.30', 'weight': '35.10'}
+[2024-10-14 00:35:48] Temperature 66.0°C, heater turned off
+[2024-10-14 00:36:48] Sensor readings: {'temperature': '66.80', 'humidity': '16.00', 'weight': '42.77'}
+[2024-10-14 00:36:48] Temperature 66.8°C, heater turned off
+[2024-10-14 00:37:48] Temperature 64.1°C, heater turned off
+[2024-10-14 00:39:49] Temperature 56.3°C, heater turned on
+[2024-10-14 00:40:49] Temperature 54.5°C, heater turned on
+[2024-10-14 00:41:48] Sensor readings: {'temperature': '56.10', 'humidity': '23.80', 'weight': '35.22'}
+[2024-10-14 00:41:49] Temperature 56.2°C, heater turned on
+[2024-10-14 00:44:49] Temperature 64.5°C, heater turned off
+[2024-10-14 00:45:49] Temperature 65.5°C, heater turned off
+[2024-10-14 00:46:48] Sensor readings: {'temperature': '63.20', 'humidity': '17.90', 'weight': '36.12'}
+[2024-10-14 00:48:50] Temperature 55.6°C, heater turned on
+[2024-10-14 00:49:50] Temperature 53.9°C, heater turned on
+[2024-10-14 00:50:50] Temperature 55.7°C, heater turned on
+[2024-10-14 00:51:48] Sensor readings: {'temperature': '58.60', 'humidity': '21.70', 'weight': '37.30'}
+[2024-10-14 00:53:50] Temperature 64.1°C, heater turned off
+[2024-10-14 00:54:51] Temperature 65.2°C, heater turned off
+[2024-10-14 00:56:48] Sensor readings: {'temperature': '59.30', 'humidity': '20.40', 'weight': '33.13'}
+[2024-10-14 00:57:51] Temperature 55.4°C, heater turned on
+[2024-10-14 00:58:51] Temperature 53.6°C, heater turned on
+[2024-10-14 00:59:51] Temperature 55.5°C, heater turned on
+[2024-10-14 01:01:48] Sensor readings: {'temperature': '61.20', 'humidity': '19.50', 'weight': '39.82'}
+[2024-10-14 01:04:15] Temperature 65.9°C, heater turned off
+[2024-10-14 01:05:24] Temperature 66.1°C, heater turned off
+[2024-10-14 01:06:48] Sensor readings: {'temperature': '60.50', 'humidity': '19.40', 'weight': '33.72'}
+[2024-10-14 01:08:25] Temperature 54.6°C, heater turned on
+[2024-10-14 01:09:25] Temperature 53.0°C, heater turned on
+[2024-10-14 01:10:25] Temperature 55.0°C, heater turned on
+[2024-10-14 01:10:30] Reminder: 30 minutes remaining until the session ends.
+[2024-10-14 01:11:48] Sensor readings: {'temperature': '59.30', 'humidity': '20.80', 'weight': '38.00'}
+[2024-10-14 01:14:25] Temperature 66.0°C, heater turned off
+[2024-10-14 01:15:25] Temperature 66.9°C, heater turned off
+[2024-10-14 01:16:26] Temperature 64.3°C, heater turned off
+[2024-10-14 01:16:48] Sensor readings: {'temperature': '62.70', 'humidity': '17.90', 'weight': '35.33'}
+[2024-10-14 01:18:26] Temperature 56.5°C, heater turned on
+[2024-10-14 01:19:26] Temperature 54.6°C, heater turned on
+[2024-10-14 01:20:26] Temperature 56.3°C, heater turned on
+[2024-10-14 01:21:48] Sensor readings: {'temperature': '60.20', 'humidity': '20.20', 'weight': '38.45'}
+[2024-10-14 01:23:27] Temperature 64.4°C, heater turned off
+[2024-10-14 01:24:27] Temperature 65.6°C, heater turned off
+[2024-10-14 01:26:48] Sensor readings: {'temperature': '57.90', 'humidity': '21.30', 'weight': '32.27'}
+[2024-10-14 01:27:27] Temperature 55.7°C, heater turned on
+[2024-10-14 01:28:34] Temperature 53.9°C, heater turned on
+[2024-10-14 01:29:35] Temperature 56.1°C, heater turned on
+[2024-10-14 01:31:48] Sensor readings: {'temperature': '62.50', 'humidity': '18.60', 'weight': '41.15'}
+[2024-10-14 01:32:35] Temperature 64.4°C, heater turned off
+[2024-10-14 01:33:52] Temperature 65.6°C, heater turned off
+[2024-10-14 01:36:49] Sensor readings: {'temperature': '54.90', 'humidity': '24.00', 'weight': '30.45'}
+[2024-10-14 01:36:53] Temperature 54.7°C, heater turned on
+[2024-10-14 01:37:53] Temperature 53.1°C, heater turned on
+[2024-10-14 01:38:53] Temperature 55.1°C, heater turned on
+[2024-10-14 01:41:49] Sensor readings: {'temperature': '63.80', 'humidity': '17.60', 'weight': '43.42'}
+[2024-10-14 01:41:53] Temperature 64.0°C, heater turned off
+[2024-10-14 01:42:54] Temperature 65.2°C, heater turned off
+[2024-10-14 01:45:54] Temperature 55.3°C, heater turned on
+[2024-10-14 01:46:54] Temperature 53.7°C, heater turned on
+[2024-10-14 01:47:54] Temperature 55.6°C, heater turned on
+[2024-10-14 01:50:54] Temperature 64.2°C, heater turned off
+[2024-10-14 01:51:55] Temperature 65.3°C, heater turned off
+[2024-10-14 01:54:55] Temperature 55.4°C, heater turned on
+[2024-10-14 01:55:55] Temperature 53.7°C, heater turned on
+[2024-10-14 01:56:55] Temperature 55.6°C, heater turned on
+[2024-10-14 01:59:56] Temperature 64.0°C, heater turned off
+[2024-10-14 02:00:56] Temperature 65.1°C, heater turned off
+[2024-10-14 02:01:12] Drying session ended at 2024-10-14 02:01:12. Fan turned on for 5 more minutes.
+[2024-10-14 02:06:14] Fan turned off after 5 minutes.

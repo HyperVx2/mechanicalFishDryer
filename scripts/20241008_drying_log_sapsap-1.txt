@@ -1,0 +1,268 @@
+[2024-10-08 22:28:24] Heater turned on
+[2024-10-08 22:28:24] Fan turned on
+[2024-10-08 22:28:24] Drying session started for sapsap
+[2024-10-08 22:28:24] Fixed drying period until: 2024-10-09 00:58:24
+[2024-10-08 22:28:24] Temperature is 59.6�C, heater state unchanged.
+[2024-10-08 22:29:24] Heater turned on
+[2024-10-08 22:29:24] Temperature is 57.5�C, heater turned ON.
+[2024-10-08 22:30:24] Temperature is 58.4�C, heater state unchanged.
+[2024-10-08 22:31:24] Temperature is 60.8�C, heater state unchanged.
+[2024-10-08 22:32:24] Temperature is 63.6�C, heater state unchanged.
+[2024-10-08 22:33:25] Heater turned off
+[2024-10-08 22:33:25] Temperature is 66.1�C, heater turned OFF.
+[2024-10-08 22:34:25] Heater turned off
+[2024-10-08 22:34:25] Temperature is 67.3�C, heater turned OFF.
+[2024-10-08 22:35:25] Heater turned off
+[2024-10-08 22:35:25] Temperature is 65.0�C, heater turned OFF.
+[2024-10-08 22:36:25] Temperature is 61.1�C, heater state unchanged.
+[2024-10-08 22:37:25] Heater turned on
+[2024-10-08 22:37:25] Temperature is 57.2�C, heater turned ON.
+[2024-10-08 22:38:25] Heater turned on
+[2024-10-08 22:38:25] Temperature is 55.0�C, heater turned ON.
+[2024-10-08 22:39:26] Heater turned on
+[2024-10-08 22:39:26] Temperature is 56.5�C, heater turned ON.
+[2024-10-08 22:40:26] Temperature is 59.5�C, heater state unchanged.
+[2024-10-08 22:41:26] Temperature is 62.5�C, heater state unchanged.
+[2024-10-08 22:42:26] Heater turned off
+[2024-10-08 22:42:26] Temperature is 65.3�C, heater turned OFF.
+[2024-10-08 22:43:24] Readings: {'temperature': '66.80', 'humidity': '16.30', 'weight': '142.78'}
+[2024-10-08 22:43:26] Heater turned off
+[2024-10-08 22:43:26] Temperature is 66.8�C, heater turned OFF.
+[2024-10-08 22:44:26] Temperature is 64.7�C, heater state unchanged.
+[2024-10-08 22:45:26] Temperature is 60.8�C, heater state unchanged.
+[2024-10-08 22:46:27] Heater turned on
+[2024-10-08 22:46:27] Temperature is 57.0�C, heater turned ON.
+[2024-10-08 22:47:27] Heater turned on
+[2024-10-08 22:47:27] Temperature is 54.8�C, heater turned ON.
+[2024-10-08 22:48:27] Heater turned on
+[2024-10-08 22:48:27] Temperature is 56.4�C, heater turned ON.
+[2024-10-08 22:49:27] Temperature is 59.3�C, heater state unchanged.
+[2024-10-08 22:50:27] Temperature is 62.4�C, heater state unchanged.
+[2024-10-08 22:51:27] Heater turned off
+[2024-10-08 22:51:27] Temperature is 65.1�C, heater turned OFF.
+[2024-10-08 22:52:27] Heater turned off
+[2024-10-08 22:52:27] Temperature is 66.6�C, heater turned OFF.
+[2024-10-08 22:53:28] Temperature is 64.4�C, heater state unchanged.
+[2024-10-08 22:54:28] Temperature is 60.6�C, heater state unchanged.
+[2024-10-08 22:55:29] Heater turned on
+[2024-10-08 22:55:29] Temperature is 56.8�C, heater turned ON.
+[2024-10-08 22:56:30] Heater turned on
+[2024-10-08 22:56:30] Temperature is 54.7�C, heater turned ON.
+[2024-10-08 22:57:30] Heater turned on
+[2024-10-08 22:57:30] Temperature is 56.2�C, heater turned ON.
+[2024-10-08 22:58:24] Readings: {'temperature': '58.80', 'humidity': '21.90', 'weight': '113.17'}
+[2024-10-08 22:58:30] Temperature is 59.2�C, heater state unchanged.
+[2024-10-08 22:59:30] Temperature is 62.2�C, heater state unchanged.
+[2024-10-08 23:00:31] Temperature is 64.9�C, heater state unchanged.
+[2024-10-08 23:01:31] Heater turned off
+[2024-10-08 23:01:31] Temperature is 67.4�C, heater turned OFF.
+[2024-10-08 23:02:31] Heater turned off
+[2024-10-08 23:02:31] Temperature is 68.5�C, heater turned OFF.
+[2024-10-08 23:03:32] Heater turned off
+[2024-10-08 23:03:32] Temperature is 66.1�C, heater turned OFF.
+[2024-10-08 23:04:32] Temperature is 62.1�C, heater state unchanged.
+[2024-10-08 23:05:32] Temperature is 58.2�C, heater state unchanged.
+[2024-10-08 23:06:32] Heater turned on
+[2024-10-08 23:06:32] Temperature is 54.8�C, heater turned ON.
+[2024-10-08 23:07:34] Heater turned on
+[2024-10-08 23:07:34] Temperature is 53.2�C, heater turned ON.
+[2024-10-08 23:08:35] Heater turned on
+[2024-10-08 23:08:35] Temperature is 55.3�C, heater turned ON.
+[2024-10-08 23:09:35] Temperature is 58.5�C, heater state unchanged.
+[2024-10-08 23:10:35] Temperature is 61.7�C, heater state unchanged.
+[2024-10-08 23:11:35] Temperature is 64.5�C, heater state unchanged.
+[2024-10-08 23:12:36] Heater turned off
+[2024-10-08 23:12:36] Temperature is 67.0�C, heater turned OFF.
+[2024-10-08 23:13:24] Readings: {'temperature': '68.30', 'humidity': '15.50', 'weight': '104.06'}
+[2024-10-08 23:13:36] Heater turned off
+[2024-10-08 23:13:36] Temperature is 68.3�C, heater turned OFF.
+[2024-10-08 23:14:36] Heater turned off
+[2024-10-08 23:14:36] Temperature is 66.0�C, heater turned OFF.
+[2024-10-08 23:15:36] Temperature is 62.0�C, heater state unchanged.
+[2024-10-08 23:16:38] Heater turned on
+[2024-10-08 23:16:38] Temperature is 57.9�C, heater turned ON.
+[2024-10-08 23:17:39] Heater turned on
+[2024-10-08 23:17:39] Temperature is 55.7�C, heater turned ON.
+[2024-10-08 23:18:39] Heater turned on
+[2024-10-08 23:18:39] Temperature is 57.2�C, heater turned ON.
+[2024-10-08 23:19:39] Temperature is 60.1�C, heater state unchanged.
+[2024-10-08 23:20:39] Temperature is 63.0�C, heater state unchanged.
+[2024-10-08 23:21:39] Heater turned off
+[2024-10-08 23:21:39] Temperature is 65.7�C, heater turned OFF.
+[2024-10-08 23:22:40] Heater turned off
+[2024-10-08 23:22:40] Temperature is 67.1�C, heater turned OFF.
+[2024-10-08 23:23:40] Heater turned off
+[2024-10-08 23:23:40] Temperature is 65.0�C, heater turned OFF.
+[2024-10-08 23:24:40] Temperature is 61.2�C, heater state unchanged.
+[2024-10-08 23:25:40] Heater turned on
+[2024-10-08 23:25:40] Temperature is 57.4�C, heater turned ON.
+[2024-10-08 23:26:40] Heater turned on
+[2024-10-08 23:26:40] Temperature is 55.4�C, heater turned ON.
+[2024-10-08 23:27:40] Heater turned on
+[2024-10-08 23:27:40] Temperature is 57.0�C, heater turned ON.
+[2024-10-08 23:28:24] Readings: {'temperature': '59.10', 'humidity': '21.50', 'weight': '84.47'}
+[2024-10-08 23:28:40] Temperature is 60.0�C, heater state unchanged.
+[2024-10-08 23:29:41] Temperature is 63.1�C, heater state unchanged.
+[2024-10-08 23:30:41] Heater turned off
+[2024-10-08 23:30:41] Temperature is 66.0�C, heater turned OFF.
+[2024-10-08 23:31:41] Heater turned off
+[2024-10-08 23:31:41] Temperature is 67.5�C, heater turned OFF.
+[2024-10-08 23:32:41] Heater turned off
+[2024-10-08 23:32:41] Temperature is 65.4�C, heater turned OFF.
+[2024-10-08 23:33:41] Temperature is 61.5�C, heater state unchanged.
+[2024-10-08 23:34:41] Heater turned on
+[2024-10-08 23:34:41] Temperature is 57.5�C, heater turned ON.
+[2024-10-08 23:35:42] Heater turned on
+[2024-10-08 23:35:42] Temperature is 55.4�C, heater turned ON.
+[2024-10-08 23:36:42] Heater turned on
+[2024-10-08 23:36:42] Temperature is 56.8�C, heater turned ON.
+[2024-10-08 23:37:42] Temperature is 59.7�C, heater state unchanged.
+[2024-10-08 23:38:42] Temperature is 62.7�C, heater state unchanged.
+[2024-10-08 23:39:42] Heater turned off
+[2024-10-08 23:39:42] Temperature is 65.4�C, heater turned OFF.
+[2024-10-08 23:40:42] Heater turned off
+[2024-10-08 23:40:42] Temperature is 66.9�C, heater turned OFF.
+[2024-10-08 23:41:42] Temperature is 64.7�C, heater state unchanged.
+[2024-10-08 23:42:42] Temperature is 60.8�C, heater state unchanged.
+[2024-10-08 23:43:24] Readings: {'temperature': '58.10', 'humidity': '21.60', 'weight': '68.51'}
+[2024-10-08 23:43:43] Heater turned on
+[2024-10-08 23:43:43] Temperature is 57.0�C, heater turned ON.
+[2024-10-08 23:44:43] Heater turned on
+[2024-10-08 23:44:43] Temperature is 54.9�C, heater turned ON.
+[2024-10-08 23:45:43] Heater turned on
+[2024-10-08 23:45:43] Temperature is 56.4�C, heater turned ON.
+[2024-10-08 23:46:43] Temperature is 59.3�C, heater state unchanged.
+[2024-10-08 23:47:43] Temperature is 62.3�C, heater state unchanged.
+[2024-10-08 23:48:43] Heater turned off
+[2024-10-08 23:48:43] Temperature is 65.1�C, heater turned OFF.
+[2024-10-08 23:49:44] Heater turned off
+[2024-10-08 23:49:44] Temperature is 66.5�C, heater turned OFF.
+[2024-10-08 23:50:44] Temperature is 64.3�C, heater state unchanged.
+[2024-10-08 23:51:44] Temperature is 60.5�C, heater state unchanged.
+[2024-10-08 23:52:44] Heater turned on
+[2024-10-08 23:52:44] Temperature is 56.7�C, heater turned ON.
+[2024-10-08 23:53:44] Heater turned on
+[2024-10-08 23:53:44] Temperature is 54.7�C, heater turned ON.
+[2024-10-08 23:54:44] Heater turned on
+[2024-10-08 23:54:44] Temperature is 56.3�C, heater turned ON.
+[2024-10-08 23:55:44] Temperature is 59.3�C, heater state unchanged.
+[2024-10-08 23:56:44] Temperature is 62.3�C, heater state unchanged.
+[2024-10-08 23:57:45] Heater turned off
+[2024-10-08 23:57:45] Temperature is 65.1�C, heater turned OFF.
+[2024-10-08 23:58:24] Readings: {'temperature': '66.60', 'humidity': '16.20', 'weight': '67.60'}
+[2024-10-08 23:58:45] Heater turned off
+[2024-10-08 23:58:45] Temperature is 66.7�C, heater turned OFF.
+[2024-10-08 23:59:45] Temperature is 64.7�C, heater state unchanged.
+[2024-10-09 00:00:45] Temperature is 60.9�C, heater state unchanged.
+[2024-10-09 00:01:45] Heater turned on
+[2024-10-09 00:01:45] Temperature is 57.0�C, heater turned ON.
+[2024-10-09 00:02:46] Heater turned on
+[2024-10-09 00:02:46] Temperature is 54.9�C, heater turned ON.
+[2024-10-09 00:03:47] Heater turned on
+[2024-10-09 00:03:47] Temperature is 56.6�C, heater turned ON.
+[2024-10-09 00:04:47] Temperature is 59.7�C, heater state unchanged.
+[2024-10-09 00:05:47] Temperature is 62.8�C, heater state unchanged.
+[2024-10-09 00:06:47] Heater turned off
+[2024-10-09 00:06:47] Temperature is 65.7�C, heater turned OFF.
+[2024-10-09 00:07:47] Heater turned off
+[2024-10-09 00:07:47] Temperature is 67.3�C, heater turned OFF.
+[2024-10-09 00:08:47] Heater turned off
+[2024-10-09 00:08:47] Temperature is 65.1�C, heater turned OFF.
+[2024-10-09 00:09:47] Temperature is 61.3�C, heater state unchanged.
+[2024-10-09 00:10:48] Heater turned on
+[2024-10-09 00:10:48] Temperature is 57.5�C, heater turned ON.
+[2024-10-09 00:11:48] Heater turned on
+[2024-10-09 00:11:48] Temperature is 55.3�C, heater turned ON.
+[2024-10-09 00:12:49] Heater turned on
+[2024-10-09 00:12:49] Temperature is 56.8�C, heater turned ON.
+[2024-10-09 00:13:24] Readings: {'temperature': '58.60', 'humidity': '21.50', 'weight': '70.02'}
+[2024-10-09 00:13:49] Temperature is 59.8�C, heater state unchanged.
+[2024-10-09 00:14:49] Temperature is 62.8�C, heater state unchanged.
+[2024-10-09 00:15:49] Heater turned off
+[2024-10-09 00:15:49] Temperature is 65.6�C, heater turned OFF.
+[2024-10-09 00:16:49] Heater turned off
+[2024-10-09 00:16:49] Temperature is 67.1�C, heater turned OFF.
+[2024-10-09 00:17:50] Heater turned off
+[2024-10-09 00:17:50] Temperature is 65.0�C, heater turned OFF.
+[2024-10-09 00:18:50] Temperature is 61.2�C, heater state unchanged.
+[2024-10-09 00:19:50] Heater turned on
+[2024-10-09 00:19:50] Temperature is 57.4�C, heater turned ON.
+[2024-10-09 00:20:50] Heater turned on
+[2024-10-09 00:20:50] Temperature is 55.3�C, heater turned ON.
+[2024-10-09 00:21:50] Heater turned on
+[2024-10-09 00:21:50] Temperature is 56.8�C, heater turned ON.
+[2024-10-09 00:22:50] Temperature is 59.7�C, heater state unchanged.
+[2024-10-09 00:23:50] Temperature is 62.7�C, heater state unchanged.
+[2024-10-09 00:24:51] Heater turned off
+[2024-10-09 00:24:51] Temperature is 65.5�C, heater turned OFF.
+[2024-10-09 00:25:51] Heater turned off
+[2024-10-09 00:25:51] Temperature is 67.0�C, heater turned OFF.
+[2024-10-09 00:26:51] Temperature is 64.9�C, heater state unchanged.
+[2024-10-09 00:27:51] Temperature is 61.1�C, heater state unchanged.
+[2024-10-09 00:28:24] Readings: {'temperature': '58.90', 'humidity': '20.60', 'weight': '65.77'}
+[2024-10-09 00:28:51] Heater turned on
+[2024-10-09 00:28:51] Temperature is 57.3�C, heater turned ON.
+[2024-10-09 00:29:51] Heater turned on
+[2024-10-09 00:29:51] Temperature is 55.1�C, heater turned ON.
+[2024-10-09 00:30:51] Heater turned on
+[2024-10-09 00:30:51] Temperature is 56.7�C, heater turned ON.
+[2024-10-09 00:31:51] Temperature is 59.7�C, heater state unchanged.
+[2024-10-09 00:32:51] Temperature is 62.7�C, heater state unchanged.
+[2024-10-09 00:33:52] Heater turned off
+[2024-10-09 00:33:52] Temperature is 65.5�C, heater turned OFF.
+[2024-10-09 00:34:52] Heater turned off
+[2024-10-09 00:34:52] Temperature is 67.0�C, heater turned OFF.
+[2024-10-09 00:35:52] Temperature is 64.9�C, heater state unchanged.
+[2024-10-09 00:36:52] Temperature is 61.1�C, heater state unchanged.
+[2024-10-09 00:37:52] Heater turned on
+[2024-10-09 00:37:52] Temperature is 57.2�C, heater turned ON.
+[2024-10-09 00:38:52] Heater turned on
+[2024-10-09 00:38:52] Temperature is 55.2�C, heater turned ON.
+[2024-10-09 00:39:52] Heater turned on
+[2024-10-09 00:39:52] Temperature is 56.7�C, heater turned ON.
+[2024-10-09 00:40:52] Temperature is 59.7�C, heater state unchanged.
+[2024-10-09 00:41:52] Temperature is 62.7�C, heater state unchanged.
+[2024-10-09 00:42:53] Heater turned off
+[2024-10-09 00:42:53] Temperature is 65.4�C, heater turned OFF.
+[2024-10-09 00:43:24] Readings: {'temperature': '66.60', 'humidity': '16.00', 'weight': '67.04'}
+[2024-10-09 00:43:53] Heater turned off
+[2024-10-09 00:43:53] Temperature is 66.9�C, heater turned OFF.
+[2024-10-09 00:44:53] Temperature is 64.9�C, heater state unchanged.
+[2024-10-09 00:45:53] Temperature is 61.1�C, heater state unchanged.
+[2024-10-09 00:46:53] Heater turned on
+[2024-10-09 00:46:53] Temperature is 57.2�C, heater turned ON.
+[2024-10-09 00:47:53] Heater turned on
+[2024-10-09 00:47:53] Temperature is 55.1�C, heater turned ON.
+[2024-10-09 00:48:53] Heater turned on
+[2024-10-09 00:48:53] Temperature is 56.6�C, heater turned ON.
+[2024-10-09 00:49:54] Temperature is 59.5�C, heater state unchanged.
+[2024-10-09 00:50:54] Temperature is 62.5�C, heater state unchanged.
+[2024-10-09 00:51:54] Heater turned off
+[2024-10-09 00:51:54] Temperature is 65.4�C, heater turned OFF.
+[2024-10-09 00:52:54] Heater turned off
+[2024-10-09 00:52:54] Temperature is 67.1�C, heater turned OFF.
+[2024-10-09 00:53:54] Heater turned off
+[2024-10-09 00:53:54] Temperature is 65.2�C, heater turned OFF.
+[2024-10-09 00:54:54] Temperature is 61.4�C, heater state unchanged.
+[2024-10-09 00:55:54] Heater turned on
+[2024-10-09 00:55:54] Temperature is 57.6�C, heater turned ON.
+[2024-10-09 00:56:55] Heater turned on
+[2024-10-09 00:56:55] Temperature is 55.4�C, heater turned ON.
+[2024-10-09 00:57:55] Heater turned on
+[2024-10-09 00:57:55] Temperature is 57.1�C, heater turned ON.
+[2024-10-09 00:58:24] Readings: {'temperature': '58.50', 'humidity': '21.50', 'weight': '47.41'}
+[2024-10-09 00:58:29] Humidity: 21.3, Additional drying time: 2.1100003908692933 mins
+[2024-10-09 00:58:55] Temperature is 60.1�C, heater state unchanged.
+[2024-10-09 00:59:55] Temperature is 63.1�C, heater state unchanged.
+[2024-10-09 01:00:41] Humidity: 16.8, Additional drying time: 1.9678961748633883 mins
+[2024-10-09 01:00:55] Heater turned off
+[2024-10-09 01:00:55] Temperature is 65.9�C, heater turned OFF.
+[2024-10-09 01:01:55] Heater turned off
+[2024-10-09 01:01:55] Temperature is 67.4�C, heater turned OFF.
+[2024-10-09 01:02:44] Humidity: 16.1, Additional drying time: 1.9473427754677757 mins
+[2024-10-09 01:02:55] Heater turned off
+[2024-10-09 01:02:55] Temperature is 65.3�C, heater turned OFF.
+[2024-10-09 01:03:55] Temperature is 61.5�C, heater state unchanged.
+[2024-10-09 01:04:41] Heater turned off
+[2024-10-09 01:04:41] Fan turned off
+[2024-10-09 01:04:41] Drying session ended for sapsap
