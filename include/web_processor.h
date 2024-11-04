@@ -3,15 +3,14 @@
 *  separate them out as in serve/cards. All templates must have logic
 *  in processor to define the template value.
 */
-#ifndef PROCESSOR
-#define PROCESSOR
+#ifndef WEB_PROCESSOR
+#define WEB_PROCESSOR
 
 #include <ESPAsyncWebServer.h>
 #include <LittleFS.h>
-#include "card_0.h"
-#include "card_1.h"
-#include "card_2.h"
-#include "card_3.h"
+
+#include "constants.h"
+#include "web_cards.h"
 
 // Card processor
 String processor(const String& var);

@@ -4,17 +4,14 @@
 *  the Arduino .ino file for the website.
 */
 
-#ifndef SERVE
-#define SERVE
+#ifndef WEB_SERVE
+#define WEB_SERVE
 
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <LittleFS.h>
-#include "home.h"
-#include "card_0.h"
-#include "card_1.h"
-#include "card_2.h"
-#include "card_3.h"
+
+#include "web_cards.h"
 
 void serve(AsyncWebServer *server);
 #endif
