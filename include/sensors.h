@@ -17,6 +17,8 @@ void readDHT();
 void readHX711();
 void debug_randSensor();
 
+void printSensors();
+
 void setTareHX711();
 
 #endif

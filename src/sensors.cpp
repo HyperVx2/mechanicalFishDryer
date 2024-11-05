@@ -4,6 +4,8 @@ float temperature, humidity, weight;
 float current, voltage;
 
 const int timerDelay = DELAY_MS;
+
+unsigned long dht_lastTime;
 unsigned long hx711_lastTime;
 unsigned long randSensor_lastTime;
 
@@ -26,6 +28,8 @@ bool beginSensors() {
     // Initialize DHT22
     dht.begin();
     sensor_t DHTsensor;
+    dht.temperature().getSensor(&DHTsensor);
+    dht.humidity().getSensor(&DHTsensor);
     DHT_delayMS = DHTsensor.min_delay / 1000;
 
     // initialize HX711
@@ -42,7 +46,7 @@ bool beginSensors() {
     }
     else {
         hx711.setCalFactor(calibrationValue); // set calibration value (float)
-        Serial.println("Startup is complete");
+        Serial.println("HX711 setup complete.");
     }
 
     attachInterrupt(digitalPinToInterrupt(HX711_DOUT), HX711_dataReadyISR, FALLING);
@@ -51,23 +55,23 @@ bool beginSensors() {
 }
 
 void readDHT() {
-    //Delay between measurements
-    delay(DHT_delayMS);
-
     sensors_event_t event;
-    // Get temperature event and print its value.
-    dht.temperature().getEvent(&event);
-    if (isnan(event.temperature)) {
-        Serial.println(F("Error reading temperature!"));
-    } else {
-        temperature = event.temperature;
-    }
-    // Get humidity event and print its value.
-    dht.humidity().getEvent(&event);
-    if (isnan(event.relative_humidity)) {
-        Serial.println(F("Error reading humidity!"));
-    } else {
-        humidity = event.relative_humidity;
+    if (millis() > dht_lastTime + DHT_delayMS) {
+        // Get temperature event and print its value.
+        dht.temperature().getEvent(&event);
+        if (isnan(event.temperature)) {
+            Serial.println(F("Error reading temperature!"));
+        } else {
+            temperature = event.temperature;
+        }
+        // Get humidity event and print its value.
+        dht.humidity().getEvent(&event);
+        if (isnan(event.relative_humidity)) {
+            Serial.println(F("Error reading humidity!"));
+        } else {
+            humidity = event.relative_humidity;
+        }
+            dht_lastTime = millis();
     }
 }
 
@@ -91,6 +95,12 @@ void setTareHX711() {
         Serial.println("Tare timeout, check MCU>HX711 wiring and pin designations");
         //return false;
     }
+}
+
+void printSensors() {
+    Serial.print("Temp: "); Serial.println(temperature);
+    Serial.print("Humidity: "); Serial.println(humidity);
+    Serial.print("Weight: "); Serial.println(weight);
 }
 
 void debug_randSensor() { 

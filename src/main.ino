@@ -21,7 +21,10 @@ void setup() {
 }
 
 void loop() {
-    readDHT(); readHX711();
+    readDHT(); 
+    readHX711();
     //debug_randSensor();
     web_sendEvent();
+
+    printSensors();
 }
