@@ -25,6 +25,12 @@ void HX711_dataReadyISR() {
 }
 
 bool beginSensors() {
+    // Initilize actuators
+    pinMode(RELAY_HEAT, OUTPUT);
+    pinMode(RELAY_FAN, OUTPUT);
+    digitalWrite(RELAY_HEAT, HIGH);
+    digitalWrite(RELAY_FAN, HIGH);
+
     // Initialize DHT22
     dht.begin();
     sensor_t DHTsensor;
