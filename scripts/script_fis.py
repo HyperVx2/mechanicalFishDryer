@@ -108,7 +108,7 @@ class DryingSession:
         self.fish_name = fish_name
         self.sensor_controller = SensorController()
         self.simulator = setup_fuzzy_logic()
-        self.drying_time_minutes = drying_time_minutes
+        self.drying_time_minutes = drying_time_minutes  # Initial drying time in minutes
         self.layer_count = layer_count
         self.temperature_range = self.set_temperature_range(layer_count)
         self.low_humidity_repeats = 0
@@ -192,14 +192,25 @@ class DryingSession:
                 time.sleep(additional_time * 60)
 
     def run(self):
-        """Run the entire drying session, including temperature and humidity control."""
+        """Run the entire drying session, including initial drying phase and fuzzy control."""
         try:
             self.start()
+
+            # Start temperature control in a separate thread
             temperature_thread = threading.Thread(target=self.check_temperature)
             temperature_thread.start()
+
+            # Run the initial drying phase for the set time (e.g., 240 minutes or 4 hours)
+            initial_drying_seconds = self.drying_time_minutes * 60
+            self.log(f"Initial drying phase started for {self.drying_time_minutes} minutes.")
+            time.sleep(initial_drying_seconds)  # Blocking for initial drying time
+            self.log("Initial drying phase completed.")
+
+            # Start fuzzy logic drying control after initial drying phase
             fuzzy_drying_thread = threading.Thread(target=self.run_fuzzy_drying)
             fuzzy_drying_thread.start()
 
+            # Wait for threads to finish
             temperature_thread.join()
             fuzzy_drying_thread.join()
         finally:
