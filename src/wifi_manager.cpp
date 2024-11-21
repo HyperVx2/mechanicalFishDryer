@@ -155,6 +155,9 @@ void setupWebserver() {
     Serial.print("AP IP address: ");
     Serial.println(IP); 
 
+    ssid = WIFI_SSID;
+    ip = IP.toString();
+
     // Web Server Root URL
     server.on("/conn", HTTP_GET, [](AsyncWebServerRequest *request){
       request->send(LittleFS, "/wifimanager.html", "text/html");

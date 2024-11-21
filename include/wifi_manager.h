@@ -11,6 +11,9 @@
 #include "web_serve.h"
 #include "web_cards.h"
 
+extern String ssid;
+extern String ip;
+
 void initLittleFS();
 String readFile(fs::FS &fs, const char * path);
 void writeFile(fs::FS &fs, const char * path, const char * message);

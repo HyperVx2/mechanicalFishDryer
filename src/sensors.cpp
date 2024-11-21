@@ -3,14 +3,11 @@
 float temperature, humidity, weight;
 float current, voltage;
 
-const int timerDelay = DELAY_MS;
-
 unsigned long dht_lastTime;
 unsigned long hx711_lastTime;
 unsigned long randSensor_lastTime;
 
 uint32_t DHT_delayMS;
-const int HX711_calVal_eeproom = 0;
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
 HX711_ADC hx711(HX711_DOUT, HX711_SCK);
@@ -20,12 +17,15 @@ volatile boolean HX711_newDataReady;
 //interrupt routine:
 void HX711_dataReadyISR() {
   if (hx711.update()) {
-    HX711_newDataReady = 1;
+    HX711_newDataReady = true;
   }
 }
 
+ACS712 ACS(ACS712_PIN, ACS712_VOLT, ACS712_ADC, ACS712_mvPerA);
+
+
 bool beginSensors() {
-    // Initilize actuators
+    // Initialize actuators
     pinMode(RELAY_HEAT, OUTPUT);
     pinMode(RELAY_FAN, OUTPUT);
     digitalWrite(RELAY_HEAT, HIGH);
@@ -41,11 +41,11 @@ bool beginSensors() {
     // initialize HX711
     float calibrationValue = HX711_CALIBRATION;
     EEPROM.begin(512);
-    EEPROM.get(HX711_calVal_eeproom, calibrationValue); // Fetch the value from eeprom
+    EEPROM.get(HX711_CALVAL_ADDR, calibrationValue); // Fetch the value from eeprom
 
     hx711.begin();
     unsigned long stabilizingtime = 2000; // tare preciscion can be improved by adding a few seconds of stabilizing time
-    boolean _tare = true; //set this to false if you don't want tare to be performed in the next step
+    boolean _tare = false; //set this to false if you don't want tare to be performed in the next step
     hx711.start(stabilizingtime, _tare);
     if (hx711.getTareTimeoutFlag()) {
         Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
@@ -57,6 +57,17 @@ bool beginSensors() {
 
     attachInterrupt(digitalPinToInterrupt(HX711_DOUT), HX711_dataReadyISR, FALLING);
 
+    return true;
+}
+
+bool beginSensors_2() {
+    // Initialize ACS712
+    ACS712 ACS(ACS712_PIN, ACS712_VOLT, ACS712_ADC, ACS712_mvPerA);
+    ACS.autoMidPoint();
+    Serial.print("MidPoint: ");
+    Serial.print(ACS.getMidPoint());
+    Serial.print(". Noise mV: ");
+    Serial.println(ACS.getNoisemV());
     return true;
 }
 
@@ -84,9 +95,9 @@ void readDHT() {
 void readHX711() {
     // get smoothed value from the dataset:
     if (HX711_newDataReady) {
-        if (millis() > hx711_lastTime + timerDelay) {
+        if (millis() > hx711_lastTime + DELAY_MS) {
         weight = hx711.getData();
-        HX711_newDataReady = 0;
+        HX711_newDataReady = false;
         hx711_lastTime = millis();
         }
     }
@@ -103,6 +114,11 @@ void setTareHX711() {
     }
 }
 
+void readACS712() {
+    current = ACS.mA_AC();
+    voltage = ACS.getMidPoint();
+}
+
 void printSensors() {
     Serial.print("Temp: "); Serial.println(temperature);
     Serial.print("Humidity: "); Serial.println(humidity);
@@ -110,10 +126,10 @@ void printSensors() {
 }
 
 void debug_randSensor() { 
-    if (millis() > randSensor_lastTime + timerDelay) {
-        temperature = random(20, 30);
-        humidity = random(40, 60);
-        weight = random(100, 200);
+    if (millis() > randSensor_lastTime + DELAY_MS) {
+        temperature = random(30, 80);
+        humidity = random(30, 99);
+        weight = random(-120, 1200);
         randSensor_lastTime = millis();
     }
 }

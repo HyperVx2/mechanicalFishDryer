@@ -11,7 +11,11 @@
 
 #include "constants.h"
 
+extern float temperature, humidity, weight;
+extern float current, voltage;
+
 bool beginSensors();
+bool beginSensors_2();
 
 void readDHT();
 void readHX711();

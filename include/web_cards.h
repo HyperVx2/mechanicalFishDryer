@@ -8,6 +8,7 @@
 
 #include "constants.h"
 #include "sensors.h"
+#include "display_oled.h"
 #include "web_processor.h"
 
 extern float humidity, temperature, weight;

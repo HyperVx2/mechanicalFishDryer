@@ -22,6 +22,13 @@
 #define SERIAL_BAUD 9600
 #define DELAY_MS 1000
 
+// EEPROM Addresses
+#define TIMER_START_ADDR 0
+#define TIMER_DURATION_ADDR (TIMER_START_ADDR + sizeof(unsigned long))
+#define TIMER_REMAINING_ADDR (TIMER_DURATION_ADDR + sizeof(unsigned long))
+#define SYSTEM_IDLE_ADDR (TIMER_REMAINING_ADDR + sizeof(unsigned long))
+#define HX711_CALVAL_ADDR (SYSTEM_IDLE_ADDR + sizeof(bool))
+
 // WiFi and Web Server
 #define WIFI_SSID "SMFDS_ESP32"
 #define WIFI_PASS "foobar123"
@@ -42,6 +49,9 @@
 
 // Sensor: ACS712 (30A) Current Sensor
 #define ACS712_PIN 00 //TODO
+#define ACS712_VOLT 5.0
+#define ACS712_ADC 1023
+#define ACS712_mvPerA 66
 
 // Sensor: ZMPT101B Voltage Sensor
 #define ZMPT101B_PIN 00 //TODO
