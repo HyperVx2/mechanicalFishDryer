@@ -12,9 +12,11 @@ String processor(const String& var) {
     if (var == "RELAYHEAT") {
         if (digitalRead(RELAY_HEAT)){
             relayHeatState = "OFF";
+            digitalWrite(LED_3, LOW);
         }
         else {
             relayHeatState = "ON";
+            digitalWrite(LED_3, HIGH);
         }
         Serial.print(relayHeatState);
         return relayHeatState;

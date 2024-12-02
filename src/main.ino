@@ -23,9 +23,13 @@ void setup() {
 
     setupWebserver();
     display_begin();
+
+    buzz_set(1000, 100, 100, 4);
 }
 
 void loop() {
+    buzz_loop();
+
     static int rCount = 0;
 
     if (Serial.available()) {
@@ -40,6 +44,8 @@ void loop() {
             addTimer(15000);
         } else if (ch == 's') {
             resetTimer();
+        } else if (ch == 't') {
+            setTareHX711();
         }
         else {
             rCount = 0; // Reset the count if any other character is received
@@ -53,5 +59,5 @@ void loop() {
     display_loop();
     web_sendEvent();
     // Serial
-    //printSensors();
+    printSensors();
 }

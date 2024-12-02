@@ -1,8 +1,16 @@
 /*
-    Usable ESP32 pins (in order): 14, 27, 26, 25, 33, 32
     Ref: https://lastminuteengineers.com/esp32-pinout-reference
 
-    Assigned pin (in order): RELAY_HEATER, HX711_DT, HX711_SCK, DHT22, RELAY_FAN, DHT11_CONTROL
+    PIN ASSIGNMENT:
+    LED_1 (RED):    D23 | LED_2 (GREEN):    D19 | LED_3 (RED):  D18
+    BUZZER:         D32
+    RELAY_HEATER:   D14 | RELAY_FAN:        D33
+    OLED_SCL:       D22 | OLED_SDA:         D21
+    DHT22:          D25 | HX711_DT:         D27 | HX711_SCK:    D26
+    ACS712:         D16 | ZMPT101B:         D17
+
+    LED ASSIGNMENT:
+    LED_1 (RED) = timerRunning | LED_2 (GREEN) = remainingTime | LED_3 (RED) = RELAY_HEATER
 
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
@@ -34,9 +42,13 @@
 #define WIFI_PASS "foobar123"
 #define WEB_PORT 80
 
-// Relay Module
-#define RELAY_HEAT 33
-#define RELAY_FAN 14
+// LED, buzzer, & relay
+#define LED_1 23 // Red
+#define LED_2 19 // Green
+#define LED_3 18 // Red
+#define BUZZER 32 
+#define RELAY_HEAT 14
+#define RELAY_FAN 33
 
 // Sensor: DHT22 Temperature and Humidity
 #define DHT_PIN 25
@@ -48,12 +60,12 @@
 #define HX711_CALIBRATION 1500
 
 // Sensor: ACS712 (30A) Current Sensor
-#define ACS712_PIN 00 //TODO
+#define ACS712_PIN 16
 #define ACS712_VOLT 5.0
 #define ACS712_ADC 1023
 #define ACS712_mvPerA 66
 
 // Sensor: ZMPT101B Voltage Sensor
-#define ZMPT101B_PIN 00 //TODO
+#define ZMPT101B_PIN 17
 
 #endif

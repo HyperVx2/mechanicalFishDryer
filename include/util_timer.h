@@ -1,9 +1,11 @@
 #ifndef UTIL_TIMER
 #define UTIL_TIMER
 
+#include <Arduino.h>
 #include <Preferences.h>
 
 #include "constants.h"
+#include "sensors.h"
 
 extern unsigned long timerDuration, timerStartMillis;
 extern bool timerRunning;

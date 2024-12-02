@@ -1,11 +1,20 @@
 #include "sensors.h"
 
+int buzzCount = 0;
+bool buzzing = false;
+int buzzInterval = 0;
+int buzzTimes = 0;
+int buzzFrequency = 0;
+int buzzDuration = 0;
+
 float temperature, humidity, weight;
 float current, voltage;
 
+unsigned long buzz_lastTime;
 unsigned long dht_lastTime;
 unsigned long hx711_lastTime;
 unsigned long randSensor_lastTime;
+unsigned long printSensor_lastTime;
 
 uint32_t DHT_delayMS;
 
@@ -14,7 +23,7 @@ HX711_ADC hx711(HX711_DOUT, HX711_SCK);
 
 volatile boolean HX711_newDataReady;
 
-//interrupt routine:
+// (HX711) interrupt routine:
 void HX711_dataReadyISR() {
   if (hx711.update()) {
     HX711_newDataReady = true;
@@ -23,9 +32,18 @@ void HX711_dataReadyISR() {
 
 ACS712 ACS(ACS712_PIN, ACS712_VOLT, ACS712_ADC, ACS712_mvPerA);
 
-
+// Initialize the actuators, DHT22, and HX711
 bool beginSensors() {
     // Initialize actuators
+    pinMode(LED_1, OUTPUT);
+    pinMode(LED_2, OUTPUT);
+    pinMode(LED_3, OUTPUT);
+    pinMode(BUZZER, OUTPUT);
+
+    digitalWrite(LED_1, LOW);
+    digitalWrite(LED_2, LOW);
+    digitalWrite(LED_3, LOW);
+    
     pinMode(RELAY_HEAT, OUTPUT);
     pinMode(RELAY_FAN, OUTPUT);
     digitalWrite(RELAY_HEAT, HIGH);
@@ -60,6 +78,8 @@ bool beginSensors() {
     return true;
 }
 
+
+// Initialize ACS712 and ZMT101B
 bool beginSensors_2() {
     // Initialize ACS712
     ACS712 ACS(ACS712_PIN, ACS712_VOLT, ACS712_ADC, ACS712_mvPerA);
@@ -69,6 +89,32 @@ bool beginSensors_2() {
     Serial.print(". Noise mV: ");
     Serial.println(ACS.getNoisemV());
     return true;
+}
+
+void buzz_set(int frequency, int duration, int interval, int times) {
+    buzzFrequency = frequency;
+    buzzDuration = duration;
+    buzzInterval = interval;
+    buzzTimes = times;
+    buzzCount = 0;
+    buzzing = true;
+    buzz_lastTime = millis();
+}
+
+void buzz_loop() {
+    if (buzzing) {
+        unsigned long currentMillis = millis();
+        if (currentMillis - buzz_lastTime >= buzzInterval) {
+            buzz_lastTime = currentMillis;
+            buzzCount++;
+            if (buzzCount >= buzzTimes) {
+                buzzing = false;
+                noTone(BUZZER); // Ensure buzzer is off
+            } else {
+                tone(BUZZER, buzzFrequency, buzzDuration); // Continue buzzing
+            }
+        }
+    }
 }
 
 void readDHT() {
@@ -107,10 +153,12 @@ void setTareHX711() {
     hx711.tareNoDelay();
     if (hx711.getTareStatus() == true) {
         Serial.println("Tare complete");
-        //return true;
+        display_addNotification("Tare set");
+        buzz_set(1000, 1000, 100, 3);
     } else {
         Serial.println("Tare timeout, check MCU>HX711 wiring and pin designations");
-        //return false;
+        display_addNotification("Tare err");
+        buzz_set(500, 1000, 1000, 4);
     }
 }
 
@@ -120,9 +168,16 @@ void readACS712() {
 }
 
 void printSensors() {
-    Serial.print("Temp: "); Serial.println(temperature);
-    Serial.print("Humidity: "); Serial.println(humidity);
-    Serial.print("Weight: "); Serial.println(weight);
+    if (millis() > printSensor_lastTime + 3000) {
+        Serial.print("Temperature: "); Serial.print(temperature); Serial.println(" *C");
+        Serial.print("Humidity: "); Serial.print(humidity); Serial.println(" %");
+        Serial.print("Weight: "); Serial.print(weight); Serial.println(" g");
+        Serial.print("Current: "); Serial.print(current); Serial.println(" mA");
+        Serial.print("Voltage: "); Serial.print(voltage); Serial.println(" V");
+        Serial.println();
+
+        printSensor_lastTime = millis();
+    }
 }
 
 void debug_randSensor() { 

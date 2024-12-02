@@ -25,14 +25,12 @@ void card_0(AsyncWebServer *server) {
     // Route to set dryer status to TRUE
     server->on("/on0", HTTP_GET, [](AsyncWebServerRequest *request){
         setTareHX711();
-        display_addNotification("Tare set");
         request->send(LittleFS, "/index.html", String(), false, processor);
     });
 
     // Route to set dryer status to FALSE
     server->on("/off0", HTTP_GET, [](AsyncWebServerRequest *request){
         setTareHX711();
-        display_addNotification("Tare set");
         request->send(LittleFS, "/index.html", String(), false, processor);
     });
 
@@ -44,6 +42,7 @@ void card_1(AsyncWebServer *server) {
     server->on("/on1", HTTP_GET, [](AsyncWebServerRequest *request){
         digitalWrite(RELAY_HEAT, LOW);
         display_addNotification("Heater ON");
+        buzz_set(1000, 100, 100, 2);
         request->send(LittleFS, "/index.html", String(), false, processor);
     });
 
@@ -51,6 +50,7 @@ void card_1(AsyncWebServer *server) {
     server->on("/off1", HTTP_GET, [](AsyncWebServerRequest *request){
         digitalWrite(RELAY_HEAT, HIGH);
         display_addNotification("Heater OFF");
+        buzz_set(1000, 100, 100, 2);
         request->send(LittleFS, "/index.html", String(), false, processor);
     });
 }
@@ -61,6 +61,7 @@ void card_2(AsyncWebServer *server) {
     server->on("/on2", HTTP_GET, [](AsyncWebServerRequest *request){
         digitalWrite(RELAY_FAN, LOW);
         display_addNotification("Fan ON");
+        buzz_set(1000, 100, 100, 2);
         request->send(LittleFS, "/index.html", String(), false, processor);
     });
 
@@ -68,6 +69,7 @@ void card_2(AsyncWebServer *server) {
     server->on("/off2", HTTP_GET, [](AsyncWebServerRequest *request){
         digitalWrite(RELAY_FAN, HIGH);
         display_addNotification("Fan OFF");
+        buzz_set(1000, 100, 100, 2);
         request->send(LittleFS, "/index.html", String(), false, processor);
     });
 }

@@ -10,12 +10,16 @@
 #include <ACS712.h>
 
 #include "constants.h"
+#include "display_oled.h"
 
 extern float temperature, humidity, weight;
 extern float current, voltage;
 
 bool beginSensors();
 bool beginSensors_2();
+
+void buzz_set(int frequency, int duration, int interval, int times);
+void buzz_loop();
 
 void readDHT();
 void readHX711();
