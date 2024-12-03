@@ -11,7 +11,7 @@
 AUTO_SETUP_LOCALE=C.UTF-8
 
 # Keyboard layout e.g.: "gb" / "us" / "de" / "fr"
-AUTO_SETUP_KEYBOARD_LAYOUT=gb
+AUTO_SETUP_KEYBOARD_LAYOUT=us
 
 # Time zone e.g.: "Europe/London" / "America/New_York" | Full list: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 AUTO_SETUP_TIMEZONE=Asia/Manila
@@ -21,7 +21,7 @@ AUTO_SETUP_TIMEZONE=Asia/Manila
 # - If both Ethernet and WiFi are enabled, WiFi will take priority and Ethernet will be disabled.
 # - If using WiFi, please edit dietpi-wifi.txt to pre-enter credentials.
 AUTO_SETUP_NET_ETHERNET_ENABLED=1
-AUTO_SETUP_NET_WIFI_ENABLED=1
+AUTO_SETUP_NET_WIFI_ENABLED=0
 
 # WiFi country code: 2 capital letter value (e.g. GB US DE JP): https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 # - NB: This choice may be overridden if the WiFi access point sends a country code.
@@ -132,7 +132,7 @@ AUTO_SETUP_GLOBAL_PASSWORD=foobar123
 # - E.g. the following (without the leading "#") will install the LXDE desktop automatically on first boot:
 AUTO_SETUP_INSTALL_SOFTWARE_ID=23 # LXDE
 AUTO_SETUP_INSTALL_SOFTWARE_ID=60 # hostapd
-AUTO_SETUP_INSTALL_SOFTWARE_ID=63 #LinuxDash
+AUTO_SETUP_INSTALL_SOFTWARE_ID=63 # LinuxDash
 AUTO_SETUP_INSTALL_SOFTWARE_ID=74 # InfluxDB
 AUTO_SETUP_INSTALL_SOFTWARE_ID=74 # Grafana
 AUTO_SETUP_INSTALL_SOFTWARE_ID=122 # Node-RED
@@ -236,7 +236,7 @@ CONFIG_APT_DEBIAN_MIRROR=https://deb.debian.org/debian/
 # - To use another public NTP pool, see the full list at: https://www.ntppool.org/zone/@
 #   Use the pool domain without leading integer and dot (without "0."), like "debian.pool.ntp.org", "pool.ntp.org" or "uk.pool.ntp.org".
 # - You can also use a custom IP address, hostname or any combination of space-separated IP addresses, hostnames and NTP pool domains.
-CONFIG_NTP_MIRROR=default
+CONFIG_NTP_MIRROR=gateway
 
 #------------------------------------------------------------------------------------------------------
 ##### DietPi-Software settings #####
@@ -246,7 +246,7 @@ CONFIG_NTP_MIRROR=default
 #	0=Allow password logins for all users, including root
 #	root=Disable password login for root user only
 #	1=Disable password logins for all users, assure that you have a valid SSH key applied!
-SOFTWARE_DISABLE_SSH_PASSWORD_LOGINS=1
+SOFTWARE_DISABLE_SSH_PASSWORD_LOGINS=root
 
 # VNC Server
 SOFTWARE_VNCSERVER_WIDTH=1280
