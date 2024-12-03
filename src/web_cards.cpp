@@ -5,29 +5,6 @@ extern AsyncWebServer server();
 // Json varaible to hold sensor readings
 JSONVar readings;
 
-// Note that server is a pointer entering serve(),
-// it doesn't need to be derefenced again.
-void serve(AsyncWebServer *server) {
-    // Home Page
-    home(server);
-
-    // Card 0: Set tare
-    // Route to set dryer status
-    card_0(server);
-
-    // Card 1: Relay heater ON/OFF
-    // Route to relay pin ON or OFF
-    card_1(server);
-
-    // Card 2: Relay fan ON/OFF
-    // Route to relay pin ON or OFF
-    card_2(server);
-
-    // Card 3: Sensor readings
-    // This will read three sensor readings
-    card_3(server);
-}
-
 // Get actuators state
 String processor(const String& var) {
     String relayHeatState;
@@ -141,17 +118,6 @@ void card_2(AsyncWebServer *server) {
     });
 }
 
-// Get Sensor Readings and return JSON object
-String getSensorReadings(){
-    readings["millis"] = String(millis());
-    readings["temperature"] = String(temperature);
-    readings["humidity"] =  String(humidity);
-    readings["weight"] = String(weight);
-    
-    String jsonString = JSON.stringify(readings);
-    return jsonString;
-}
-
 void card_3(AsyncWebServer *server) {
 
     // Send a GET request to /slider?value=<inputMessage>
@@ -161,4 +127,27 @@ void card_3(AsyncWebServer *server) {
         request->send(200, "application/json", json);
         json = String();
     });
+}
+
+// Note that server is a pointer entering serve(),
+// it doesn't need to be derefenced again.
+void serve(AsyncWebServer *server) {
+    // Home Page
+    home(server);
+
+    // Card 0: Set tare
+    // Route to set dryer status
+    card_0(server);
+
+    // Card 1: Relay heater ON/OFF
+    // Route to relay pin ON or OFF
+    card_1(server);
+
+    // Card 2: Relay fan ON/OFF
+    // Route to relay pin ON or OFF
+    card_2(server);
+
+    // Card 3: Sensor readings
+    // This will read three sensor readings
+    card_3(server);
 }
