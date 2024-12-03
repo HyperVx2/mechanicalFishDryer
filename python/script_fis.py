@@ -123,15 +123,15 @@ class DryingSession:
     def log(self, message):
         logging.info(message)
 
-    def insert_sensor_reading(self, temperature, humidity, weight, drying_time_left, millis):
+    def insert_sensor_reading(self, temperature, humidity, weight, drying_time_left):
         """Log sensor readings into the SQLite database."""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO SensorReadings (timestamp, temperature, humidity, weight, drying_time_left, millis)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (timestamp, temperature, humidity, weight, drying_time_left, millis))
+            INSERT INTO SensorReadings (timestamp, temperature, humidity, weight, drying_time_left)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (timestamp, temperature, humidity, weight, drying_time_left))
         conn.commit()
         conn.close()
 
@@ -167,28 +167,23 @@ class DryingSession:
     def run_fuzzy_drying(self):
         """Perform fuzzy logic-based drying session with humidity control."""
         while self.session_active:
-            time.sleep(5)
+            time.sleep(1)  # Sleep for 1 second
             readings = self.sensor_controller.fetch_readings()
             if readings and "humidity" in readings:
                 humidity = float(readings["humidity"])
                 weight = float(readings.get("weight", 0))  # Assume weight in readings
-                millis = int(readings.get("millis", 0))  # New millis value from Arduino
                 self.simulator.input['humidity'] = humidity
                 self.simulator.compute()
                 additional_time = self.simulator.output['drying_time']
                 self.log(f"Humidity {humidity}%, additional drying time {additional_time} minutes")
-
-                # Insert the reading including millis to the database
-                self.insert_sensor_reading(readings.get("temperature"), humidity, weight, additional_time, millis)
-
+                # Insert the reading including timestamp to the database
+                self.insert_sensor_reading(readings.get("temperature"), humidity, weight, additional_time)
                 if humidity <= 35:
                     self.low_humidity_repeats += 1
                 else:
                     self.low_humidity_repeats = 0
-
                 if self.low_humidity_repeats >= 3:
                     self.end()
-
                 time.sleep(additional_time * 60)
 
     def run(self):
