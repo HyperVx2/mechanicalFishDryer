@@ -1,15 +1,7 @@
-/*********
-  Rui Santos & Sara Santos - Random Nerd Tutorials
-  Complete instructions at https://RandomNerdTutorials.com/esp32-wi-fi-manager-asyncwebserver/
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files.
-  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*********/
-#include "wifi_manager.h"
+#include "web_wifiManager.h"
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
-
-// Create an Event Source on /events
 AsyncEventSource events("/events");
 
 // Search for parameter in HTTP POST request
@@ -32,13 +24,15 @@ const char* gatewayPath = "/gateway.txt";
 
 IPAddress localIP;
 
-// Set your Gateway IP address
+// Set Gateway IP address
 IPAddress localGateway;
 IPAddress subnet(255, 255, 0, 0);
 
 // Timer variables
 unsigned long previousMillis = 0;
 const long interval = 10000;  // interval to wait for Wi-Fi connection (milliseconds)
+
+boolean restart = false;
 
 // Initialize LittleFS
 void initLittleFS() {
@@ -93,79 +87,32 @@ bool initWiFi() {
   localIP.fromString(ip.c_str());
   localGateway.fromString(gateway.c_str());
 
-
   if (!WiFi.config(localIP, localGateway, subnet)){
     Serial.println("STA Failed to configure");
     return false;
   }
   WiFi.begin(ssid.c_str(), pass.c_str());
+
   Serial.println("Connecting to WiFi...");
-
-  unsigned long currentMillis = millis();
-  previousMillis = currentMillis;
-
-  while(WiFi.status() != WL_CONNECTED) {
-    currentMillis = millis();
-    if (currentMillis - previousMillis >= interval) {
-      Serial.println("Failed to connect.");
-      return false;
-    }
+  delay(20000);
+  if(WiFi.status() != WL_CONNECTED) {
+    Serial.println("Failed to connect.");
+    return false;
   }
 
   Serial.println(WiFi.localIP());
   return true;
 }
 
-void setupWebserver() {
+void setupSSID(){
+  // Web Server Root URL
+  server.on("/conn", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(LittleFS, "/wifimanager.html", "text/html"); });
 
-  initLittleFS();
-  
-  // Load values saved in LittleFS
-  ssid = readFile(LittleFS, ssidPath);
-  pass = readFile(LittleFS, passPath);
-  ip = readFile(LittleFS, ipPath);
-  gateway = readFile (LittleFS, gatewayPath);
-  Serial.println(ssid);
-  Serial.println(pass);
-  Serial.println(ip);
-  Serial.println(gateway);
+  server.serveStatic("/conn", LittleFS, "/");
 
-  events.onConnect([](AsyncEventSourceClient *client){
-      if(client->lastId()){
-        Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
-      }
-      // send event with message "hello!", id current millis
-      // and set reconnect delay to 1 second
-      client->send("hello!", NULL, millis(), 10000);
-    });
-    server.addHandler(&events);
-    
-  serve(&server);
-
-  if(initWiFi()) {
-    server.begin();
-  }
-  else {
-    // Connect to Wi-Fi network with SSID and password
-    Serial.println("Setting AP (Access Point)");
-    // NULL sets an open Access Point
-    WiFi.softAP(WIFI_SSID, WIFI_PASS);
-
-    IPAddress IP = WiFi.softAPIP();
-    Serial.print("AP IP address: ");
-    Serial.println(IP); 
-
-    ssid = WIFI_SSID;
-    ip = IP.toString();
-
-    // Web Server Root URL
-    server.on("/conn", HTTP_GET, [](AsyncWebServerRequest *request){
-      request->send(LittleFS, "/wifimanager.html", "text/html");
-    });
-    
-    server.serveStatic("/", LittleFS, "/");
-    
-    server.on("/conn", HTTP_POST, [](AsyncWebServerRequest *request) {
+  server.on("/conn", HTTP_POST, [](AsyncWebServerRequest *request)
+            {
       int params = request->params();
       for(int i=0;i<params;i++){
         const AsyncWebParameter* p = request->getParam(i);
@@ -205,18 +152,64 @@ void setupWebserver() {
           //Serial.printf("POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
         }
       }
-      request->send(200, "text/plain", "Done. ESP will restart, connect to your router and go to IP address: " + ip);
-      delay(3000);
-      ESP.restart();
-    });
+      restart = true;
+      request->send(200, "text/plain", "Done. ESP will restart, connect to your router and go to IP address: " + ip); });
+}
+
+void beginWifiManager() {
+  initLittleFS();
+  
+  // Load values saved in LittleFS
+  ssid = readFile(LittleFS, ssidPath);
+  pass = readFile(LittleFS, passPath);
+  ip = readFile(LittleFS, ipPath);
+  gateway = readFile (LittleFS, gatewayPath);
+  Serial.println(ssid);
+  Serial.println(pass);
+  Serial.println(ip);
+  Serial.println(gateway);
+
+  setupSSID();
+  serve(&server);
+
+  // Event Source
+  events.onConnect([](AsyncEventSourceClient *client){
+    if(client->lastId()){
+      Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
+    }
+    // send event with message "hello!", id current millis
+    client->send("hello!", NULL, millis());
+  });
+  server.addHandler(&events);
+
+  if(initWiFi()) {
+    server.begin();
+  }
+  else {
+    // Connect to Wi-Fi network with SSID and password
+    Serial.println("Setting AP (Access Point)");
+    // NULL sets an open Access Point
+    WiFi.softAP(WIFI_SSID, WIFI_PASS);
+
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("AP IP address: ");
+    Serial.println(IP);
+
+    ssid = WIFI_SSID; ip = IP.toString();
+    
     server.begin();
   }
 }
 
-void web_sendEvent() {
-    if (millis() > previousMillis + interval) {
-      events.send("ping",NULL,millis());
-      events.send(getSensorReadings().c_str(), "new_readings", millis());
-      previousMillis = millis();
-    }
+void loopWifiManager() {
+  if (restart){
+    delay(5000);
+    ESP.restart();
+  }
+
+  if ((millis() - previousMillis) > interval) {
+    events.send(getSensorReadings().c_str(),"new_readings" ,millis());
+
+    previousMillis = millis();
+  }
 }

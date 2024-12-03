@@ -2,11 +2,12 @@
 
 // Project includes
 #include "constants.h"
-#include "util_timer.h"
-#include "sensors.h"
-#include "wifi_manager.h"
+#include "web_wifiManager.h"
 #include "web_cards.h"
-#include "display_oled.h"
+#include "util_timer.h"
+#include "gpio_sensors.h"
+#include "gpio_actuators.h"
+#include "util_display.h"
 
 void setup() {
     Serial.begin(SERIAL_BAUD); delay(10);
@@ -14,6 +15,13 @@ void setup() {
 
     Serial.println("Project SMFDS [ALPHA]");Serial.println("Starting...");
 
+    if (!beginActuators()) {
+        Serial.println("Error initializing actuators");
+    }
+    else {
+        Serial.println("Actuators initialized");
+    }
+    
     if (!beginSensors()) {
         Serial.println("Error initializing sensors");
     }
@@ -21,13 +29,14 @@ void setup() {
         Serial.println("Sensors initialized");
     }
 
-    setupWebserver();
-    display_begin();
+    beginWifiManager();
+    beginDisplay();
 
     buzz_set(1000, 100, 100, 4);
 }
 
 void loop() {
+    loopWifiManager();
     buzz_loop();
 
     static int rCount = 0;
@@ -57,7 +66,6 @@ void loop() {
     //debug_randSensor();
 
     display_loop();
-    web_sendEvent();
     // Serial
     printSensors();
 }

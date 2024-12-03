@@ -2,8 +2,75 @@
 
 extern AsyncWebServer server();
 
-// Json Variable to Hold Sensor Readings
+// Json varaible to hold sensor readings
 JSONVar readings;
+
+// Note that server is a pointer entering serve(),
+// it doesn't need to be derefenced again.
+void serve(AsyncWebServer *server) {
+    // Home Page
+    home(server);
+
+    // Card 0: Set tare
+    // Route to set dryer status
+    card_0(server);
+
+    // Card 1: Relay heater ON/OFF
+    // Route to relay pin ON or OFF
+    card_1(server);
+
+    // Card 2: Relay fan ON/OFF
+    // Route to relay pin ON or OFF
+    card_2(server);
+
+    // Card 3: Sensor readings
+    // This will read three sensor readings
+    card_3(server);
+}
+
+// Get actuators state
+String processor(const String& var) {
+    String relayHeatState;
+    String relayFanState;
+
+    //debug* Serial.println(var);
+
+    if (var == "RELAYHEAT") {
+        if (digitalRead(RELAY_HEAT)){
+            relayHeatState = "OFF";
+        }
+        else {
+            relayHeatState = "ON";
+        }
+        Serial.print(relayHeatState);
+        return relayHeatState;
+    }
+
+    // Card 2 Processing
+    if (var == "RELAYFAN") {
+        if (digitalRead(RELAY_FAN)){
+            relayFanState = "OFF";
+        }
+        else {
+            relayFanState = "ON";
+        }
+        Serial.print(relayFanState);
+        return relayFanState;
+    }
+}
+
+// Get sensor readings and return JSON object
+String getSensorReadings() {
+    readings["timeRemaining"] = getRemainingTime();
+    readings["temperature"] = temperature;
+    readings["humidity"] = humidity;
+    readings["weight"] = weight;
+    readings["relayHeat"] = digitalRead(RELAY_HEAT);
+    readings["relayFan"] = digitalRead(RELAY_FAN);
+
+    String jsonString = JSON.stringify(readings);
+    return jsonString;
+}
 
 void home(AsyncWebServer *server) {
     // Route for root / web page

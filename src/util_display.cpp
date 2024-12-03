@@ -1,4 +1,4 @@
-#include "display_oled.h"
+#include "util_display.h"
 
 Adafruit_SH1106 display(-1);
 
@@ -81,7 +81,7 @@ String formatTime(unsigned long duration) {
 }
 
 
-void display_begin() {
+void beginDisplay() {
     display.begin(SH1106_I2C_ADDRESS, 0x3C); // Default I2C address
     display.display();
     delay(2000); // Show splash screen

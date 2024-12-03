@@ -5,7 +5,7 @@
 #include <Preferences.h>
 
 #include "constants.h"
-#include "sensors.h"
+#include "gpio_sensors.h"
 
 extern unsigned long timerDuration, timerStartMillis;
 extern bool timerRunning;

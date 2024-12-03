@@ -1,5 +1,5 @@
-#ifndef SENSORS_H
-#define SENSORS_H
+#ifndef GPIO_SENSORS
+#define GPIO_SENSORS
 
 #include <Arduino.h>
 #include <Adafruit_Sensor.h>
@@ -10,16 +10,14 @@
 #include <ACS712.h>
 
 #include "constants.h"
-#include "display_oled.h"
+#include "util_display.h"
+#include "gpio_actuators.h"
 
 extern float temperature, humidity, weight;
 extern float current, voltage;
 
 bool beginSensors();
 bool beginSensors_2();
-
-void buzz_set(int frequency, int duration, int interval, int times);
-void buzz_loop();
 
 void readDHT();
 void readHX711();
