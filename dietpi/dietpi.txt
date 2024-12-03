@@ -83,7 +83,7 @@ AUTO_SETUP_SSH_SERVER_INDEX=-1
 # - Public key(s) for "root" and "dietpi" users, which will be added to ~/.ssh/authorized_keys
 # - Use the same setting multiple times for adding multiple keys.
 # - See SOFTWARE_DISABLE_SSH_PASSWORD_LOGINS below for disabling SSH password logins.
-#AUTO_SETUP_SSH_PUBKEY=ssh-ed25519 AAAAAAAA111111111111BBBBBBBBBBBB222222222222cccccccccccc333333333333 mySSHkey
+AUTO_SETUP_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPR2E+EDi6OpbQUh356VaQqD3sOusbc1Uz0JA0Zs5tAd chada@CHADSTER-PC
 
 # Logging mode choice: 0=none/custom | -1=RAMlog hourly clear | -2=RAMlog hourly save to disk + clear | -3=Rsyslog + Logrotate
 AUTO_SETUP_LOGGING_INDEX=-1
@@ -130,11 +130,14 @@ AUTO_SETUP_GLOBAL_PASSWORD=foobar123
 # - Add as many entries as you wish, one each line.
 # - DietPi will automatically install all dependencies, like ALSA/X11 for desktops etc.
 # - E.g. the following (without the leading "#") will install the LXDE desktop automatically on first boot:
-AUTO_SETUP_INSTALL_SOFTWARE_ID=
-23
-134
-162
-185
+AUTO_SETUP_INSTALL_SOFTWARE_ID=23 # LXDE
+AUTO_SETUP_INSTALL_SOFTWARE_ID=60 # hostapd
+AUTO_SETUP_INSTALL_SOFTWARE_ID=63 #LinuxDash
+AUTO_SETUP_INSTALL_SOFTWARE_ID=74 # InfluxDB
+AUTO_SETUP_INSTALL_SOFTWARE_ID=74 # Grafana
+AUTO_SETUP_INSTALL_SOFTWARE_ID=122 # Node-RED
+AUTO_SETUP_INSTALL_SOFTWARE_ID=123 # Mosquitto
+AUTO_SETUP_INSTALL_SOFTWARE_ID=130 # Python 3 pip
 
 #------------------------------------------------------------------------------------------------------
 ##### Misc DietPi program settings #####
@@ -243,7 +246,7 @@ CONFIG_NTP_MIRROR=default
 #	0=Allow password logins for all users, including root
 #	root=Disable password login for root user only
 #	1=Disable password logins for all users, assure that you have a valid SSH key applied!
-SOFTWARE_DISABLE_SSH_PASSWORD_LOGINS=0
+SOFTWARE_DISABLE_SSH_PASSWORD_LOGINS=1
 
 # VNC Server
 SOFTWARE_VNCSERVER_WIDTH=1280
@@ -260,9 +263,9 @@ SOFTWARE_OWNCLOUD_DATADIR=/mnt/dietpi_userdata/owncloud_data
 SOFTWARE_NEXTCLOUD_DATADIR=/mnt/dietpi_userdata/nextcloud_data
 
 # WiFi Hotspot
-SOFTWARE_WIFI_HOTSPOT_SSID=DietPi-HotSpot
+SOFTWARE_WIFI_HOTSPOT_SSID=SMFDS_rPi4
 # - Key requires a minimum of 8 characters
-SOFTWARE_WIFI_HOTSPOT_KEY=dietpihotspot
+SOFTWARE_WIFI_HOTSPOT_KEY=foobar123
 # - 2.4 GHz WiFi channel, not effective if 5 GHz frequency is enabled
 SOFTWARE_WIFI_HOTSPOT_CHANNEL=3
 # - 802.11n/WiFi 4, 802.11ac/WiFi 5, 802.11ax/WiFi 6 and 5 GHz support: Note that your WiFi adapter must support it!
