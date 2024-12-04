@@ -154,7 +154,7 @@ void display_main() {
     if (isNotif) {
         text = notif_text;
     } else if (!timerRunning && !isNotif) {
-        text = "SYS IDLE";
+        text = "READY";
     } else if (timerRunning && !isNotif) {
         unsigned long remainingTime = getRemainingTime();
         text = formatTime(remainingTime);

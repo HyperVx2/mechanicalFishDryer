@@ -6,7 +6,6 @@
 #include <DHT.h>
 #include <DHT_U.h>
 #include <HX711_ADC.h>
-#include <EEPROM.h>
 #include <ACS712.h>
 
 #include "constants.h"

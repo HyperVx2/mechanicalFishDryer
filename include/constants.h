@@ -7,15 +7,17 @@
     RELAY_HEATER:   D14 | RELAY_FAN:        D33
     OLED_SCL:       D22 | OLED_SDA:         D21
     DHT22:          D25 | HX711_DT:         D27 | HX711_SCK:    D26
-    ACS712:         D16 | ZMPT101B:         D17
+    ACS712:         D35 | ZMPT101B:         D34
 
     LED ASSIGNMENT:
     LED_1 (RED) = timerRunning | LED_2 (GREEN) = remainingTime | LED_3 (RED) = RELAY_HEATER
 
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
-    Ref 3 (scheduler): https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
-    Ref 4 (dashboard): https://github.com/lkoepsel/Dashboard
+    Ref 3 (acs712): https://github.com/RobTillaart/ACS712
+    Ref 4 (zmpt101b): https://github.com/r3mko/ZMPT101B/
+    Ref 5 (scheduler): https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
+    Ref 6 (dashboard): https://github.com/lkoepsel/Dashboard
 */
 
 #ifndef CONSTANTS_H
@@ -31,11 +33,10 @@
 #define DELAY_MS 1000
 
 // EEPROM Addresses
-#define TIMER_START_ADDR 0
-#define TIMER_DURATION_ADDR (TIMER_START_ADDR + sizeof(unsigned long))
+#define TIMER_DURATION_ADDR 0
 #define TIMER_REMAINING_ADDR (TIMER_DURATION_ADDR + sizeof(unsigned long))
 #define SYSTEM_IDLE_ADDR (TIMER_REMAINING_ADDR + sizeof(unsigned long))
-#define HX711_CALVAL_ADDR (SYSTEM_IDLE_ADDR + sizeof(bool))
+#define TIMER_START_ADDR (SYSTEM_IDLE_ADDR + sizeof(bool))
 
 // WiFi and Web Server
 #define WIFI_SSID "SMFDS_ESP32"
@@ -60,12 +61,12 @@
 #define HX711_CALIBRATION 1500
 
 // Sensor: ACS712 (30A) Current Sensor
-#define ACS712_PIN 16
+#define ACS712_PIN 34
 #define ACS712_VOLT 5.0
 #define ACS712_ADC 1023
 #define ACS712_mvPerA 66
 
 // Sensor: ZMPT101B Voltage Sensor
-#define ZMPT101B_PIN 17
+#define ZMPT101B_PIN 35
 
 #endif

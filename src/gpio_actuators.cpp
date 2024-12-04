@@ -2,10 +2,7 @@
 
 int buzzCount = 0;
 bool buzzing = false;
-int buzzInterval = 0;
-int buzzTimes = 0;
-int buzzFrequency = 0;
-int buzzDuration = 0;
+int buzzInterval, buzzTimes, buzzFrequency, buzzDuration;
 
 unsigned long buzz_lastTime;
 
@@ -16,11 +13,6 @@ bool beginActuators() {
     pinMode(LED_2, OUTPUT);
     pinMode(LED_3, OUTPUT);
     pinMode(BUZZER, OUTPUT);
-
-    // Set LEDs as off 
-    digitalWrite(LED_1, LOW);
-    digitalWrite(LED_2, LOW);
-    digitalWrite(LED_3, LOW);
     
     // Initialize relay modules and set to off
     pinMode(RELAY_HEAT, OUTPUT);
@@ -49,7 +41,7 @@ void buzz_loop() {
         if (currentMillis - buzz_lastTime >= buzzInterval) {
             buzz_lastTime = currentMillis;
             buzzCount++;
-            if (buzzCount >= buzzTimes) {
+            if (buzzCount > buzzTimes) {
                 buzzing = false;
                 noTone(BUZZER); // Ensure buzzer is off
             } else {

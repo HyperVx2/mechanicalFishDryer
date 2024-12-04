@@ -1,6 +1,7 @@
 #include "gpio_sensors.h"
 
 float temperature, humidity, weight;
+float calibrationValue = HX711_CALIBRATION;
 float current, voltage;
 
 unsigned long dht_lastTime;
@@ -18,7 +19,7 @@ volatile boolean HX711_newDataReady;
 // (HX711) interrupt routine:
 void HX711_dataReadyISR() {
   if (hx711.update()) {
-    HX711_newDataReady = true;
+    HX711_newDataReady = 1;
   }
 }
 
@@ -34,13 +35,9 @@ bool beginSensors() {
     DHT_delayMS = DHTsensor.min_delay / 1000;
 
     // initialize HX711
-    float calibrationValue = HX711_CALIBRATION;
-    EEPROM.begin(512);
-    EEPROM.get(HX711_CALVAL_ADDR, calibrationValue); // Fetch the value from eeprom
-
     hx711.begin();
     unsigned long stabilizingtime = 2000; // tare preciscion can be improved by adding a few seconds of stabilizing time
-    boolean _tare = false; //set this to false if you don't want tare to be performed in the next step
+    boolean _tare = true; //set this to false if you don't want tare to be performed in the next step
     hx711.start(stabilizingtime, _tare);
     if (hx711.getTareTimeoutFlag()) {
         Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
@@ -94,23 +91,20 @@ void readHX711() {
     if (HX711_newDataReady) {
         if (millis() > hx711_lastTime + DELAY_MS) {
         weight = hx711.getData();
-        HX711_newDataReady = false;
+        HX711_newDataReady = 0;
         hx711_lastTime = millis();
         }
+    }
+
+    if (hx711.getTareStatus() == true) {
+        Serial.println("Tare complete");
+        display_addNotification("Tare set");
+        buzz_set(1000, 500, 1000, 1);
     }
 }
 
 void setTareHX711() {
     hx711.tareNoDelay();
-    if (hx711.getTareStatus() == true) {
-        Serial.println("Tare complete");
-        display_addNotification("Tare set");
-        buzz_set(1000, 1000, 100, 3);
-    } else {
-        Serial.println("Tare timeout, check MCU>HX711 wiring and pin designations");
-        display_addNotification("Tare err");
-        buzz_set(500, 1000, 1000, 4);
-    }
 }
 
 void readACS712() {
