@@ -12,10 +12,10 @@ import os
 # Constants
 BASE_URL = "http://192.168.4.1"
 READINGS_URL = f"{BASE_URL}/readings"
-HEATER_ON_URL = f"{BASE_URL}/on2"
-HEATER_OFF_URL = f"{BASE_URL}/off2"
-FAN_ON_URL = f"{BASE_URL}/on1"
-FAN_OFF_URL = f"{BASE_URL}/off1"
+HEATER_ON_URL = f"{BASE_URL}/on1"
+HEATER_OFF_URL = f"{BASE_URL}/off1"
+FAN_ON_URL = f"{BASE_URL}/on2"
+FAN_OFF_URL = f"{BASE_URL}/off2"
 SPECIAL_TRIGGER_URL = f"{BASE_URL}/on0"  # New URL for 't' trigger
 DB_FILE = "drying_session.db"
 TIMEOUT = 5
@@ -172,18 +172,21 @@ class DryingSession:
             if readings and "humidity" in readings:
                 humidity = float(readings["humidity"])
                 weight = float(readings.get("weight", 0))  # Assume weight in readings
+                temperature = readings.get("temperature")
                 self.simulator.input['humidity'] = humidity
                 self.simulator.compute()
                 additional_time = self.simulator.output['drying_time']
+                self.log(f"Sensor Readings - Temperature: {temperature}, Humidity: {humidity}%, Weight: {weight}")
                 self.log(f"Humidity {humidity}%, additional drying time {additional_time} minutes")
                 # Insert the reading including timestamp to the database
-                self.insert_sensor_reading(readings.get("temperature"), humidity, weight, additional_time)
+                self.insert_sensor_reading(temperature, humidity, weight, additional_time)
                 if humidity <= 35:
                     self.low_humidity_repeats += 1
                 else:
                     self.low_humidity_repeats = 0
                 if self.low_humidity_repeats >= 3:
                     self.end()
+                self.log(f"Remaining drying time: {additional_time} minutes")
                 time.sleep(additional_time * 60)
 
     def run(self):
