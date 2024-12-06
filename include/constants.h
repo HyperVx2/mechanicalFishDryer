@@ -58,7 +58,7 @@
 // Sensor: HX711 Weight Sensor Amplifier
 #define HX711_DOUT 27
 #define HX711_SCK 26
-#define HX711_CALIBRATION 1500
+#define HX711_CALIBRATION 250
 
 // Sensor: ACS712 (30A) Current Sensor
 #define ACS712_PIN 34

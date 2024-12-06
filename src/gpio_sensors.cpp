@@ -114,11 +114,11 @@ void readACS712() {
 
 void printSensors() {
     if (millis() > printSensor_lastTime + 3000) {
-        Serial.print("Temperature: "); Serial.print(temperature); Serial.println(" *C");
-        Serial.print("Humidity: "); Serial.print(humidity); Serial.println(" %");
-        Serial.print("Weight: "); Serial.print(weight); Serial.println(" g");
-        Serial.print("Current: "); Serial.print(current); Serial.println(" mA");
-        Serial.print("Voltage: "); Serial.print(voltage); Serial.println(" V");
+        Serial.print(">temperature:"); Serial.println(temperature);
+        Serial.print(">humidity:"); Serial.println(humidity);
+        Serial.print(">weight:"); Serial.println(weight);
+        Serial.print(">current:"); Serial.println(current);
+        Serial.print(">voltage:"); Serial.println(voltage);
         Serial.println();
 
         printSensor_lastTime = millis();
