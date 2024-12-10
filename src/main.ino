@@ -11,10 +11,12 @@
 
 void setup() {
     Serial.begin(SERIAL_BAUD); delay(10);
+    Serial.println("Project SMFDS [ALPHA]");Serial.println("Starting...");
+    
+    beginWifiManager();
     loadTimerState();
 
-    Serial.println("Project SMFDS [ALPHA]");Serial.println("Starting...");
-
+    // initialize sensors and actuators
     if (!beginActuators()) {
         Serial.println("Error initializing actuators");
     }
@@ -22,24 +24,24 @@ void setup() {
         Serial.println("Actuators initialized");
     }
     
-    if (!beginSensors()) {
+    if (!beginSensors() && !beginSensors_pow()) {
         Serial.println("Error initializing sensors");
     }
     else {
         Serial.println("Sensors initialized");
     }
-
-    beginWifiManager();
+    
     beginDisplay();
 
-    buzz_set(1000, 100, 100, 4);
+    setupBuzz(1000, 100, 250, 3); // Buzz to indicate startup
 }
 
 void loop() {
     loopWifiManager();
-    buzz_loop();
+    loopBuzz();
 
     static int rCount = 0;
+    bool opt = 0;
 
     if (Serial.available()) {
         char ch = Serial.read();
@@ -55,17 +57,23 @@ void loop() {
             resetTimer();
         } else if (ch == 't') {
             setTareHX711();
+        } else if (ch == 'c') {
+            opt = !opt;
         }
         else {
             rCount = 0; // Reset the count if any other character is received
         }
     }
 
-    readDHT(); 
-    readHX711();
-    //debug_randSensor();
+    if (Serial) {
+        //debug
+        debug_randSensor();
+        if (opt) printSensors();
+    
+    } else { 
+        readSensors();
+        readPower();
+    }
 
     display_loop();
-    // Serial
-    printSensors();
 }

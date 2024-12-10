@@ -1,8 +1,8 @@
 #include "gpio_sensors.h"
 
-float temperature, humidity, weight;
 float calibrationValue = HX711_CALIBRATION;
-float current, voltage;
+float temperature, humidity, weight;
+float current, voltage, power;
 
 unsigned long dht_lastTime;
 unsigned long hx711_lastTime;
@@ -13,6 +13,8 @@ uint32_t DHT_delayMS;
 
 DHT_Unified dht(DHT_PIN, DHT_TYPE);
 HX711_ADC hx711(HX711_DOUT, HX711_SCK);
+ACS712 ACS(ACS712_PIN, ACS712_VOLT, ACS712_ADC, ACS712_mvPerA);
+ZMPT101B voltageSensor(ZMPT101B_PIN);
 
 volatile boolean HX711_newDataReady;
 
@@ -22,8 +24,6 @@ void HX711_dataReadyISR() {
     HX711_newDataReady = 1;
   }
 }
-
-ACS712 ACS(ACS712_PIN, ACS712_VOLT, ACS712_ADC, ACS712_mvPerA);
 
 // Initialize DHT22 and HX711
 bool beginSensors() {
@@ -52,22 +52,24 @@ bool beginSensors() {
     return true;
 }
 
-
 // Initialize ACS712 and ZMT101B
-bool beginSensors_2() {
+bool beginSensors_pow() {
     // Initialize ACS712
-    ACS712 ACS(ACS712_PIN, ACS712_VOLT, ACS712_ADC, ACS712_mvPerA);
     ACS.autoMidPoint();
     Serial.print("MidPoint: ");
     Serial.print(ACS.getMidPoint());
     Serial.print(". Noise mV: ");
     Serial.println(ACS.getNoisemV());
+
+    // Initialize ZMT101B
+    voltageSensor.calibrate();
     return true;
 }
 
-void readDHT() {
+// Read DHT22 and HX711 data
+void readSensors() {
     sensors_event_t event;
-    if (millis() > dht_lastTime + DHT_delayMS) {
+    if (millis() > dht_lastTime + DELAY_MS) {
         // Get temperature event and print its value.
         dht.temperature().getEvent(&event);
         if (isnan(event.temperature)) {
@@ -84,10 +86,8 @@ void readDHT() {
         }
             dht_lastTime = millis();
     }
-}
 
-void readHX711() {
-    // get smoothed value from the dataset:
+    // get smoothed value from the dataset
     if (HX711_newDataReady) {
         if (millis() > hx711_lastTime + DELAY_MS) {
         weight = hx711.getData();
@@ -99,26 +99,64 @@ void readHX711() {
     if (hx711.getTareStatus() == true) {
         Serial.println("Tare complete");
         display_addNotification("Tare set");
-        buzz_set(1000, 500, 1000, 1);
+        setupBuzz(500, 100, 200, 2);
     }
 }
 
+// Set tare for HX711
 void setTareHX711() {
     hx711.tareNoDelay();
 }
 
-void readACS712() {
-    current = ACS.mA_AC();
-    voltage = ACS.getMidPoint();
+// Define states for the state machine
+enum ReadACS712State {
+    IDLE,
+    READING,
+    DONE
+};
+
+ReadACS712State readState = IDLE;
+float average = 0;
+int readCount = 0;
+unsigned long startTime = 0;
+const int numReadings = 100;
+
+void readPower() {
+    switch (readState) {
+        case IDLE:
+            average = 0;
+            readCount = 0;
+            startTime = millis();
+            readState = READING;
+            break;
+
+        case READING:
+            if (readCount < numReadings) {
+                average += ACS.mA_AC();
+                readCount++;
+            } else {
+                current = average / numReadings;
+                voltage = voltageSensor.getVoltageAC();
+                power = current * voltage;
+                readState = DONE;
+            }
+            break;
+
+        case DONE:
+            // Reading is complete, reset state to IDLE for next call
+            readState = IDLE;
+            break;
+    }
 }
 
 void printSensors() {
     if (millis() > printSensor_lastTime + 3000) {
-        Serial.print(">temperature:"); Serial.println(temperature);
-        Serial.print(">humidity:"); Serial.println(humidity);
-        Serial.print(">weight:"); Serial.println(weight);
-        Serial.print(">current:"); Serial.println(current);
-        Serial.print(">voltage:"); Serial.println(voltage);
+        Serial.print(">t:"); Serial.println(temperature);
+        Serial.print(">h:"); Serial.println(humidity);
+        Serial.print(">w:"); Serial.println(weight);
+        Serial.print(">c:"); Serial.println(current);
+        Serial.print(">v:"); Serial.println(voltage);
+        Serial.print(">p:"); Serial.println(power);
         Serial.println();
 
         printSensor_lastTime = millis();
@@ -130,6 +168,9 @@ void debug_randSensor() {
         temperature = random(30, 80);
         humidity = random(30, 99);
         weight = random(-120, 1200);
+        current = 30;
+        voltage = 230;
+        power = current * voltage;
         randSensor_lastTime = millis();
     }
 }

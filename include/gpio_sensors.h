@@ -7,19 +7,20 @@
 #include <DHT_U.h>
 #include <HX711_ADC.h>
 #include <ACS712.h>
+#include <ZMPT101B.h>
 
 #include "constants.h"
 #include "util_display.h"
 #include "gpio_actuators.h"
 
 extern float temperature, humidity, weight;
-extern float current, voltage;
+extern float current, voltage, power;
 
 bool beginSensors();
-bool beginSensors_2();
+bool beginSensors_pow();
 
-void readDHT();
-void readHX711();
+void readSensors();
+void readPower();
 void debug_randSensor();
 
 void printSensors();

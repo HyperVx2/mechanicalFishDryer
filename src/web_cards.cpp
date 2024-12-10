@@ -2,51 +2,113 @@
 
 extern AsyncWebServer server();
 
-// Json varaible to hold sensor readings
-JSONVar readings;
+// MQTT server is the gateway IP address
+const char* mqtt_server = MQTT_SERVER;
 
-// Get actuators state
-String processor(const String& var) {
-    String relayHeatState;
-    String relayFanState;
+WiFiClient espClient;
+PubSubClient client(espClient);
+long lastMsg = 0;
+char msg[50];
+int value = 0;
 
-    //debug* Serial.println(var);
+void mqtt_callback(char* topic, byte* message, unsigned int length) {
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
+  Serial.print(". Message: ");
+  String messageTemp;
 
-    if (var == "RELAYHEAT") {
-        if (digitalRead(RELAY_HEAT)){
-            relayHeatState = "OFF";
-        }
-        else {
-            relayHeatState = "ON";
-        }
-        Serial.print(relayHeatState);
-        return relayHeatState;
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)message[i]);
+    messageTemp += (char)message[i];
+  }
+  Serial.println();
+
+  // MQTT actuator and timer topics
+  if (String(topic) == "esp32/heater") {
+    Serial.print("Changing heater state to ");
+    if(messageTemp == "true"){
+      Serial.println("true");
+      toggleActuator("heater", HIGH);
+    } else if(messageTemp == "false"){
+      Serial.println("false");
+      toggleActuator("heater", LOW);
     }
-
-    // Card 2 Processing
-    if (var == "RELAYFAN") {
-        if (digitalRead(RELAY_FAN)){
-            relayFanState = "OFF";
-        }
-        else {
-            relayFanState = "ON";
-        }
-        Serial.print(relayFanState);
-        return relayFanState;
+  } else if (String(topic) == "esp32/fan") {
+    Serial.print("Changing fan state to ");
+    if(messageTemp == "true"){
+      Serial.println("true");
+      toggleActuator("fan", HIGH);
+    } else if(messageTemp == "false"){
+      Serial.println("false");
+      toggleActuator("fan", LOW);
     }
+  } else if (String(topic) == "esp32/timer/start") {
+    unsigned long duration = messageTemp.toInt();
+    startTimer(duration);
+  } else if (String(topic) == "esp32/timer/add") {
+    unsigned long duration = messageTemp.toInt();
+    addTimer(duration);
+  } else if (String(topic) == "esp32/timer/reset") {
+    if (messageTemp == "true") {
+      resetTimer();
+    }
+  }
 }
 
-// Get sensor readings and return JSON object
-String getSensorReadings() {
-    readings["timeRemaining"] = getRemainingTime();
-    readings["temperature"] = temperature;
-    readings["humidity"] = humidity;
-    readings["weight"] = weight;
-    readings["relayHeat"] = digitalRead(RELAY_HEAT);
-    readings["relayFan"] = digitalRead(RELAY_FAN);
+boolean mqtt_reconnect() {
+  if (client.connect(MQTT_CLIENT_NAME, MQTT_USERNAME, MQTT_PASSWORD)) {
+    // Subscribe to a mqtt topics
+    client.subscribe("esp32/heater");
+    client.subscribe("esp32/fan");
+    client.subscribe("esp32/timer/start");
+    client.subscribe("esp32/timer/add");
+    client.subscribe("esp32/timer/reset");
+  }
 
-    String jsonString = JSON.stringify(readings);
-    return jsonString;
+  return client.connected();
+}
+
+
+void beginMQTT() {
+    Serial.print("mqtt server: "); Serial.println(mqtt_server);
+    client.setServer(mqtt_server, 1883);
+    client.setCallback(mqtt_callback);
+}
+
+void loopMQTT() {
+  unsigned long remainingTime = getRemainingTime();
+
+  if (!client.connected()) {
+    Serial.println("Reconnecting to MQTT server...");
+    if (mqtt_reconnect()) {
+      Serial.println("Reconnected to MQTT server!");
+    } else {
+      Serial.println("Reconnection failed!");
+    }
+  }
+  client.loop();
+
+  long now = millis();
+  if (now - lastMsg > DELAY_MS) {
+    lastMsg = now;
+
+    // Create a JSON document
+    JSONVar sensor;
+
+    // Add values to JSON
+    sensor["tem"] = temperature;
+    sensor["hum"] = humidity;
+    sensor["wei"] = weight;
+    sensor["cur"] = current;
+    sensor["vol"] = voltage;
+
+    // Serialize JSON to String
+    String jsonString = JSON.stringify(sensor);
+
+    // Publish the JSON string
+    client.publish("esp32/sensors", jsonString.c_str());
+    client.publish("esp32/timer", String(remainingTime).c_str());
+  }
 }
 
 void home(AsyncWebServer *server) {
@@ -64,90 +126,9 @@ void home(AsyncWebServer *server) {
 
 }
 
-void card_0(AsyncWebServer *server) {
-
-    // Route to set dryer status to TRUE
-    server->on("/on0", HTTP_GET, [](AsyncWebServerRequest *request){
-        setTareHX711();
-        request->send(LittleFS, "/index.html", String(), false, processor);
-    });
-
-    // Route to set dryer status to FALSE
-    server->on("/off0", HTTP_GET, [](AsyncWebServerRequest *request){
-        setTareHX711();
-        request->send(LittleFS, "/index.html", String(), false, processor);
-    });
-
-}
-
-void card_1(AsyncWebServer *server) {
-
-    // Route to set relay heater to LOW
-    server->on("/on1", HTTP_GET, [](AsyncWebServerRequest *request){
-        digitalWrite(RELAY_HEAT, LOW);
-        display_addNotification("Heater ON");
-        buzz_set(1000, 100, 100, 2);
-        request->send(LittleFS, "/index.html", String(), false, processor);
-    });
-
-    // Route to set relay heater to HIGH
-    server->on("/off1", HTTP_GET, [](AsyncWebServerRequest *request){
-        digitalWrite(RELAY_HEAT, HIGH);
-        display_addNotification("Heater OFF");
-        buzz_set(1000, 100, 100, 2);
-        request->send(LittleFS, "/index.html", String(), false, processor);
-    });
-}
-
-void card_2(AsyncWebServer *server) {
-
-    // Route to set relay fan to LOW
-    server->on("/on2", HTTP_GET, [](AsyncWebServerRequest *request){
-        digitalWrite(RELAY_FAN, LOW);
-        display_addNotification("Fan ON");
-        buzz_set(1000, 100, 100, 2);
-        request->send(LittleFS, "/index.html", String(), false, processor);
-    });
-
-    // Route to set relay fan to HIGH
-    server->on("/off2", HTTP_GET, [](AsyncWebServerRequest *request){
-        digitalWrite(RELAY_FAN, HIGH);
-        display_addNotification("Fan OFF");
-        buzz_set(1000, 100, 100, 2);
-        request->send(LittleFS, "/index.html", String(), false, processor);
-    });
-}
-
-void card_3(AsyncWebServer *server) {
-
-    // Send a GET request to /slider?value=<inputMessage>
-    // Request for the latest sensor readings
-    server->on("/readings", HTTP_GET, [](AsyncWebServerRequest *request){
-        String json = getSensorReadings();
-        request->send(200, "application/json", json);
-        json = String();
-    });
-}
-
 // Note that server is a pointer entering serve(),
 // it doesn't need to be derefenced again.
 void serve(AsyncWebServer *server) {
     // Home Page
     home(server);
-
-    // Card 0: Set tare
-    // Route to set dryer status
-    card_0(server);
-
-    // Card 1: Relay heater ON/OFF
-    // Route to relay pin ON or OFF
-    card_1(server);
-
-    // Card 2: Relay fan ON/OFF
-    // Route to relay pin ON or OFF
-    card_2(server);
-
-    // Card 3: Sensor readings
-    // This will read three sensor readings
-    card_3(server);
 }

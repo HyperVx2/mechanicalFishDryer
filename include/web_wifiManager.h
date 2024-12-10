@@ -1,7 +1,6 @@
 #ifndef WEB_WIFIMANAGER
 #define WEB_WIFIMANAGER
 
-#include <Arduino.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncTCP.h>
@@ -10,10 +9,10 @@
 #include "constants.h"
 #include "web_cards.h"
 
-extern String ssid;
-extern String ip;
+extern String ssid, pass, ip, gateway;
 
 void beginWifiManager();
+bool initWiFi();
 void setupSSID();
 void loopWifiManager();
 

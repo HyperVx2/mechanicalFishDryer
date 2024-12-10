@@ -1,21 +1,20 @@
 #ifndef WEB_CARDS
 #define WEB_CARDS
 
-#include <Arduino.h>
-#include <WiFi.h>
 #include <ESPAsyncWebServer.h>
-#include <AsyncTCP.h>
-#include "LittleFS.h"
 #include <Arduino_JSON.h>
+#include <PubSubClient.h>
+#include <AsyncTCP.h>
 
 #include "constants.h"
+#include "web_wifiManager.h"
 #include "gpio_actuators.h"
 #include "gpio_sensors.h"
 #include "util_timer.h"
 
-void serve(AsyncWebServer *server);
+void beginMQTT();
+void loopMQTT();
 
-String processor(const String& var);
-String getSensorReadings();
+void serve(AsyncWebServer *server);
 
 #endif

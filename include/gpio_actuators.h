@@ -8,7 +8,9 @@
 
 bool beginActuators();
 
-void buzz_set(int frequency, int duration, int interval, int times);
-void buzz_loop();
+void toggleActuator(String relay, bool state);
+
+void setupBuzz(int frequency, int duration, int interval, int times);
+void loopBuzz();
 
 #endif

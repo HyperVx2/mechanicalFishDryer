@@ -18,6 +18,7 @@
     Ref 4 (zmpt101b): https://github.com/r3mko/ZMPT101B/
     Ref 5 (scheduler): https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
     Ref 6 (dashboard): https://github.com/lkoepsel/Dashboard
+    Ref 7 (WiFi Manager): https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver/
 */
 
 #ifndef CONSTANTS_H
@@ -43,6 +44,12 @@
 #define WIFI_PASS "foobar123"
 #define WEB_PORT 80
 
+// MQTT Broker
+#define MQTT_SERVER "192.168.0.110"
+#define MQTT_CLIENT_NAME "SMFDS_ESP32"
+#define MQTT_USERNAME "mosquitto"
+#define MQTT_PASSWORD "foobar123"
+
 // LED, buzzer, & relay
 #define LED_1 23 // Red
 #define LED_2 19 // Green
@@ -62,8 +69,8 @@
 
 // Sensor: ACS712 (30A) Current Sensor
 #define ACS712_PIN 34
-#define ACS712_VOLT 5.0
-#define ACS712_ADC 1023
+#define ACS712_VOLT 30.0
+#define ACS712_ADC 4095
 #define ACS712_mvPerA 66
 
 // Sensor: ZMPT101B Voltage Sensor

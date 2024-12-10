@@ -42,7 +42,7 @@ void startTimer(unsigned long duration) {
   saveTimerState(); // Save the state
 
   Serial.print("Timer started for "); Serial.print(duration); Serial.println("ms");
-  buzz_set(3000, 500, 1000, 2);
+  setupBuzz(500, 100, 200, 2);
 }
 
 // Function to add time to the timer
@@ -53,26 +53,26 @@ void addTimer(unsigned long duration) {
   saveTimerState(); // Save the state
 
   Serial.print("Timer extended by "); Serial.print(duration); Serial.println("ms");
-  buzz_set(3000, 500, 1000, 2);
+  setupBuzz(500, 100, 200, 2);
 }
 
 // Function to check the timer
 unsigned long getRemainingTime() {
-    unsigned long elapsed = millis() - timerStartMillis;
-    if (timerRunning) {
-        digitalWrite(LED_1, HIGH);
-
-        if (elapsed >= timerDuration) {
-            timerRunning = false;
-            digitalWrite(LED_1, LOW);
-            timerDuration = 0;
-            saveTimerState(); // Save final state
-            
-            return 0; // Timer expired
-        }
+    if (!timerRunning) {
+        return 0;
     }
-    
-    // Get the current timer duration
+
+    unsigned long elapsed = millis() - timerStartMillis;
+
+    if (elapsed >= timerDuration) {
+        timerRunning = false;
+        timerDuration = 0;
+        timerStartMillis = 0;
+        digitalWrite(LED_1, LOW);
+        saveTimerState(); // Save final state
+        return 0; // Timer expired
+    }
+
     unsigned long remainingTime = timerDuration - elapsed;
 
     // Blink LED if remainingTime is odd number
@@ -82,10 +82,7 @@ unsigned long getRemainingTime() {
     } else {
         digitalWrite(LED_2, LOW);
     }
-    
-    // Call saveTimerState()
-    saveTimerState();
-    
+
     return remainingTime;
 }
 

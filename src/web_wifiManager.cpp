@@ -157,6 +157,7 @@ void setupSSID(){
 }
 
 void beginWifiManager() {
+  WiFi.disconnect();
   initLittleFS();
   
   // Load values saved in LittleFS
@@ -183,6 +184,7 @@ void beginWifiManager() {
   server.addHandler(&events);
 
   if(initWiFi()) {
+    beginMQTT();
     server.begin();
   }
   else {
@@ -206,10 +208,6 @@ void loopWifiManager() {
     delay(5000);
     ESP.restart();
   }
-
-  if ((millis() - previousMillis) > interval) {
-    events.send(getSensorReadings().c_str(),"new_readings" ,millis());
-
-    previousMillis = millis();
-  }
+  
+  loopMQTT();
 }
