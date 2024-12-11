@@ -10,7 +10,7 @@
     ACS712:         D35 | ZMPT101B:         D34
 
     LED ASSIGNMENT:
-    LED_1 (RED) = timerRunning | LED_2 (GREEN) = remainingTime | LED_3 (RED) = RELAY_HEATER
+    LED_3 (RED) = timerRunning | LED_2 (GREEN) = remainingTime | LED_1 (RED) = RELAY_HEATER
 
     Ref 1 (dht22): https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
     Ref 2 (hx711): https://github.com/olkal/HX711_ADC/blob/master/examples/Read_1x_load_cell_interrupt_driven/Read_1x_load_cell_interrupt_driven.ino
@@ -31,7 +31,7 @@
 
 // Serial
 #define SERIAL_BAUD 9600
-#define DELAY_MS 1000
+#define DELAY_MS 3000
 
 // EEPROM Addresses
 #define TIMER_DURATION_ADDR 0
@@ -51,9 +51,9 @@
 #define MQTT_PASSWORD "foobar123"
 
 // LED, buzzer, & relay
-#define LED_1 23 // Red
+#define LED_1 18 // Red
+#define LED_3 23 // Red
 #define LED_2 19 // Green
-#define LED_3 18 // Red
 #define BUZZER 32 
 #define RELAY_HEAT 14
 #define RELAY_FAN 33

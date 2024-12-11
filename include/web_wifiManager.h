@@ -9,7 +9,7 @@
 #include "constants.h"
 #include "web_cards.h"
 
-extern String ssid, pass, ip, gateway;
+extern String ssid, pass, ip, gateway, mqtt;
 
 void beginWifiManager();
 bool initWiFi();

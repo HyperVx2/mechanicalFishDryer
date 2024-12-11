@@ -52,8 +52,10 @@ void loop() {
                 ESP.restart();
             }
         } else if (ch == 'a') {
-            addTimer(15000);
+            startTimer(15000);
         } else if (ch == 's') {
+            addTimer(15000);
+        } else if (ch == 'd') {
             resetTimer();
         } else if (ch == 't') {
             setTareHX711();
@@ -65,14 +67,12 @@ void loop() {
         }
     }
 
-    if (Serial) {
-        //debug
-        debug_randSensor();
-        if (opt) printSensors();
+    readSensors();
+    readPower();
     
-    } else { 
-        readSensors();
-        readPower();
+    if (opt) {
+        //debug_randSensor();
+        printSensors();
     }
 
     display_loop();

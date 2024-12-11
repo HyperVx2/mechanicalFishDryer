@@ -36,11 +36,20 @@ bool beginActuators() {
 
 // Toggle a relay module of either the heater or fan
 void toggleActuator(String relay, bool state) {
-    if (relay == "heater") {
-        digitalWrite(RELAY_HEAT, state);
-        digitalWrite(LED_1, state);
-    } else if (relay == "fan") {
-        digitalWrite(RELAY_FAN, state);
+    if (state) {
+        if (relay == "heater") {
+            digitalWrite(RELAY_HEAT, LOW);
+            digitalWrite(LED_1, HIGH);
+        } else if( relay == "fan") {
+            digitalWrite(RELAY_FAN, LOW);
+        }
+    } else if (!state) {
+        if (relay == "heater") {
+            digitalWrite(RELAY_HEAT, HIGH);
+            digitalWrite(LED_1, LOW);
+        } else if( relay == "fan") {
+            digitalWrite(RELAY_FAN, HIGH);
+        }
     }
 }
 

@@ -155,9 +155,19 @@ void display_main() {
         text = notif_text;
     } else if (!timerRunning && !isNotif) {
         text = "READY";
+        digitalWrite(LED_1, LOW);
     } else if (timerRunning && !isNotif) {
         unsigned long remainingTime = getRemainingTime();
         text = formatTime(remainingTime);
+    
+        // Blink LED if remainingTime is odd number
+        // When remainingTime is 0 or even number, LED_2 is light up
+        digitalWrite(LED_1, HIGH);
+        if (remainingTime % 2 == 1) {
+            digitalWrite(LED_2, HIGH);
+        } else {
+            digitalWrite(LED_2, LOW);
+        }
     }
 
     int16_t x1, y1;

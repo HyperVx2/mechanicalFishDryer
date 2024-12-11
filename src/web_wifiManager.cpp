@@ -9,18 +9,17 @@ const char* PARAM_INPUT_1 = "ssid";
 const char* PARAM_INPUT_2 = "pass";
 const char* PARAM_INPUT_3 = "ip";
 const char* PARAM_INPUT_4 = "gateway";
+const char* PARAM_INPUT_5 = "mqtt";
 
 //Variables to save values from HTML form
-String ssid;
-String pass;
-String ip;
-String gateway;
+String ssid, pass, ip, gateway, mqtt;
 
 // File paths to save input values permanently
 const char* ssidPath = "/ssid.txt";
 const char* passPath = "/pass.txt";
 const char* ipPath = "/ip.txt";
 const char* gatewayPath = "/gateway.txt";
+const char* mqttPath = "/mqtt.txt";
 
 IPAddress localIP;
 
@@ -149,6 +148,14 @@ void setupSSID(){
             // Write file to save value
             writeFile(LittleFS, gatewayPath, gateway.c_str());
           }
+          // HTTP POST mqtt value
+          if (p->name() == PARAM_INPUT_5) {
+            mqtt = p->value().c_str();
+            Serial.print("MQTT set to: ");
+            Serial.println(mqtt);
+            // Write file to save value
+            writeFile(LittleFS, mqttPath, mqtt.c_str());
+          }
           //Serial.printf("POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
         }
       }
@@ -165,10 +172,12 @@ void beginWifiManager() {
   pass = readFile(LittleFS, passPath);
   ip = readFile(LittleFS, ipPath);
   gateway = readFile (LittleFS, gatewayPath);
-  Serial.println(ssid);
-  Serial.println(pass);
-  Serial.println(ip);
-  Serial.println(gateway);
+  mqtt = readFile (LittleFS, mqttPath);
+  Serial.print("ssid:"); Serial.println(ssid);
+  Serial.print("pass:"); Serial.println(pass);
+  Serial.print("ip:"); Serial.println(ip);
+  Serial.print("gateway:"); Serial.println(gateway);
+  Serial.print("mqtt:"); Serial.println(mqtt);
 
   setupSSID();
   serve(&server);

@@ -2,9 +2,6 @@
 
 extern AsyncWebServer server();
 
-// MQTT server is the gateway IP address
-const char* mqtt_server = MQTT_SERVER;
-
 WiFiClient espClient;
 PubSubClient client(espClient);
 long lastMsg = 0;
@@ -24,7 +21,12 @@ void mqtt_callback(char* topic, byte* message, unsigned int length) {
   Serial.println();
 
   // MQTT actuator and timer topics
-  if (String(topic) == "esp32/heater") {
+  if (String(topic) == "esp32/sensors/settare") {
+    if (messageTemp == "true") {
+      setTareHX711();
+    }
+  }
+  else if (String(topic) == "esp32/heater") {
     Serial.print("Changing heater state to ");
     if(messageTemp == "true"){
       Serial.println("true");
@@ -58,6 +60,7 @@ void mqtt_callback(char* topic, byte* message, unsigned int length) {
 boolean mqtt_reconnect() {
   if (client.connect(MQTT_CLIENT_NAME, MQTT_USERNAME, MQTT_PASSWORD)) {
     // Subscribe to a mqtt topics
+    client.subscribe("esp32/sensors/settare");
     client.subscribe("esp32/heater");
     client.subscribe("esp32/fan");
     client.subscribe("esp32/timer/start");
@@ -70,8 +73,7 @@ boolean mqtt_reconnect() {
 
 
 void beginMQTT() {
-    Serial.print("mqtt server: "); Serial.println(mqtt_server);
-    client.setServer(mqtt_server, 1883);
+    client.setServer(mqtt.c_str(), 1883);
     client.setCallback(mqtt_callback);
 }
 
@@ -89,7 +91,7 @@ void loopMQTT() {
   client.loop();
 
   long now = millis();
-  if (now - lastMsg > DELAY_MS) {
+  if (now - lastMsg > 1000) {
     lastMsg = now;
 
     // Create a JSON document
