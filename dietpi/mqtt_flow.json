@@ -1,0 +1,961 @@
+[
+    {
+        "id": "917f4a933091bb50",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "53cc048a3785347e",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/fan",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 460,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "3a72ba079a99f57d",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/sensors",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 260,
+        "y": 560,
+        "wires": [
+            [
+                "a8df327927fa5573",
+                "7a667b8ebacf81bc",
+                "595fbb8da23cd63a",
+                "6b325822ce8b9f4d",
+                "b1db180d7b81b022",
+                "74aafefaba26bf21",
+                "976830442150c06d"
+            ]
+        ]
+    },
+    {
+        "id": "90c95bf334459278",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "esp32/fan",
+        "group": "39a50896b157996d",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 300,
+        "y": 40,
+        "wires": [
+            [
+                "53cc048a3785347e"
+            ]
+        ]
+    },
+    {
+        "id": "fb53ab0fb9a6ab72",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 690,
+        "y": 120,
+        "wires": [
+            [
+                "9cc37adb234beebb",
+                "8c6ba4e5f708da6a"
+            ]
+        ]
+    },
+    {
+        "id": "50db37491f251d4f",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer/start",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 1150,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "b2b749b314e4d7ca",
+        "type": "ui-number-input",
+        "z": "917f4a933091bb50",
+        "group": "6927b59262e6befa",
+        "name": "",
+        "label": "timerStart.int (mins)",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "600",
+        "step": 1,
+        "tooltip": "",
+        "passthru": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": true,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 710,
+        "y": 180,
+        "wires": [
+            [
+                "78205662e8d8999e"
+            ]
+        ]
+    },
+    {
+        "id": "376401f575720e85",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "esp32/heater",
+        "group": "39a50896b157996d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "label",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 290,
+        "y": 100,
+        "wires": [
+            [
+                "32c666856190e24b"
+            ]
+        ]
+    },
+    {
+        "id": "32c666856190e24b",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/heater",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 470,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "74aafefaba26bf21",
+        "type": "debug",
+        "z": "917f4a933091bb50",
+        "name": "read sensors",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "9cc37adb234beebb",
+        "type": "debug",
+        "z": "917f4a933091bb50",
+        "name": "read timer",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "fb52e2b769e44f56",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer/add",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 1140,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "62331d893262bc38",
+        "type": "ui-number-input",
+        "z": "917f4a933091bb50",
+        "group": "6927b59262e6befa",
+        "name": "",
+        "label": "timerAdd.int (mins)",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "600",
+        "step": 1,
+        "tooltip": "",
+        "passthru": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": true,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "default",
+        "x": 710,
+        "y": 240,
+        "wires": [
+            [
+                "ed13296d428959c9"
+            ]
+        ]
+    },
+    {
+        "id": "d58c83c2e1ebfa70",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer/reset",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 1110,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "e1de0d10f828ed74",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "6927b59262e6befa",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "timer",
+        "label": "timer",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1070,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "5ebd0155205f7fca",
+        "type": "ui-gauge",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "group": "3d430ec977a2940b",
+        "order": 1,
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "temp",
+        "units": "°C",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "61",
+                "color": "#ffc800"
+            },
+            {
+                "from": "70",
+                "color": "#ea5353"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 710,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "a8df327927fa5573",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract tem",
+        "func": "var data = msg.payload;\nmsg.payload = data.tem;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 460,
+        "wires": [
+            [
+                "5ebd0155205f7fca"
+            ]
+        ]
+    },
+    {
+        "id": "90ac3eb215c079c6",
+        "type": "ui-gauge",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "group": "3d430ec977a2940b",
+        "order": 2,
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "hum",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 710,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "7a667b8ebacf81bc",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract hum",
+        "func": "var data = msg.payload;\nmsg.payload = data.hum;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 520,
+        "wires": [
+            [
+                "90ac3eb215c079c6"
+            ]
+        ]
+    },
+    {
+        "id": "595fbb8da23cd63a",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract wei",
+        "func": "var data = msg.payload;\nmsg.payload = data.wei;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 580,
+        "wires": [
+            [
+                "dccba389e9d69fd9"
+            ]
+        ]
+    },
+    {
+        "id": "6b325822ce8b9f4d",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract cur",
+        "func": "var data = msg.payload;\nmsg.payload = data.cur;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 640,
+        "wires": [
+            [
+                "a1cb1a887309c650"
+            ]
+        ]
+    },
+    {
+        "id": "b1db180d7b81b022",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract vol",
+        "func": "var data = msg.payload;\nmsg.payload = data.vol;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 700,
+        "wires": [
+            [
+                "417955c5df8e65fd"
+            ]
+        ]
+    },
+    {
+        "id": "dccba389e9d69fd9",
+        "type": "ui-gauge",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "group": "3d430ec977a2940b",
+        "order": 3,
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "wei",
+        "units": "g",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            }
+        ],
+        "min": 0,
+        "max": "1000",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 710,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "a1cb1a887309c650",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "3d430ec977a2940b",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "cur",
+        "label": "cur",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 710,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "417955c5df8e65fd",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "3d430ec977a2940b",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "vol",
+        "label": "vol",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 710,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "1209580a472ff89e",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "timerReset",
+        "group": "6927b59262e6befa",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 690,
+        "y": 300,
+        "wires": [
+            [
+                "d58c83c2e1ebfa70"
+            ]
+        ]
+    },
+    {
+        "id": "8c6ba4e5f708da6a",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "format time",
+        "func": "function formatTime(ms) {\n    // Calculate the time components\n    var seconds = Math.floor((ms / 1000) % 60);\n    var minutes = Math.floor((ms / (1000 * 60)) % 60);\n    var hours = Math.floor((ms / (1000 * 60 * 60)) % 24);\n\n    // Format the time components into a string\n    var formattedTime = \n        (hours < 10 ? \"0\" : \"\") + hours + \":\" +\n        (minutes < 10 ? \"0\" : \"\") + minutes + \":\" +\n        (seconds < 10 ? \"0\" : \"\") + seconds;\n\n    return formattedTime;\n}\n\nvar data = msg.payload;\nmsg.payload = formatTime(data);\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 120,
+        "wires": [
+            [
+                "e1de0d10f828ed74"
+            ]
+        ]
+    },
+    {
+        "id": "78205662e8d8999e",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "convert mins to ms",
+        "func": "function minutesToMilliseconds(minutes) {\n    return minutes * 60 * 1000;\n}\n\nvar data = msg.payload;\nmsg.payload = minutesToMilliseconds(data);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 180,
+        "wires": [
+            [
+                "50db37491f251d4f"
+            ]
+        ]
+    },
+    {
+        "id": "ed13296d428959c9",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "convert mins to ms",
+        "func": "function minutesToMilliseconds(minutes) {\n    return minutes * 60 * 1000;\n}\n\nvar data = msg.payload;\nmsg.payload = minutesToMilliseconds(data);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 240,
+        "wires": [
+            [
+                "fb52e2b769e44f56"
+            ]
+        ]
+    },
+    {
+        "id": "976830442150c06d",
+        "type": "influxdb out",
+        "z": "917f4a933091bb50",
+        "influxdb": "623d44022ea29544",
+        "name": "",
+        "measurement": "sensor",
+        "precision": "s",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 520,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d558bef4aa03e5e6",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/sensors/settare",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 660,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "df6f555b71b10a09",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "setTare",
+        "group": "3d430ec977a2940b",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 440,
+        "y": 760,
+        "wires": [
+            [
+                "d558bef4aa03e5e6"
+            ]
+        ]
+    },
+    {
+        "id": "ca64badfb8e78568",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/fan",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 40,
+        "wires": [
+            [
+                "90c95bf334459278"
+            ]
+        ]
+    },
+    {
+        "id": "207fb449606e47ed",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/heater",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 100,
+        "wires": [
+            [
+                "376401f575720e85"
+            ]
+        ]
+    },
+    {
+        "id": "c22cbfaf233a6e9b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "39a50896b157996d",
+        "type": "ui-group",
+        "name": "actuator controls",
+        "page": "f7c89c2c63c4096e",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "6927b59262e6befa",
+        "type": "ui-group",
+        "name": "timer",
+        "page": "f7c89c2c63c4096e",
+        "width": "6",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "3d430ec977a2940b",
+        "type": "ui-group",
+        "name": "sensor readings",
+        "page": "f7c89c2c63c4096e",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "623d44022ea29544",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "smfds_db",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "f7c89c2c63c4096e",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "a5d0a76114c2a2c4",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "e717cb789e5b76fb",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": 0,
+                "cols": 3
+            },
+            {
+                "name": "Tablet",
+                "px": 576,
+                "cols": 6
+            },
+            {
+                "name": "Small Desktop",
+                "px": 768,
+                "cols": 9
+            },
+            {
+                "name": "Desktop",
+                "px": 1024,
+                "cols": 12
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "a5d0a76114c2a2c4",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": false,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "showPageTitle": true,
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true
+    },
+    {
+        "id": "e717cb789e5b76fb",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    }
+]

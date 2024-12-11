@@ -73,6 +73,7 @@ dtparam=audio=off
 #-------I2C-------------
 #dtparam=i2c_arm=off
 #dtparam=i2c_arm_baudrate=100000
+dtoverlay=i2c-rtc,ds1307
 
 #-------SPI-------------
 #dtparam=spi=off
