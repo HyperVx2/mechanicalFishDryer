@@ -9,48 +9,34 @@ char msg[50];
 int value = 0;
 
 void mqtt_callback(char* topic, byte* message, unsigned int length) {
-  Serial.print("Message arrived on topic: ");
+  /*Serial.print("Message arrived on topic: ");
   Serial.print(topic);
-  Serial.print(". Message: ");
+  Serial.print(". Message: "); */
   String messageTemp;
 
   for (int i = 0; i < length; i++) {
-    Serial.print((char)message[i]);
+    //Serial.print((char)message[i]);
     messageTemp += (char)message[i];
   }
-  Serial.println();
+  //Serial.println();
 
-  // MQTT actuator and timer topics
-  if (String(topic) == "esp32/sensors/settare") {
+  if (strcmp(topic, "esp32/sensors/settare") == 0) {
     if (messageTemp == "true") {
       setTareHX711();
     }
-  }
-  else if (String(topic) == "esp32/heater") {
-    Serial.print("Changing heater state to ");
-    if(messageTemp == "true"){
-      Serial.println("true");
-      toggleActuator("heater", HIGH);
-    } else if(messageTemp == "false"){
-      Serial.println("false");
-      toggleActuator("heater", LOW);
-    }
-  } else if (String(topic) == "esp32/fan") {
-    Serial.print("Changing fan state to ");
-    if(messageTemp == "true"){
-      Serial.println("true");
-      toggleActuator("fan", HIGH);
-    } else if(messageTemp == "false"){
-      Serial.println("false");
-      toggleActuator("fan", LOW);
-    }
-  } else if (String(topic) == "esp32/timer/start") {
-    unsigned long duration = messageTemp.toInt();
-    startTimer(duration);
-  } else if (String(topic) == "esp32/timer/add") {
-    unsigned long duration = messageTemp.toInt();
-    addTimer(duration);
-  } else if (String(topic) == "esp32/timer/reset") {
+  } else if (strcmp(topic, "esp32/heater") == 0) {
+    //Serial.print("Changing heater state to ");
+    toggleActuator("heater", messageTemp == "true" ? HIGH : LOW);
+    //Serial.println(messageTemp);
+  } else if (strcmp(topic, "esp32/fan") == 0) {
+    //Serial.print("Changing fan state to ");
+    toggleActuator("fan", messageTemp == "true" ? HIGH : LOW);
+    //Serial.println(messageTemp);
+  } else if (strcmp(topic, "esp32/timer/start") == 0) {
+    setTimer(messageTemp.toInt());
+  } else if (strcmp(topic, "esp32/timer/add") == 0) {
+    setTimer(messageTemp.toInt(), true);
+  } else if (strcmp(topic, "esp32/timer/reset") == 0) {
     if (messageTemp == "true") {
       resetTimer();
     }
@@ -81,12 +67,13 @@ void loopMQTT() {
   unsigned long remainingTime = getRemainingTime();
 
   if (!client.connected()) {
-    Serial.println("Reconnecting to MQTT server...");
-    if (mqtt_reconnect()) {
-      Serial.println("Reconnected to MQTT server!");
-    } else {
+    //Serial.println("Reconnecting to MQTT server...");
+    mqtt_reconnect();
+    /* if () {
+      //Serial.println("Reconnected to MQTT server!");
+    }  else {
       Serial.println("Reconnection failed!");
-    }
+    } */
   }
   client.loop();
 

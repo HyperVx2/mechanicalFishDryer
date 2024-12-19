@@ -2,12 +2,7 @@
 
 float calibrationValue = HX711_CALIBRATION;
 float temperature, humidity, weight;
-float current, voltage, power;
-
-unsigned long dht_lastTime;
-unsigned long hx711_lastTime;
-unsigned long randSensor_lastTime;
-unsigned long printSensor_lastTime;
+float current, voltage;
 
 uint32_t DHT_delayMS;
 
@@ -32,7 +27,6 @@ bool beginSensors() {
     sensor_t DHTsensor;
     dht.temperature().getSensor(&DHTsensor);
     dht.humidity().getSensor(&DHTsensor);
-    DHT_delayMS = DHTsensor.min_delay / 1000;
 
     // initialize HX711
     hx711.begin();
@@ -66,38 +60,23 @@ bool beginSensors_pow() {
     return true;
 }
 
-// Read DHT22 and HX711 data
 void readSensors() {
-    sensors_event_t event;
-    if (millis() > dht_lastTime + DELAY_MS) {
-        // Get temperature event and print its value.
-        dht.temperature().getEvent(&event);
-        if (isnan(event.temperature)) {
-            Serial.println(F("Error reading temperature!"));
-        } else {
-            temperature = event.temperature;
-        }
-        // Get humidity event and print its value.
-        dht.humidity().getEvent(&event);
-        if (isnan(event.relative_humidity)) {
-            Serial.println(F("Error reading humidity!"));
-        } else {
-            humidity = event.relative_humidity;
-        }
-            dht_lastTime = millis();
-    }
+    // Get temperature and humidity event
+    sensors_event_t tempEvent, humidityEvent;
+    dht.temperature().getEvent(&tempEvent);
+    dht.humidity().getEvent(&humidityEvent);
 
-    // get smoothed value from the dataset
+    temperature = isnan(tempEvent.temperature) ? -1 : round(tempEvent.temperature * 100) / 100.0;
+    humidity = isnan(humidityEvent.relative_humidity) ? -1 : round(humidityEvent.relative_humidity * 100) / 100.0;
+
+    // Get smoothed weight value from the dataset
     if (HX711_newDataReady) {
-        if (millis() > hx711_lastTime + DELAY_MS) {
-        weight = hx711.getData();
+        weight = round(hx711.getData() * 100) / 100.0;
         HX711_newDataReady = 0;
-        hx711_lastTime = millis();
-        }
     }
 
-    if (hx711.getTareStatus() == true) {
-        Serial.println("Tare complete");
+    // Check tare status
+    if (hx711.getTareStatus()) {
         display_addNotification("Tare set");
         setupBuzz(500, 100, 200, 2);
     }
@@ -116,12 +95,13 @@ enum ReadACS712State {
 };
 
 ReadACS712State readState = IDLE;
-float average = 0;
-int readCount = 0;
-unsigned long startTime = 0;
-const int numReadings = 100;
 
 void readPower() {
+    static float average = 0;
+    static int readCount = 0;
+    static unsigned long startTime = 0;
+    const int numReadings = 100;
+
     switch (readState) {
         case IDLE:
             average = 0;
@@ -137,7 +117,6 @@ void readPower() {
             } else {
                 current = average / numReadings;
                 voltage = voltageSensor.getVoltageAC();
-                power = current * voltage;
                 readState = DONE;
             }
             break;
@@ -150,27 +129,18 @@ void readPower() {
 }
 
 void printSensors() {
-    if (millis() > printSensor_lastTime + 3000) {
-        Serial.print(">t:"); Serial.println(temperature);
-        Serial.print(">h:"); Serial.println(humidity);
-        Serial.print(">w:"); Serial.println(weight);
-        Serial.print(">c:"); Serial.println(current);
-        Serial.print(">v:"); Serial.println(voltage);
-        Serial.print(">p:"); Serial.println(power);
-        Serial.println();
-
-        printSensor_lastTime = millis();
-    }
+    Serial.print(">t:"); Serial.println(temperature, 2);
+    Serial.print(">h:"); Serial.println(humidity, 2);
+    Serial.print(">w:"); Serial.println(weight, 2);
+    Serial.print(">c:"); Serial.println(current);
+    Serial.print(">v:"); Serial.println(voltage);
+    Serial.println();
 }
 
 void debug_randSensor() { 
-    if (millis() > randSensor_lastTime + DELAY_MS) {
-        temperature = random(30, 80);
-        humidity = random(30, 99);
-        weight = random(-120, 1200);
-        current = 30;
-        voltage = 230;
-        power = current * voltage;
-        randSensor_lastTime = millis();
-    }
+    temperature = random(30, 80);
+    humidity = random(30, 99);
+    weight = random(-120, 1200);
+    current = 30;
+    voltage = 230;
 }

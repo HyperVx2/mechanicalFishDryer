@@ -33,27 +33,20 @@
 #define SERIAL_BAUD 9600
 #define DELAY_MS 3000
 
-// EEPROM Addresses
-#define TIMER_DURATION_ADDR 0
-#define TIMER_REMAINING_ADDR (TIMER_DURATION_ADDR + sizeof(unsigned long))
-#define SYSTEM_IDLE_ADDR (TIMER_REMAINING_ADDR + sizeof(unsigned long))
-#define TIMER_START_ADDR (SYSTEM_IDLE_ADDR + sizeof(bool))
-
 // WiFi and Web Server
 #define WIFI_SSID "SMFDS_ESP32"
 #define WIFI_PASS "foobar123"
 #define WEB_PORT 80
 
 // MQTT Broker
-#define MQTT_SERVER "192.168.0.110"
 #define MQTT_CLIENT_NAME "SMFDS_ESP32"
 #define MQTT_USERNAME "mosquitto"
 #define MQTT_PASSWORD "foobar123"
 
 // LED, buzzer, & relay
-#define LED_1 18 // Red
-#define LED_3 23 // Red
-#define LED_2 19 // Green
+#define LED_1 18 // RED
+#define LED_2 19 // GRN
+#define LED_3 23 // GRED
 #define BUZZER 32 
 #define RELAY_HEAT 14
 #define RELAY_FAN 33

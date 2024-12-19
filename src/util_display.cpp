@@ -84,7 +84,7 @@ String formatTime(unsigned long duration) {
 void beginDisplay() {
     display.begin(SH1106_I2C_ADDRESS, 0x3C); // Default I2C address
     display.display();
-    delay(2000); // Show splash screen
+    //delay(2000); // Show splash screen
     display.clearDisplay();
 }
 
@@ -163,11 +163,7 @@ void display_main() {
         // Blink LED if remainingTime is odd number
         // When remainingTime is 0 or even number, LED_2 is light up
         digitalWrite(LED_1, HIGH);
-        if (remainingTime % 2 == 1) {
-            digitalWrite(LED_2, HIGH);
-        } else {
-            digitalWrite(LED_2, LOW);
-        }
+        digitalWrite(LED_2, (remainingTime % 2 == 1) ? HIGH : LOW);
     }
 
     int16_t x1, y1;

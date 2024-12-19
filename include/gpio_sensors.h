@@ -14,7 +14,7 @@
 #include "gpio_actuators.h"
 
 extern float temperature, humidity, weight;
-extern float current, voltage, power;
+extern float current, voltage;
 
 bool beginSensors();
 bool beginSensors_pow();

@@ -9,10 +9,18 @@
 #include "gpio_actuators.h"
 #include "util_display.h"
 
+const unsigned long interval_2 = 2000; // 2 seconds
+unsigned long previousMillis_2 = 0;
+
+static int rCount = 0;
+static bool opt = false;
+
 void setup() {
-    Serial.begin(SERIAL_BAUD); delay(10);
+    Serial.begin(SERIAL_BAUD);
     Serial.println("Project SMFDS [ALPHA]");Serial.println("Starting...");
-    
+
+    beginDisplay();
+
     beginWifiManager();
     loadTimerState();
 
@@ -30,50 +38,55 @@ void setup() {
     else {
         Serial.println("Sensors initialized");
     }
-    
-    beginDisplay();
 
     setupBuzz(1000, 100, 250, 3); // Buzz to indicate startup
 }
 
-void loop() {
-    loopWifiManager();
-    loopBuzz();
-
-    static int rCount = 0;
-    bool opt = 0;
+void SerialEvent() {
 
     if (Serial.available()) {
         char ch = Serial.read();
-        if (ch == 'r') {
+        if (ch == 'q') {
             rCount++;
             if (rCount == 3) {
                 Serial.println("Resetting ESP32...");
                 ESP.restart();
             }
         } else if (ch == 'a') {
-            startTimer(15000);
+            setTimer(15000);
         } else if (ch == 's') {
-            addTimer(15000);
+            setTimer(15000, true);
         } else if (ch == 'd') {
             resetTimer();
-        } else if (ch == 't') {
+        } else if (ch == 'w') {
             setTareHX711();
-        } else if (ch == 'c') {
+        } else if (ch == 'e') {
+            toggleActuator("heater", opt);
+        } else if (ch == 'r') {
+            toggleActuator("fan", opt);
+        } else if (ch == '3') {
             opt = !opt;
-        }
-        else {
+        } else {
             rCount = 0; // Reset the count if any other character is received
         }
     }
+}
 
-    readSensors();
-    readPower();
-    
-    if (opt) {
-        //debug_randSensor();
-        printSensors();
-    }
+void loop() {
+    unsigned long currentMillis = millis();
 
+    loopBuzz();
+    //SerialEvent();
+
+    loopWifiManager();
     display_loop();
+
+    // 3 seconds timer
+    if (currentMillis - previousMillis_2 >= interval_2) {
+        previousMillis_2 = currentMillis;
+
+        readSensors();
+        readPower();
+        if (opt) printSensors();
+    }
 }

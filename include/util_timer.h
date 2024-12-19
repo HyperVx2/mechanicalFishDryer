@@ -11,8 +11,7 @@ extern unsigned long timerDuration, timerStartMillis;
 extern bool timerRunning;
 
 void loadTimerState();
-void startTimer(unsigned long duration);
-void addTimer(unsigned long duration);
+void setTimer(unsigned long duration, bool extend = false);
 unsigned long getRemainingTime();
 void resetTimer();
 
