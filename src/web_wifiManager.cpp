@@ -172,7 +172,7 @@ void beginWifiManager() {
       Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
     }
     // send event with message "hello!", id current millis
-    client->send("hello!", NULL, millis());
+    client->send("hello!", NULL, millis(), 1000);
   });
   server.addHandler(&events);
 
@@ -203,4 +203,8 @@ void loopWifiManager() {
   }
   
   loopMQTT();
+
+  // Send Events to the client with the Sensor Readings Every 10 seconds
+  events.send("ping",NULL,millis());
+  events.send(getReadings().c_str(),"new_readings" ,millis());
 }

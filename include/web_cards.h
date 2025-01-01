@@ -12,6 +12,8 @@
 #include "gpio_sensors.h"
 #include "util_timer.h"
 
+String getReadings();
+
 void beginMQTT();
 void loopMQTT();
 

@@ -217,7 +217,7 @@ def monitor_temperature():
     global timer_active
 
     while timer_active:
-        time.sleep(5)
+        time.sleep(15 * 60) # 15 minutes
         enforce_temperature_rules()
         log_event("Periodic temperature check executed.")
 

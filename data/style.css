@@ -16,6 +16,43 @@ p {
 .topnav { 
   overflow: hidden; 
   background-color: #0A1128;
+  padding: 10px 0;
+}
+
+.topnav h1 {
+  margin: 0;
+  padding: 0 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.topnav nav {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.topnav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.topnav ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+.topnav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 8px 16px;
+  transition: background-color 0.3s;
+}
+
+.topnav ul li a:hover {
+  background-color: #1282A2;
+  border-radius: 4px;
 }
 
 body {  
@@ -58,7 +95,7 @@ input[type=submit] {
   margin-right: 10px;
   border-radius: 4px;
   transition-duration: 0.4s;
-  }
+}
 
 input[type=submit]:hover {
   background-color: #1282A2;
@@ -106,4 +143,4 @@ button {
 }
 .button-off:hover {
   background-color: #252524;
-} 
+}

@@ -9,8 +9,8 @@
 #include "gpio_actuators.h"
 #include "util_display.h"
 
-const unsigned long interval_2 = 2000; // 2 seconds
-unsigned long previousMillis_2 = 0;
+const unsigned long interval_2 = 2000, interval_1 = 1000; // 2 seconds and 1 second
+unsigned long previousMillis_2 = 0, previousMillis_1 = 0;
 
 static int rCount = 0;
 static bool opt = false;
@@ -78,15 +78,23 @@ void loop() {
     loopBuzz();
     //SerialEvent();
 
-    loopWifiManager();
     display_loop();
 
-    // 3 seconds timer
+    // 1 second timer
+    if (currentMillis - previousMillis_1 >= interval_1) {
+        previousMillis_1 = currentMillis;
+
+        loopWifiManager();
+    }
+
+    // 2 seconds timer
     if (currentMillis - previousMillis_2 >= interval_2) {
         previousMillis_2 = currentMillis;
 
         readSensors();
         readPower();
+        //debug_randSensor();
+        
         if (opt) printSensors();
     }
 }

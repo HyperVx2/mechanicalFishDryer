@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dashboard</title>
+    <title>Mech Dryer-Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="icon" type="image/png" href="favicon.png">
@@ -9,81 +9,83 @@
   </head>
   <body>
     <div class="topnav">
-      <h1>Dashboard</h1>
+      <h1>SMFDS Dashboard</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/conn">Conn</a></li>
+        </ul>
+      </nav>
     </div>
     <div class="content">
       <div class="card-grid">
-
-        <!-- Card 0 -->
-        <div class="card">
-          <p class="card-title">
-            <img src = "lightbulb.svg" alt="Light Bulb image"/>
-            Built-in LED</p>
-          <p>
-            <a href="on0"><button class="button-on">
-              <i><img src = "switch-closed.svg" alt="closed switch image "/></i>
-            </button></a>
-            <a href="off0"><button class="button-off">
-              <i><img src = "switch-open.svg" alt="open switch image"/></i>
-            </button></a>
-          </p>
-          <p class="state">State: %STATE0%</p>
-        </div>
-        <!-- End of Card 0 -->
-
-        <!-- Card 1 -->
-        <div class="card">
-          <p class="card-title">
-            <img src = "lightbulb.svg" alt="Light Bulb image"/>
-            LED 1</p>
-          <p>
-            <a href="on1"><button class="button-on">
-              <i><img src = "switch-closed.svg" alt="closed switch image "/></i>
-            </button></a>
-            <a href="off1"><button class="button-off">
-              <i><img src = "switch-open.svg" alt="open switch image"/></i>
-            </button></a>
-          </p>
-          <p class="state">State: %STATE1%</p>
-        </div>
-        <!-- End of Card 1 -->
-
-        <!-- Card 2 -->
-        <div class="card">
-          <p class="card-title">
-            <img src = "lightbulb.svg" alt="Light Bulb image"/>
-            LED 2</p>
-              <p><input type="range" onchange="updateSliderPWM(this)" id="pwmSlider" min="0" max="255" value="%SLIDERVALUE%" step="1" class="slider"></p>
-              <p><span id="textSliderValue">%SLIDERVALUE%</span></p>
-        </div>
-        <!-- End of Card 2 -->
-
-        <!-- Card 3 -->
-        <div class="card">
+        
+        <!-- Card for Temperature -->
+        <div class="card" id="temperature">
           <p class="card-title">Temperature</p>
           <canvas id="gauge-temperature"></canvas>
-          <p class="card-title">Temperature</p>
-          <canvas id="gauge-humidity"></canvas>
+          <p id="temperature-value"></p>
         </div>
-        <!-- End of Card 3 -->
 
-        <!-- Card 4 -->
+        <!-- Card for Humidity -->
+        <div class="card" id="humidity">
+          <p class="card-title">Humidity</p>
+          <canvas id="gauge-humidity"></canvas>
+          <p id="humidity-value"></p>
+        </div>
+
+        <!-- Card for Weight -->
+        <div class="card" id="weight">
+          <p class="card-title">Weight</p>
+          <canvas id="gauge-weight"></canvas>
+          <a href="tare"><button class="button-on">Set Tare</button></a>
+        </div>
+
+        <!-- Card for Power -->
+        <div class="card" id="power">
+          <p class="card-title">Power</p>
+          <p class="state" id="power-value"></p>
+        </div>
+
+        <!-- Card for Heater Control -->
         <div class="card">
-          <h2>ESP DS18B20 Server</h2>
+          <p class="card-title">Heater</p>
           <p>
-            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
-            <span class="ds-labels">Temperature Celsius</span> 
-            <span id="temperaturec">%TEMPERATUREC%</span>
-            <sup class="units">&deg;C</sup>
+            <button id="heater-on" class="button-on">
+              <i><img src="switch-closed.svg" alt="closed switch image"/></i>
+            </button>
+            <button id="heater-off" class="button-off">
+              <i><img src="switch-open.svg" alt="open switch image"/></i>
+            </button>
           </p>
+          <p class="state" id="heater-state">State: %RELAYHEAT%</p>
+        </div>
+
+        <!-- Card for Fan Control -->
+        <div class="card">
+          <p class="card-title">Fan</p>
           <p>
-            <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
-            <span class="ds-labels">Temperature Fahrenheit</span>
-            <span id="temperaturef">%TEMPERATUREF%</span>
-            <sup class="units">&deg;F</sup>
+            <button id="fan-on" class="button-on">
+              <i><img src="switch-closed.svg" alt="closed switch image"/></i>
+            </button>
+            <button id="fan-off" class="button-off">
+              <i><img src="switch-open.svg" alt="open switch image"/></i>
+            </button>
+          </p>
+          <p class="state" id="fan-state">State: %RELAYFAN%</p>
+        </div>
+
+        <!-- Card for Timer Control -->
+        <div class="card">
+          <p class="card-title">Timer</p>
+          <p class="state" id="timer-value"></p>
+          <input type="number" id="timer-minutes" placeholder="Minutes">
+          <p>
+            <button id="addTimer" class="button-on">Add Timer</button>
+            <button id="setTimer" class="button-on">Set Timer</button>
+            <button id="resetTimer" class="button-on">Reset Timer</button>
           </p>
         </div>
-        <!-- End of Card 4 -->
 
       </div>
     </div>

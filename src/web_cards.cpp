@@ -8,6 +8,22 @@ long lastMsg = 0;
 char msg[50];
 int value = 0;
 
+String getReadings() {
+  // Create a JSON document
+  JSONVar sensor;
+
+  // Add values to JSON
+  sensor["tem"] = temperature;
+  sensor["hum"] = humidity;
+  sensor["wei"] = weight;
+  sensor["cur"] = current;
+  sensor["vol"] = voltage;
+
+  // Serialize JSON to String
+  String jsonString = JSON.stringify(sensor);
+  return jsonString;
+}
+
 void mqtt_callback(char* topic, byte* message, unsigned int length) {
   /*Serial.print("Message arrived on topic: ");
   Serial.print(topic);
@@ -81,21 +97,8 @@ void loopMQTT() {
   if (now - lastMsg > 1000) {
     lastMsg = now;
 
-    // Create a JSON document
-    JSONVar sensor;
-
-    // Add values to JSON
-    sensor["tem"] = temperature;
-    sensor["hum"] = humidity;
-    sensor["wei"] = weight;
-    sensor["cur"] = current;
-    sensor["vol"] = voltage;
-
-    // Serialize JSON to String
-    String jsonString = JSON.stringify(sensor);
-
     // Publish the JSON string
-    client.publish("esp32/sensors", jsonString.c_str());
+    client.publish("esp32/sensors", getReadings().c_str());
     client.publish("esp32/timer", String(remainingTime).c_str());
   }
 }
@@ -115,9 +118,80 @@ void home(AsyncWebServer *server) {
 
 }
 
+void cards(AsyncWebServer *server) {
+  // Route for various card functions
+
+  server->on("/readings", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(200, "application/json", getReadings());
+  });
+
+  server->on("/relay", HTTP_GET, [](AsyncWebServerRequest *request){
+    JSONVar relay;
+    relay["heater"] = (digitalRead(RELAY_HEAT) ? "OFF" : "ON");
+    relay["fan"] = (digitalRead(RELAY_FAN) ? "OFF" : "ON");
+
+    request->send(200, "application/json", JSON.stringify(relay));
+  });
+
+  // Set tare for weight sensor
+  server->on("/tare", HTTP_GET, [](AsyncWebServerRequest *request){
+    setTareHX711();
+    request->send(LittleFS, "/index.html", String(), false);
+  });
+
+  // Control heater, 0 = off, 1 = on
+  server->on("/rh0", HTTP_GET, [](AsyncWebServerRequest *request){
+    toggleActuator("heater", LOW);    
+    request->send(LittleFS, "/index.html", String(), false);
+  });
+
+  server->on("/rh1", HTTP_GET, [](AsyncWebServerRequest *request){
+    toggleActuator("heater", HIGH);    
+    request->send(LittleFS, "/index.html", String(), false);
+  });
+
+  // Control fan, 0 = off, 1 = on
+  server->on("/rf0", HTTP_GET, [](AsyncWebServerRequest *request){
+    toggleActuator("fan", LOW);    
+    request->send(LittleFS, "/index.html", String(), false);
+  });
+
+  server->on("/rf1", HTTP_GET, [](AsyncWebServerRequest *request){
+    toggleActuator("fan", HIGH);    
+    request->send(LittleFS, "/index.html", String(), false);
+  });
+
+  server->on("/timer", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(200, "application/json", String(getRemainingTime()));
+  });
+
+  server->on("/modTimer", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (request->hasParam("mode") && request->hasParam("value")) {
+        String mode = request->getParam("mode")->value();
+        int value = request->getParam("value")->value().toInt();
+
+        if (mode == "add") {
+            setTimer(value * 60 * 1000, true);
+        } else if (mode == "set") {
+            setTimer(value * 60 * 1000, false);
+        } else if (mode == "reset") {
+            resetTimer();
+        } else {
+            request->send(400, "text/plain", "Invalid mode");
+            return;
+        }
+        request->send(200, "text/plain", "Timer updated");
+    } else {
+        request->send(400, "text/plain", "Missing mode or value parameter");
+    }
+});
+}
+
 // Note that server is a pointer entering serve(),
 // it doesn't need to be derefenced again.
 void serve(AsyncWebServer *server) {
     // Home Page
     home(server);
+
+    cards(server);
 }
