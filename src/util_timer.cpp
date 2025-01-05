@@ -76,12 +76,12 @@ unsigned long getRemainingTime() {
   }
 
   unsigned long elapsed = millis() - timerStartMillis;
+  saveTimerState(); // Save state
 
   if (elapsed >= timerDuration) {
     timerRunning = false;
     timerDuration = 0;
     timerStartMillis = 0;
-    saveTimerState(); // Save final state
 
     digitalWrite(LED_3, LOW);
     setupBuzz(BUZZ_EXPIRE_FREQ, BUZZ_EXPIRE_DURATION, BUZZ_EXPIRE_INTERVAL, BUZZ_EXPIRE_TIMES);

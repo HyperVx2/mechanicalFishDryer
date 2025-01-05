@@ -84,7 +84,7 @@ function getReadings() {
       gaugeTem.value = tem;
       gaugeHum.value = hum;
       gaugeWei.value = wei;
-      document.getElementById("power-value").innerHTML = (myObj.vol + myObj.cur) + " W";
+      document.getElementById("power-value").innerHTML = ((myObj.vol * myObj.cur) / 1000) + " kW"
     }
   };
   xhrReadings.open("GET", "/readings", true);
@@ -273,7 +273,7 @@ function getReadings(){
       gaugeTem.value = tem;
       gaugeHum.value = hum;
       gaugeWei.value = wei;
-      document.getElementById("power-value").innerHTML = (myObj.vol + myObj.cur) + " W";
+      document.getElementById("power-value").innerHTML = ((myObj.vol * myObj.cur) / 1000) + " kW";
     }
   }; 
   xhr.open("GET", "/readings", true);
@@ -314,7 +314,7 @@ if (!!window.EventSource) {
     gaugeTem.value = myObj.tem;
     gaugeHum.value = myObj.hum;
     gaugeWei.value = myObj.wei;
-    document.getElementById("power-value").innerHTML = (myObj.vol + myObj.cur) + " W";
+    document.getElementById("power-value").innerHTML = ((myObj.vol * myObj.cur) / 1000) + " kW"
   }, false);
 }
 
