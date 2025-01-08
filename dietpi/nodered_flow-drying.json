@@ -1,0 +1,909 @@
+[
+    {
+        "id": "6d6c904c1ae588cf",
+        "type": "tab",
+        "label": "Drying Session",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "71422cda4947848b",
+        "type": "mysql",
+        "z": "6d6c904c1ae588cf",
+        "mydb": "c7bae59f6a7a43c0",
+        "name": "",
+        "x": 590,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "inject_node_id",
+        "type": "inject",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "props": [
+            {
+                "p": "delay",
+                "v": "5000",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3e849bafa75c5adb",
+        "type": "inject",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "iso",
+        "payloadType": "date",
+        "x": 160,
+        "y": 720,
+        "wires": [
+            [
+                "01aa970cf1d85b7d"
+            ]
+        ]
+    },
+    {
+        "id": "469cce9e5aa2f8c3",
+        "type": "ui-table",
+        "z": "6d6c904c1ae588cf",
+        "group": "d632f08ecb93a8c5",
+        "name": "data_drying",
+        "label": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "maxrows": 0,
+        "passthru": false,
+        "autocols": true,
+        "showSearch": true,
+        "selectionType": "none",
+        "columns": [],
+        "mobileBreakpoint": "sm",
+        "mobileBreakpointType": "defaults",
+        "action": "append",
+        "x": 630,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7715bce262e6fbee",
+        "type": "ui-table",
+        "z": "6d6c904c1ae588cf",
+        "group": "a6a07827f9f64881",
+        "name": "post_drying_data",
+        "label": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "maxrows": 0,
+        "passthru": false,
+        "autocols": true,
+        "showSearch": true,
+        "selectionType": "none",
+        "columns": [],
+        "mobileBreakpoint": "sm",
+        "mobileBreakpointType": "defaults",
+        "action": "append",
+        "x": 650,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "21d52a518ffd1efd",
+        "type": "ui-form",
+        "z": "6d6c904c1ae588cf",
+        "name": "Start Dryer Form",
+        "group": "d09b58eed4eee17d",
+        "label": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Fish Type",
+                "key": "fish_type",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Trays Used",
+                "key": "trays_used",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Weight (g)",
+                "key": "weight",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Drying Time (mins)",
+                "key": "drying_time",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Use FIS",
+                "key": "use_fis",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "fish_type": "",
+            "trays_used": "",
+            "weight": "",
+            "drying_time": "",
+            "use_fis": false
+        },
+        "payload": "",
+        "submit": "Start",
+        "cancel": "Clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 150,
+        "y": 60,
+        "wires": [
+            [
+                "e616042ef265bc8f"
+            ]
+        ]
+    },
+    {
+        "id": "a63e6c164636465d",
+        "type": "debug",
+        "z": "6d6c904c1ae588cf",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e616042ef265bc8f",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "processFormData",
+        "func": "// Receive payload\nvar data = msg.payload;\n\n// Set data ton context\nflow.set(\"trays_used\", data.trays_used);\nglobal.set(\"fish_type\", data.fish_type);\nglobal.set(\"timer_value\", data.drying_time);\n\nmsg.topic = `INSERT INTO drying_session \n    (type, trays_used, start_timestamp, weight_start, humidity_start) \n    VALUES \n    ('${data.fish_type.toLowerCase()}', ${data.trays_used}, NOW(), ${data.weight}, ${global.get('humidity')})`;\n\n\n// Prepare dryer data\nfunction minutesToMilliseconds(minutes) {\n    return minutes * 60 * 1000;\n}\nmsg.payload = minutesToMilliseconds(data.drying_time)\n\nnode.status({fill:\"blue\", shape:\"dot\", text:\"OK\"});\nreturn msg;\n    ",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "c5c3d0e32d4b8d12",
+                "67244df7f2070fd7",
+                "fcf9cd72538dbb6e",
+                "71422cda4947848b"
+            ]
+        ]
+    },
+    {
+        "id": "acc88f01be66bbd6",
+        "type": "mqtt in",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "topic": "esp32/timer",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 360,
+        "wires": [
+            [
+                "16eb295fa6067475",
+                "f0f52928eca57118"
+            ]
+        ]
+    },
+    {
+        "id": "16eb295fa6067475",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "monitorTemperature",
+        "func": "function monitorTemperature(msg) {\n    const timerValue = msg.payload;\n    const heaterState = global.get('heater_state');\n    \n    // Check if we should run temperature check\n    const isDiv15Min = timerValue % 900000 === 0;  // Divisible by 15 minutes\n    const isDiv5Min = timerValue % 300000 === 0;   // Divisible by 5 minutes\n\n    // Skip if is_active is false\n    if (!global.get('is_active')) {\n        node.status({fill:\"red\", shape:\"dot\", text:\"false - notActive\"});\n        return null;\n    }\n    \n    // Skip if conditions not met\n    if ((/*heaterState && */!isDiv15Min) /*|| (!heaterState && !isDiv5Min)*/ || timerValue === 0) {\n        node.status({fill:\"red\", shape:\"dot\", text:\"false - not met\"});\n        return null;\n    }\n\n    const temperature = global.get('temperature');\n    \n    // Rest of your existing temperature monitoring code\n    const TEMP_RANGES = {\n        1: [55, 60],\n        2: [55, 60],\n        3: [58, 64],\n        4: [60, 65],\n        5: [60, 70],\n        6: [65, 70]\n    };\n\n    const traysUsed = global.get('trays_used') || 2;\n    const [minTemp, maxTemp] = TEMP_RANGES[traysUsed] || [55, 60];\n\n    let newHeaterState = heaterState;\n    if (temperature > maxTemp && heaterState) {\n        newHeaterState = false;\n    } else if (temperature < minTemp && !heaterState) {\n        newHeaterState = true;\n    }\n\n    msg.topic = 'esp32/heater';\n    msg.payload = newHeaterState;\n\n    node.log(\"Temperature Check\");\n    node.status({fill:\"green\", shape:\"dot\", text:\"Temperature Check\"});\n    return msg;\n}\n\nreturn monitorTemperature(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 340,
+        "wires": [
+            [
+                "03ac53f9edf80c94",
+                "b910ae511e26b618"
+            ]
+        ]
+    },
+    {
+        "id": "c5c3d0e32d4b8d12",
+        "type": "mqtt out",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "topic": "esp32/timer/start",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 610,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "03ac53f9edf80c94",
+        "type": "mqtt out",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "topic": "esp32/heater",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 810,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "67244df7f2070fd7",
+        "type": "trigger",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "op1": "true",
+        "op2": "0",
+        "op1type": "bool",
+        "op2type": "str",
+        "duration": "0",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "ms",
+        "reset": "true",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 600,
+        "y": 240,
+        "wires": [
+            [
+                "03ac53f9edf80c94",
+                "1a58f99ad2cb02d7",
+                "dbaa774d14869dd0"
+            ]
+        ]
+    },
+    {
+        "id": "1a58f99ad2cb02d7",
+        "type": "mqtt out",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "topic": "esp32/fan",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 800,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "c5195245caac8742",
+        "type": "trigger",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "op1": "true",
+        "op2": "false",
+        "op1type": "bool",
+        "op2type": "bool",
+        "duration": "5",
+        "extend": false,
+        "overrideDelay": true,
+        "units": "min",
+        "reset": "reset",
+        "bytopic": "topic",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 590,
+        "y": 480,
+        "wires": [
+            [
+                "fd65ac811feff5a6",
+                "a63e6c164636465d"
+            ]
+        ]
+    },
+    {
+        "id": "fd65ac811feff5a6",
+        "type": "mqtt out",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "topic": "esp32/fan",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 780,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "6e1caa2fd0e17b74",
+        "type": "mysql",
+        "z": "6d6c904c1ae588cf",
+        "mydb": "c7bae59f6a7a43c0",
+        "name": "",
+        "x": 1030,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f0f52928eca57118",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "prepare postSession",
+        "func": "function updateSession(msg) {\n    // Only process when timer reaches 0\n    if (msg.payload === 0 && global.get('is_active')) {\n        global.set('is_active', false);\n        msg.delay = 300000; // Set delay to 5mins before post drying save\n        msg.payload = false;\n\n        node.log(\"Post Session Event\");\n        node.status({fill:\"green\", shape:\"dot\", text:\"Session Updated\"});\n        return msg;\n    }\n\n    node.status({fill:\"red\", shape:\"dot\", text:\"false\"});\n    return null;\n}\n\nreturn updateSession(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 400,
+        "wires": [
+            [
+                "49fd9472822286a8",
+                "c5195245caac8742",
+                "03ac53f9edf80c94",
+                "71e7c7e272ee30a8"
+            ]
+        ]
+    },
+    {
+        "id": "49fd9472822286a8",
+        "type": "delay",
+        "z": "6d6c904c1ae588cf",
+        "name": "delay postSession",
+        "pauseType": "delayv",
+        "timeout": "5",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 610,
+        "y": 540,
+        "wires": [
+            [
+                "03dc94803741ba7d",
+                "e6ab8a3ec44e3a12"
+            ]
+        ]
+    },
+    {
+        "id": "03dc94803741ba7d",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "sqlQuery postSession",
+        "func": "function updateSession(msg) {\n\n    // Get current values\n    const humidity = global.get('humidity');\n    const weight = global.get('weight');\n        \n    // Prepare SQL query\n    msg.topic = `UPDATE drying_session \n                SET end_timestamp = NOW(),\n                    humidity_end = ${humidity},\n                    weight_end = ${weight}\n                WHERE id = (SELECT MAX(id) FROM drying_session)`;\n                \n    // Clear payload as it's not needed for SQL node\n    msg.payload = [];\n    \n    node.status({fill:\"green\", shape:\"dot\", text:\"Session Updated\"});\n    return msg;\n}\n\nreturn updateSession(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 540,
+        "wires": [
+            [
+                "6e1caa2fd0e17b74"
+            ]
+        ]
+    },
+    {
+        "id": "84d45c064fa744db",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "set isActive true",
+        "func": "global.set(\"is_active\", true);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dbaa774d14869dd0",
+        "type": "delay",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 800,
+        "y": 160,
+        "wires": [
+            [
+                "84d45c064fa744db"
+            ]
+        ]
+    },
+    {
+        "id": "73b3e72c78bc49ee",
+        "type": "ui-notification",
+        "z": "6d6c904c1ae588cf",
+        "ui": "a5d0a76114c2a2c4",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "",
+        "x": 850,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fcf9cd72538dbb6e",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "dryingSessionStart-notif",
+        "func": "msg.payload = \"Drying start\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 100,
+        "wires": [
+            [
+                "73b3e72c78bc49ee"
+            ]
+        ]
+    },
+    {
+        "id": "9cbd29e958d0eddf",
+        "type": "ui-notification",
+        "z": "6d6c904c1ae588cf",
+        "ui": "a5d0a76114c2a2c4",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "",
+        "x": 830,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b910ae511e26b618",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "monitorTempCheck-notif",
+        "func": "msg.payload = \"Monitor temperature check\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 340,
+        "wires": [
+            [
+                "9cbd29e958d0eddf"
+            ]
+        ]
+    },
+    {
+        "id": "a750a1a2417c586a",
+        "type": "ui-notification",
+        "z": "6d6c904c1ae588cf",
+        "ui": "a5d0a76114c2a2c4",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "",
+        "x": 830,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "71e7c7e272ee30a8",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "preparePostSession-notif",
+        "func": "msg.payload = \"Drying done. Wait 15 minutes until fan stops.\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 400,
+        "wires": [
+            [
+                "a750a1a2417c586a"
+            ]
+        ]
+    },
+    {
+        "id": "e6ab8a3ec44e3a12",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "PostSession-notif",
+        "func": "msg.payload = \"Drying done.\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 600,
+        "wires": [
+            [
+                "9adf4c3ac2765c61"
+            ]
+        ]
+    },
+    {
+        "id": "9adf4c3ac2765c61",
+        "type": "ui-notification",
+        "z": "6d6c904c1ae588cf",
+        "ui": "a5d0a76114c2a2c4",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "",
+        "x": 990,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "01aa970cf1d85b7d",
+        "type": "debug",
+        "z": "6d6c904c1ae588cf",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "c7bae59f6a7a43c0",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "sensor_data",
+        "tz": "+08:00",
+        "charset": "UTF8"
+    },
+    {
+        "id": "d632f08ecb93a8c5",
+        "type": "ui-group",
+        "name": "Drying Data",
+        "page": "bcb5410c21f10d0b",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a6a07827f9f64881",
+        "type": "ui-group",
+        "name": "Post Drying Data",
+        "page": "bcb5410c21f10d0b",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "d09b58eed4eee17d",
+        "type": "ui-group",
+        "name": "Start Dryer",
+        "page": "f7c89c2c63c4096e",
+        "width": "6",
+        "height": "1",
+        "order": 7,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "c22cbfaf233a6e9b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a5d0a76114c2a2c4",
+        "type": "ui-base",
+        "name": "SMFDS Dashboard",
+        "path": "/dashboard",
+        "appIcon": "https://github.com/HyperVx2/mechanicalFishDryer/blob/main/data/favicon.png?raw=true",
+        "includeClientData": false,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": true,
+        "showPageTitle": true,
+        "navigationStyle": "icon",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": "1",
+        "showDisconnectNotification": true
+    },
+    {
+        "id": "bcb5410c21f10d0b",
+        "type": "ui-page",
+        "name": "Historical Data",
+        "ui": "a5d0a76114c2a2c4",
+        "path": "/page2",
+        "icon": "table",
+        "layout": "grid",
+        "theme": "e717cb789e5b76fb",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "f7c89c2c63c4096e",
+        "type": "ui-page",
+        "name": "Home",
+        "ui": "a5d0a76114c2a2c4",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "e717cb789e5b76fb",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "2"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "e717cb789e5b76fb",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    }
+]
