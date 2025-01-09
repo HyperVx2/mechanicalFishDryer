@@ -20,54 +20,6 @@
         ]
     },
     {
-        "id": "inject_node_id",
-        "type": "inject",
-        "z": "6d6c904c1ae588cf",
-        "name": "",
-        "props": [
-            {
-                "p": "delay",
-                "v": "5000",
-                "vt": "num"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 150,
-        "y": 660,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "3e849bafa75c5adb",
-        "type": "inject",
-        "z": "6d6c904c1ae588cf",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "iso",
-        "payloadType": "date",
-        "x": 160,
-        "y": 720,
-        "wires": [
-            [
-                "01aa970cf1d85b7d"
-            ]
-        ]
-    },
-    {
         "id": "469cce9e5aa2f8c3",
         "type": "ui-table",
         "z": "6d6c904c1ae588cf",
@@ -87,7 +39,7 @@
         "mobileBreakpointType": "defaults",
         "action": "append",
         "x": 630,
-        "y": 660,
+        "y": 1120,
         "wires": [
             []
         ]
@@ -112,7 +64,7 @@
         "mobileBreakpointType": "defaults",
         "action": "append",
         "x": 650,
-        "y": 720,
+        "y": 1180,
         "wires": [
             []
         ]
@@ -190,28 +142,11 @@
         ]
     },
     {
-        "id": "a63e6c164636465d",
-        "type": "debug",
-        "z": "6d6c904c1ae588cf",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 740,
-        "y": 460,
-        "wires": []
-    },
-    {
         "id": "e616042ef265bc8f",
         "type": "function",
         "z": "6d6c904c1ae588cf",
         "name": "processFormData",
-        "func": "// Receive payload\nvar data = msg.payload;\n\n// Set data ton context\nflow.set(\"trays_used\", data.trays_used);\nglobal.set(\"fish_type\", data.fish_type);\nglobal.set(\"timer_value\", data.drying_time);\n\nmsg.topic = `INSERT INTO drying_session \n    (type, trays_used, start_timestamp, weight_start, humidity_start) \n    VALUES \n    ('${data.fish_type.toLowerCase()}', ${data.trays_used}, NOW(), ${data.weight}, ${global.get('humidity')})`;\n\n\n// Prepare dryer data\nfunction minutesToMilliseconds(minutes) {\n    return minutes * 60 * 1000;\n}\nmsg.payload = minutesToMilliseconds(data.drying_time)\n\nnode.status({fill:\"blue\", shape:\"dot\", text:\"OK\"});\nreturn msg;\n    ",
+        "func": "// Receive payload\nvar data = msg.payload;\n\n// Set data to context\nflow.set(\"trays_used\", data.trays_used);\nglobal.set(\"fish_type\", data.fish_type);\nglobal.set(\"timer_value\", data.drying_time);\nglobal.set(\"is_active\", true);\n\nmsg.topic = `INSERT INTO drying_session \n    (type, trays_used, start_timestamp, weight_start, humidity_start) \n    VALUES \n    ('${data.fish_type.toLowerCase()}', ${data.trays_used}, NOW(), ${data.weight}, ${global.get('humidity')})`;\n\n\n// Prepare dryer data\nfunction minutesToMilliseconds(minutes) {\n    return minutes * 60 * 1000;\n}\nmsg.payload = minutesToMilliseconds(data.drying_time);\n\nnode.status({fill:\"blue\", shape:\"dot\", text:\"OK\"});\nreturn msg;\n    ",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -223,52 +158,8 @@
         "wires": [
             [
                 "c5c3d0e32d4b8d12",
-                "67244df7f2070fd7",
                 "fcf9cd72538dbb6e",
-                "71422cda4947848b"
-            ]
-        ]
-    },
-    {
-        "id": "acc88f01be66bbd6",
-        "type": "mqtt in",
-        "z": "6d6c904c1ae588cf",
-        "name": "",
-        "topic": "esp32/timer",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "c22cbfaf233a6e9b",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 150,
-        "y": 360,
-        "wires": [
-            [
-                "16eb295fa6067475",
-                "f0f52928eca57118"
-            ]
-        ]
-    },
-    {
-        "id": "16eb295fa6067475",
-        "type": "function",
-        "z": "6d6c904c1ae588cf",
-        "name": "monitorTemperature",
-        "func": "function monitorTemperature(msg) {\n    const timerValue = msg.payload;\n    const heaterState = global.get('heater_state');\n    \n    // Check if we should run temperature check\n    const isDiv15Min = timerValue % 900000 === 0;  // Divisible by 15 minutes\n    const isDiv5Min = timerValue % 300000 === 0;   // Divisible by 5 minutes\n\n    // Skip if is_active is false\n    if (!global.get('is_active')) {\n        node.status({fill:\"red\", shape:\"dot\", text:\"false - notActive\"});\n        return null;\n    }\n    \n    // Skip if conditions not met\n    if ((/*heaterState && */!isDiv15Min) /*|| (!heaterState && !isDiv5Min)*/ || timerValue === 0) {\n        node.status({fill:\"red\", shape:\"dot\", text:\"false - not met\"});\n        return null;\n    }\n\n    const temperature = global.get('temperature');\n    \n    // Rest of your existing temperature monitoring code\n    const TEMP_RANGES = {\n        1: [55, 60],\n        2: [55, 60],\n        3: [58, 64],\n        4: [60, 65],\n        5: [60, 70],\n        6: [65, 70]\n    };\n\n    const traysUsed = global.get('trays_used') || 2;\n    const [minTemp, maxTemp] = TEMP_RANGES[traysUsed] || [55, 60];\n\n    let newHeaterState = heaterState;\n    if (temperature > maxTemp && heaterState) {\n        newHeaterState = false;\n    } else if (temperature < minTemp && !heaterState) {\n        newHeaterState = true;\n    }\n\n    msg.topic = 'esp32/heater';\n    msg.payload = newHeaterState;\n\n    node.log(\"Temperature Check\");\n    node.status({fill:\"green\", shape:\"dot\", text:\"Temperature Check\"});\n    return msg;\n}\n\nreturn monitorTemperature(msg);",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 340,
-        "wires": [
-            [
-                "03ac53f9edf80c94",
-                "b910ae511e26b618"
+                "dbaa774d14869dd0"
             ]
         ]
     },
@@ -287,7 +178,7 @@
         "expiry": "",
         "broker": "c22cbfaf233a6e9b",
         "x": 610,
-        "y": 180,
+        "y": 140,
         "wires": []
     },
     {
@@ -304,36 +195,9 @@
         "correl": "",
         "expiry": "",
         "broker": "c22cbfaf233a6e9b",
-        "x": 810,
-        "y": 260,
+        "x": 1470,
+        "y": 200,
         "wires": []
-    },
-    {
-        "id": "67244df7f2070fd7",
-        "type": "trigger",
-        "z": "6d6c904c1ae588cf",
-        "name": "",
-        "op1": "true",
-        "op2": "0",
-        "op1type": "bool",
-        "op2type": "str",
-        "duration": "0",
-        "extend": false,
-        "overrideDelay": false,
-        "units": "ms",
-        "reset": "true",
-        "bytopic": "all",
-        "topic": "topic",
-        "outputs": 1,
-        "x": 600,
-        "y": 240,
-        "wires": [
-            [
-                "03ac53f9edf80c94",
-                "1a58f99ad2cb02d7",
-                "dbaa774d14869dd0"
-            ]
-        ]
     },
     {
         "id": "1a58f99ad2cb02d7",
@@ -349,8 +213,8 @@
         "correl": "",
         "expiry": "",
         "broker": "c22cbfaf233a6e9b",
-        "x": 800,
-        "y": 220,
+        "x": 1460,
+        "y": 160,
         "wires": []
     },
     {
@@ -370,12 +234,11 @@
         "bytopic": "topic",
         "topic": "topic",
         "outputs": 1,
-        "x": 590,
-        "y": 480,
+        "x": 1150,
+        "y": 460,
         "wires": [
             [
-                "fd65ac811feff5a6",
-                "a63e6c164636465d"
+                "fd65ac811feff5a6"
             ]
         ]
     },
@@ -393,8 +256,8 @@
         "correl": "",
         "expiry": "",
         "broker": "c22cbfaf233a6e9b",
-        "x": 780,
-        "y": 480,
+        "x": 1340,
+        "y": 460,
         "wires": []
     },
     {
@@ -403,8 +266,8 @@
         "z": "6d6c904c1ae588cf",
         "mydb": "c7bae59f6a7a43c0",
         "name": "",
-        "x": 1030,
-        "y": 540,
+        "x": 1610,
+        "y": 520,
         "wires": [
             []
         ]
@@ -421,14 +284,14 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 360,
+        "x": 920,
         "y": 400,
         "wires": [
             [
                 "49fd9472822286a8",
                 "c5195245caac8742",
-                "03ac53f9edf80c94",
-                "71e7c7e272ee30a8"
+                "71e7c7e272ee30a8",
+                "c8af558caf8b82d8"
             ]
         ]
     },
@@ -449,8 +312,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 610,
-        "y": 540,
+        "x": 1170,
+        "y": 520,
         "wires": [
             [
                 "03dc94803741ba7d",
@@ -470,30 +333,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 820,
-        "y": 540,
+        "x": 1400,
+        "y": 520,
         "wires": [
             [
-                "6e1caa2fd0e17b74"
+                "b8c7cd7405b43b06"
             ]
-        ]
-    },
-    {
-        "id": "84d45c064fa744db",
-        "type": "function",
-        "z": "6d6c904c1ae588cf",
-        "name": "set isActive true",
-        "func": "global.set(\"is_active\", true);",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 960,
-        "y": 160,
-        "wires": [
-            []
         ]
     },
     {
@@ -513,11 +358,12 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 800,
-        "y": 160,
+        "x": 580,
+        "y": 200,
         "wires": [
             [
-                "84d45c064fa744db"
+                "5171ea429d0b6a0d",
+                "d98e52368dee885a"
             ]
         ]
     },
@@ -583,8 +429,8 @@
         "raw": false,
         "className": "",
         "name": "",
-        "x": 830,
-        "y": 340,
+        "x": 1490,
+        "y": 320,
         "wires": [
             []
         ]
@@ -593,7 +439,7 @@
         "id": "b910ae511e26b618",
         "type": "function",
         "z": "6d6c904c1ae588cf",
-        "name": "monitorTempCheck-notif",
+        "name": "send notif",
         "func": "msg.payload = \"Monitor temperature check\";\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
@@ -601,8 +447,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 630,
-        "y": 340,
+        "x": 1320,
+        "y": 320,
         "wires": [
             [
                 "9cbd29e958d0eddf"
@@ -627,7 +473,7 @@
         "raw": false,
         "className": "",
         "name": "",
-        "x": 830,
+        "x": 1410,
         "y": 400,
         "wires": [
             []
@@ -645,7 +491,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 630,
+        "x": 1190,
         "y": 400,
         "wires": [
             [
@@ -665,8 +511,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 810,
-        "y": 600,
+        "x": 1390,
+        "y": 620,
         "wires": [
             [
                 "9adf4c3ac2765c61"
@@ -691,26 +537,235 @@
         "raw": false,
         "className": "",
         "name": "",
-        "x": 990,
-        "y": 600,
+        "x": 1590,
+        "y": 620,
         "wires": [
             []
         ]
     },
     {
-        "id": "01aa970cf1d85b7d",
+        "id": "d98e52368dee885a",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "checkTimer",
+        "func": "function checkTimer(msg) {\n    const timer_value = global.get('timer_value');\n    const is_active = global.get('is_active');\n    \n    msg.topic = [];\n\n    if (!is_active) {\n        msg.reset = true;\n        node.status({ fill: 'grey', shape: 'dot', text: 'inactive' });\n        return null;\n    }\n\n    if (timer_value === 0 && is_active) {\n        msg.payload = 0;\n    } else {\n        msg.payload = 1;\n    }\n\n    msg.delay = 900000; // 15 minutes\n    node.status({ fill: 'blue', shape: 'dot', text: 'OK' });\n    return msg;\n}\nreturn checkTimer(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 320,
+        "wires": [
+            [
+                "7f68e71c9e53f119",
+                "73e2d594c8d31e74"
+            ]
+        ]
+    },
+    {
+        "id": "f6d397683dbbf677",
+        "type": "function",
+        "z": "6d6c904c1ae588cf",
+        "name": "monitorTemperature",
+        "func": "function monitorTemperature(msg) {\n    const traysUsed = flow.get('traysUsed') || 2;\n    const heaterState = global.get('heater_state');\n    const temperature = global.get('temperature');\n\n    // Predefined temperature ranges\n    const TEMP_RANGES = {\n        1: [55, 60],\n        2: [55, 60],\n        3: [58, 64],\n        4: [60, 65],\n        5: [60, 70],\n        6: [65, 70]\n    };\n\n    const [minTemp, maxTemp] = TEMP_RANGES[traysUsed] || [55, 60];\n\n    let newHeaterState = heaterState;\n    if (temperature > maxTemp && heaterState) {\n        newHeaterState = false;\n    } else if (temperature < minTemp && !heaterState) {\n        newHeaterState = true;\n    }\n\n    msg.payload = newHeaterState;\n\n    node.status({ fill: 'blue', shape: 'dot', text: `Temperature: ${temperature}°C - Heater: ${newHeaterState}` });\n    return msg;\n}\nreturn monitorTemperature(msg);",
+        "outputs": 1,
+        "timeout": "3000",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 320,
+        "wires": [
+            [
+                "03ac53f9edf80c94",
+                "b910ae511e26b618",
+                "d98e52368dee885a",
+                "f4e247be27521059"
+            ]
+        ]
+    },
+    {
+        "id": "a9227ceb2983500e",
+        "type": "inject",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"fish_type\":\"var-test\",\"trays_used\":5,\"weight\":500,\"drying_time\":30,\"use_fis\":false}",
+        "payloadType": "json",
+        "x": 210,
+        "y": 220,
+        "wires": [
+            [
+                "e616042ef265bc8f"
+            ]
+        ]
+    },
+    {
+        "id": "f4e247be27521059",
         "type": "debug",
         "z": "6d6c904c1ae588cf",
-        "name": "debug 3",
+        "name": "monitorTemp",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 320,
-        "y": 720,
+        "x": 1350,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "73e2d594c8d31e74",
+        "type": "debug",
+        "z": "6d6c904c1ae588cf",
+        "name": "checkTimer",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "5171ea429d0b6a0d",
+        "type": "trigger",
+        "z": "6d6c904c1ae588cf",
+        "name": "trigger relay",
+        "op1": "true",
+        "op2": "",
+        "op1type": "bool",
+        "op2type": "nul",
+        "duration": "250",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 770,
+        "y": 200,
+        "wires": [
+            [
+                "1a58f99ad2cb02d7",
+                "03ac53f9edf80c94"
+            ]
+        ]
+    },
+    {
+        "id": "7f68e71c9e53f119",
+        "type": "switch",
+        "z": "6d6c904c1ae588cf",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 750,
+        "y": 380,
+        "wires": [
+            [
+                "c59eee1e7c1b5373"
+            ],
+            [
+                "f0f52928eca57118"
+            ]
+        ]
+    },
+    {
+        "id": "c59eee1e7c1b5373",
+        "type": "delay",
+        "z": "6d6c904c1ae588cf",
+        "name": "15mins delay",
+        "pauseType": "delayv",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 890,
+        "y": 320,
+        "wires": [
+            [
+                "f6d397683dbbf677"
+            ]
+        ]
+    },
+    {
+        "id": "c8af558caf8b82d8",
+        "type": "debug",
+        "z": "6d6c904c1ae588cf",
+        "name": "pre-postSession",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "b8c7cd7405b43b06",
+        "type": "debug",
+        "z": "6d6c904c1ae588cf",
+        "name": "postSession",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1430,
+        "y": 580,
         "wires": []
     },
     {
