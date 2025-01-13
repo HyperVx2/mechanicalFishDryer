@@ -47,12 +47,15 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 790,
-        "y": 100,
+        "x": 830,
+        "y": 440,
         "wires": [
             [
                 "8c6ba4e5f708da6a",
-                "40c7f34230068fd6"
+                "40c7f34230068fd6",
+                "762ceb46fc8b96e2",
+                "895c72bf793786c1",
+                "f4ecfe24b2bb709f"
             ]
         ]
     },
@@ -70,8 +73,8 @@
         "correl": "",
         "expiry": "",
         "broker": "c22cbfaf233a6e9b",
-        "x": 1250,
-        "y": 160,
+        "x": 1290,
+        "y": 620,
         "wires": []
     },
     {
@@ -99,8 +102,8 @@
         "iconPosition": "left",
         "iconInnerPosition": "outside",
         "spinner": "default",
-        "x": 810,
-        "y": 160,
+        "x": 850,
+        "y": 620,
         "wires": [
             [
                 "78205662e8d8999e"
@@ -121,8 +124,8 @@
         "correl": "",
         "expiry": "",
         "broker": "c22cbfaf233a6e9b",
-        "x": 1240,
-        "y": 220,
+        "x": 1280,
+        "y": 680,
         "wires": []
     },
     {
@@ -150,8 +153,8 @@
         "iconPosition": "left",
         "iconInnerPosition": "outside",
         "spinner": "default",
-        "x": 810,
-        "y": 220,
+        "x": 850,
+        "y": 680,
         "wires": [
             [
                 "ed13296d428959c9"
@@ -172,8 +175,8 @@
         "correl": "",
         "expiry": "",
         "broker": "c22cbfaf233a6e9b",
-        "x": 1250,
-        "y": 280,
+        "x": 1290,
+        "y": 740,
         "wires": []
     },
     {
@@ -194,8 +197,8 @@
         "color": "#717171",
         "wrapText": false,
         "className": "",
-        "x": 1210,
-        "y": 100,
+        "x": 1250,
+        "y": 400,
         "wires": []
     },
     {
@@ -209,7 +212,7 @@
         "height": "3",
         "gtype": "gauge-half",
         "gstyle": "needle",
-        "title": "",
+        "title": "Temperature",
         "units": "",
         "icon": "thermometer",
         "prefix": "",
@@ -224,7 +227,7 @@
                 "color": "#ffc800"
             },
             {
-                "from": "61",
+                "from": "65",
                 "color": "#ea5353"
             }
         ],
@@ -245,13 +248,13 @@
         "type": "ui-gauge",
         "z": "917f4a933091bb50",
         "name": "Humi Gauge",
-        "group": "053f07e3c92bc485",
-        "order": 1,
-        "width": 3,
-        "height": 3,
+        "group": "abdab87339b7bc42",
+        "order": 2,
+        "width": "3",
+        "height": "3",
         "gtype": "gauge-half",
         "gstyle": "needle",
-        "title": "",
+        "title": "Humidity",
         "units": "",
         "icon": "water",
         "prefix": "",
@@ -287,13 +290,13 @@
         "type": "ui-gauge",
         "z": "917f4a933091bb50",
         "name": "Weight Gauge",
-        "group": "76097f93cc2931a9",
-        "order": 1,
-        "width": 3,
-        "height": 3,
+        "group": "abdab87339b7bc42",
+        "order": 3,
+        "width": "3",
+        "height": "3",
         "gtype": "gauge-half",
         "gstyle": "needle",
-        "title": "",
+        "title": "Weight",
         "units": "",
         "icon": "weight",
         "prefix": "",
@@ -350,8 +353,8 @@
         "offvalueType": "bool",
         "officon": "",
         "offcolor": "",
-        "x": 790,
-        "y": 280,
+        "x": 830,
+        "y": 740,
         "wires": [
             [
                 "d58c83c2e1ebfa70",
@@ -363,7 +366,7 @@
         "id": "8c6ba4e5f708da6a",
         "type": "function",
         "z": "917f4a933091bb50",
-        "name": "format time",
+        "name": "formatTime",
         "func": "function formatTime(ms) {\n    // Calculate the time components\n    var seconds = Math.floor((ms / 1000) % 60);\n    var minutes = Math.floor((ms / (1000 * 60)) % 60);\n    var hours = Math.floor((ms / (1000 * 60 * 60)) % 24);\n\n    // Format the time components into a string\n    var formattedTime = \n        (hours < 10 ? \"0\" : \"\") + hours + \":\" +\n        (minutes < 10 ? \"0\" : \"\") + minutes + \":\" +\n        (seconds < 10 ? \"0\" : \"\") + seconds;\n\n    return formattedTime;\n}\n\nvar data = msg.payload;\nmsg.payload = formatTime(data);\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
@@ -371,11 +374,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 990,
-        "y": 100,
+        "x": 1030,
+        "y": 420,
         "wires": [
             [
-                "e1de0d10f828ed74"
+                "e1de0d10f828ed74",
+                "813a66a89b905b24"
             ]
         ]
     },
@@ -391,8 +395,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1030,
-        "y": 160,
+        "x": 1070,
+        "y": 620,
         "wires": [
             [
                 "50db37491f251d4f",
@@ -412,8 +416,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1030,
-        "y": 220,
+        "x": 1070,
+        "y": 680,
         "wires": [
             [
                 "fb52e2b769e44f56",
@@ -463,7 +467,7 @@
         "z": "917f4a933091bb50",
         "name": "",
         "label": "Set Tare Weight",
-        "group": "76097f93cc2931a9",
+        "group": "39a50896b157996d",
         "order": 3,
         "width": 0,
         "height": 0,
@@ -558,6 +562,7 @@
         "id": "6b325822ce8b9f4d",
         "type": "function",
         "z": "917f4a933091bb50",
+        "d": true,
         "name": "extract pow",
         "func": "var data = msg.payload;\n\nvar power = data.cur * data.vol\nvar power_kw = power / 1000;\n\nmsg.payload = Math.round((power_kw) * 100) / 100;\n\nreturn msg;\n",
         "outputs": 1,
@@ -606,8 +611,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1020,
-        "y": 60,
+        "x": 1060,
+        "y": 380,
         "wires": [
             []
         ]
@@ -616,8 +621,9 @@
         "id": "a15e1ce6745478a4",
         "type": "ui-gauge",
         "z": "917f4a933091bb50",
+        "d": true,
         "name": "Power Gauge",
-        "group": "3d430ec977a2940b",
+        "group": "",
         "order": 1,
         "width": 3,
         "height": 3,
@@ -660,8 +666,8 @@
         "z": "917f4a933091bb50",
         "group": "abdab87339b7bc42",
         "name": "Temp Chart",
-        "label": "Last 15 mins",
-        "order": 2,
+        "label": "Temperature Chart",
+        "order": 4,
         "chartType": "line",
         "category": "Temperature",
         "categoryType": "str",
@@ -684,8 +690,8 @@
         "pointShape": "circle",
         "pointRadius": "4",
         "showLegend": false,
-        "removeOlder": "15",
-        "removeOlderUnit": "60",
+        "removeOlder": "2",
+        "removeOlderUnit": "3600",
         "removeOlderPoints": "",
         "colors": [
             "#0095ff",
@@ -706,8 +712,8 @@
             "#e5e5e5"
         ],
         "gridColorDefault": true,
-        "width": "3",
-        "height": "5",
+        "width": "9",
+        "height": "6",
         "className": "",
         "interpolation": "linear",
         "x": 550,
@@ -720,10 +726,10 @@
         "id": "a680d3e6a8552282",
         "type": "ui-chart",
         "z": "917f4a933091bb50",
-        "group": "053f07e3c92bc485",
+        "group": "abdab87339b7bc42",
         "name": "Humi Chart",
-        "label": "Last 15 mins",
-        "order": 2,
+        "label": "Humidity Chart",
+        "order": 5,
         "chartType": "line",
         "category": "Humidity",
         "categoryType": "str",
@@ -746,8 +752,8 @@
         "pointShape": "circle",
         "pointRadius": "4",
         "showLegend": false,
-        "removeOlder": "15",
-        "removeOlderUnit": "60",
+        "removeOlder": "2",
+        "removeOlderUnit": "3600",
         "removeOlderPoints": "",
         "colors": [
             "#0095ff",
@@ -768,8 +774,8 @@
             "#e5e5e5"
         ],
         "gridColorDefault": true,
-        "width": "3",
-        "height": "5",
+        "width": "9",
+        "height": "6",
         "className": "",
         "interpolation": "linear",
         "x": 550,
@@ -782,10 +788,10 @@
         "id": "9d90e263a552e194",
         "type": "ui-chart",
         "z": "917f4a933091bb50",
-        "group": "76097f93cc2931a9",
+        "group": "abdab87339b7bc42",
         "name": "Weight Chart",
-        "label": "Last 15 mins",
-        "order": 2,
+        "label": "Weight Chart",
+        "order": 6,
         "chartType": "line",
         "category": "Weight",
         "categoryType": "str",
@@ -808,8 +814,8 @@
         "pointShape": "circle",
         "pointRadius": "4",
         "showLegend": false,
-        "removeOlder": "15",
-        "removeOlderUnit": "60",
+        "removeOlder": "2",
+        "removeOlderUnit": "3600",
         "removeOlderPoints": "",
         "colors": [
             "#0095ff",
@@ -830,8 +836,8 @@
             "#e5e5e5"
         ],
         "gridColorDefault": true,
-        "width": "3",
-        "height": "5",
+        "width": "9",
+        "height": "6",
         "className": "",
         "interpolation": "linear",
         "x": 550,
@@ -844,7 +850,8 @@
         "id": "f29743421c7b75cd",
         "type": "ui-text",
         "z": "917f4a933091bb50",
-        "group": "3d430ec977a2940b",
+        "d": true,
+        "group": "",
         "order": 2,
         "width": "3",
         "height": "1",
@@ -866,6 +873,7 @@
         "id": "b08daa32971cb791",
         "type": "function",
         "z": "917f4a933091bb50",
+        "d": true,
         "name": "extract vol",
         "func": "var data = msg.payload;\n\nmsg.payload = Math.round((data.vol) * 100) / 100;\n\nreturn msg;\n",
         "outputs": 1,
@@ -886,7 +894,8 @@
         "id": "66f9548c0af61c80",
         "type": "ui-text",
         "z": "917f4a933091bb50",
-        "group": "3d430ec977a2940b",
+        "d": true,
+        "group": "",
         "order": 3,
         "width": "3",
         "height": "1",
@@ -908,6 +917,7 @@
         "id": "937a023c64583e1a",
         "type": "function",
         "z": "917f4a933091bb50",
+        "d": true,
         "name": "extract cur",
         "func": "var data = msg.payload;\n\nmsg.payload = Math.round((data.cur) * 100) / 100;\n\nreturn msg;\n",
         "outputs": 1,
@@ -1107,8 +1117,8 @@
         "raw": false,
         "className": "",
         "name": "",
-        "x": 1390,
-        "y": 340,
+        "x": 1430,
+        "y": 800,
         "wires": [
             []
         ]
@@ -1125,13 +1135,161 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1190,
-        "y": 340,
+        "x": 1230,
+        "y": 800,
         "wires": [
             [
                 "ec04d2c8a71c96c3"
             ]
         ]
+    },
+    {
+        "id": "f5cca74242e5af26",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 1,
+        "width": "1",
+        "height": "1",
+        "name": "Drying status",
+        "label": "Dryer Status",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1270,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "762ceb46fc8b96e2",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "getDryerStatus",
+        "func": "const is_active = global.get('is_active');\n\nif (is_active){\n    msg.payload = 'Active';\n} else {\n    msg.payload = 'Ready';\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 480,
+        "wires": [
+            [
+                "f5cca74242e5af26"
+            ]
+        ]
+    },
+    {
+        "id": "813a66a89b905b24",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "name": "timer-status",
+        "label": "Timer",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1270,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "895c72bf793786c1",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "getTraysUsed",
+        "func": "const trays_used = global.get('trays_used');\n\nmsg.payload = trays_used;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 520,
+        "wires": [
+            [
+                "00f61c6e23c376b7"
+            ]
+        ]
+    },
+    {
+        "id": "f4ecfe24b2bb709f",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "getFishType",
+        "func": "function toProperCase(str) {\n    return str.replace(/\\w\\S*/g, function(txt) {\n        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();\n    });\n}\n\nconst fish_type = global.get('fish_type');\n\nmsg.payload = toProperCase(fish_type);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 560,
+        "wires": [
+            [
+                "a5308e2531c99290"
+            ]
+        ]
+    },
+    {
+        "id": "00f61c6e23c376b7",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 4,
+        "width": "1",
+        "height": "1",
+        "name": "traysUsed",
+        "label": "No. of Trays",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1260,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "a5308e2531c99290",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 3,
+        "width": "1",
+        "height": "1",
+        "name": "fishType",
+        "label": "Fish Type",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1260,
+        "y": 560,
+        "wires": []
     },
     {
         "id": "c22cbfaf233a6e9b",
@@ -1171,7 +1329,7 @@
         "page": "f7c89c2c63c4096e",
         "width": "3",
         "height": "2",
-        "order": 6,
+        "order": 4,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -1181,39 +1339,11 @@
     {
         "id": "abdab87339b7bc42",
         "type": "ui-group",
-        "name": "Temperature Readings",
+        "name": "Sensor Readings",
         "page": "f7c89c2c63c4096e",
-        "width": "3",
-        "height": "2",
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "053f07e3c92bc485",
-        "type": "ui-group",
-        "name": "Humidity Readings",
-        "page": "f7c89c2c63c4096e",
-        "width": "3",
-        "height": "2",
+        "width": "9",
+        "height": "8",
         "order": 2,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "76097f93cc2931a9",
-        "type": "ui-group",
-        "name": "Weight Readings",
-        "page": "f7c89c2c63c4096e",
-        "width": "3",
-        "height": "2",
-        "order": 3,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -1236,27 +1366,13 @@
         "rejectUnauthorized": true
     },
     {
-        "id": "3d430ec977a2940b",
-        "type": "ui-group",
-        "name": "Power Readings",
-        "page": "f7c89c2c63c4096e",
-        "width": "3",
-        "height": "2",
-        "order": 4,
-        "showTitle": true,
-        "className": "",
-        "visible": false,
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "39a50896b157996d",
         "type": "ui-group",
-        "name": "Control Actuators",
+        "name": "Control Chamber",
         "page": "f7c89c2c63c4096e",
         "width": "3",
         "height": "1",
-        "order": 5,
+        "order": 3,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -1283,19 +1399,33 @@
         "showDisconnectNotification": true
     },
     {
+        "id": "10b994ecd314583f",
+        "type": "ui-group",
+        "name": "Dryer Status",
+        "page": "f7c89c2c63c4096e",
+        "width": "4",
+        "height": "1",
+        "order": 1,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
         "id": "f7c89c2c63c4096e",
         "type": "ui-page",
         "name": "Home",
         "ui": "a5d0a76114c2a2c4",
         "path": "/page1",
         "icon": "home",
-        "layout": "grid",
+        "layout": "notebook",
         "theme": "e717cb789e5b76fb",
         "breakpoints": [
             {
                 "name": "Default",
                 "px": "0",
-                "cols": "2"
+                "cols": "3"
             },
             {
                 "name": "Tablet",
