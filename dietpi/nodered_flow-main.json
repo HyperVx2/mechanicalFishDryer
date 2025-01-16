@@ -1,0 +1,1470 @@
+[
+    {
+        "id": "917f4a933091bb50",
+        "type": "tab",
+        "label": "Main",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3a72ba079a99f57d",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/sensors",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 40,
+        "wires": [
+            [
+                "6b325822ce8b9f4d",
+                "595fbb8da23cd63a",
+                "7a667b8ebacf81bc",
+                "a8df327927fa5573",
+                "b08daa32971cb791",
+                "937a023c64583e1a",
+                "e872ce4fe057d096"
+            ]
+        ]
+    },
+    {
+        "id": "fb53ab0fb9a6ab72",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 830,
+        "y": 440,
+        "wires": [
+            [
+                "8c6ba4e5f708da6a",
+                "40c7f34230068fd6",
+                "762ceb46fc8b96e2",
+                "895c72bf793786c1",
+                "f4ecfe24b2bb709f"
+            ]
+        ]
+    },
+    {
+        "id": "50db37491f251d4f",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer/start",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 1290,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "b2b749b314e4d7ca",
+        "type": "ui-number-input",
+        "z": "917f4a933091bb50",
+        "group": "6927b59262e6befa",
+        "name": "",
+        "label": "Start timer (mins)",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "600",
+        "step": "5",
+        "tooltip": "",
+        "passthru": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": true,
+        "icon": "clock-check",
+        "iconPosition": "left",
+        "iconInnerPosition": "outside",
+        "spinner": "default",
+        "x": 850,
+        "y": 620,
+        "wires": [
+            [
+                "78205662e8d8999e"
+            ]
+        ]
+    },
+    {
+        "id": "fb52e2b769e44f56",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer/add",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 1280,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "62331d893262bc38",
+        "type": "ui-number-input",
+        "z": "917f4a933091bb50",
+        "group": "6927b59262e6befa",
+        "name": "",
+        "label": "Add Timer (mins)",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "600",
+        "step": 1,
+        "tooltip": "",
+        "passthru": false,
+        "sendOnBlur": false,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": true,
+        "icon": "clock-plus",
+        "iconPosition": "left",
+        "iconInnerPosition": "outside",
+        "spinner": "default",
+        "x": 850,
+        "y": 680,
+        "wires": [
+            [
+                "ed13296d428959c9"
+            ]
+        ]
+    },
+    {
+        "id": "d58c83c2e1ebfa70",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/timer/reset",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 1290,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "e1de0d10f828ed74",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "6927b59262e6befa",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "timer",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1250,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "5ebd0155205f7fca",
+        "type": "ui-gauge",
+        "z": "917f4a933091bb50",
+        "name": "Temp Gauge",
+        "group": "abdab87339b7bc42",
+        "order": 1,
+        "width": "3",
+        "height": "3",
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Temperature",
+        "units": "",
+        "icon": "thermometer",
+        "prefix": "",
+        "suffix": "°C",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "50",
+                "color": "#ffc800"
+            },
+            {
+                "from": "65",
+                "color": "#ea5353"
+            }
+        ],
+        "min": "20",
+        "max": "80",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 550,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "90ac3eb215c079c6",
+        "type": "ui-gauge",
+        "z": "917f4a933091bb50",
+        "name": "Humi Gauge",
+        "group": "abdab87339b7bc42",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Humidity",
+        "units": "",
+        "icon": "water",
+        "prefix": "",
+        "suffix": "%",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "50",
+                "color": "#ffc800"
+            },
+            {
+                "from": "80",
+                "color": "#ea5353"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 550,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "dccba389e9d69fd9",
+        "type": "ui-gauge",
+        "z": "917f4a933091bb50",
+        "name": "Weight Gauge",
+        "group": "abdab87339b7bc42",
+        "order": 3,
+        "width": "3",
+        "height": "3",
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Weight",
+        "units": "",
+        "icon": "weight",
+        "prefix": "",
+        "suffix": "g",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "300",
+                "color": "#ffc800"
+            },
+            {
+                "from": "600",
+                "color": "#ea5353"
+            }
+        ],
+        "min": 0,
+        "max": "1000",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 560,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "1209580a472ff89e",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "Reset Timer",
+        "group": "6927b59262e6befa",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 830,
+        "y": 740,
+        "wires": [
+            [
+                "d58c83c2e1ebfa70",
+                "50e67c0b09fb46ae"
+            ]
+        ]
+    },
+    {
+        "id": "8c6ba4e5f708da6a",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "formatTime",
+        "func": "function formatTime(ms) {\n    // Calculate the time components\n    var seconds = Math.floor((ms / 1000) % 60);\n    var minutes = Math.floor((ms / (1000 * 60)) % 60);\n    var hours = Math.floor((ms / (1000 * 60 * 60)) % 24);\n\n    // Format the time components into a string\n    var formattedTime = \n        (hours < 10 ? \"0\" : \"\") + hours + \":\" +\n        (minutes < 10 ? \"0\" : \"\") + minutes + \":\" +\n        (seconds < 10 ? \"0\" : \"\") + seconds;\n\n    return formattedTime;\n}\n\nvar data = msg.payload;\nmsg.payload = formatTime(data);\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 420,
+        "wires": [
+            [
+                "e1de0d10f828ed74",
+                "813a66a89b905b24"
+            ]
+        ]
+    },
+    {
+        "id": "78205662e8d8999e",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "convert mins to ms",
+        "func": "function minutesToMilliseconds(minutes) {\n    return minutes * 60 * 1000;\n}\n\nvar data = msg.payload;\nmsg.payload = minutesToMilliseconds(data);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 620,
+        "wires": [
+            [
+                "50db37491f251d4f",
+                "50e67c0b09fb46ae"
+            ]
+        ]
+    },
+    {
+        "id": "ed13296d428959c9",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "convert mins to ms",
+        "func": "function minutesToMilliseconds(minutes) {\n    return minutes * 60 * 1000;\n}\n\nvar data = msg.payload;\nmsg.payload = minutesToMilliseconds(data);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 680,
+        "wires": [
+            [
+                "fb52e2b769e44f56",
+                "50e67c0b09fb46ae"
+            ]
+        ]
+    },
+    {
+        "id": "976830442150c06d",
+        "type": "influxdb out",
+        "z": "917f4a933091bb50",
+        "influxdb": "623d44022ea29544",
+        "name": "",
+        "measurement": "sensor",
+        "precision": "s",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 660,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "d558bef4aa03e5e6",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/sensors/settare",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 760,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "df6f555b71b10a09",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "Set Tare Weight",
+        "group": "39a50896b157996d",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 560,
+        "y": 360,
+        "wires": [
+            [
+                "d558bef4aa03e5e6"
+            ]
+        ]
+    },
+    {
+        "id": "a8df327927fa5573",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract tem",
+        "func": "var data = msg.payload;\nmsg.payload = Math.round(data.tem * 100) / 100;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 80,
+        "wires": [
+            [
+                "5ebd0155205f7fca",
+                "814f0326dfed2d3a"
+            ]
+        ]
+    },
+    {
+        "id": "7a667b8ebacf81bc",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract hum",
+        "func": "var data = msg.payload;\nmsg.payload = Math.round(data.hum * 100) / 100;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "90ac3eb215c079c6",
+                "a680d3e6a8552282"
+            ]
+        ]
+    },
+    {
+        "id": "595fbb8da23cd63a",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "extract wei",
+        "func": "var data = msg.payload;\nmsg.payload = Math.round(data.wei * 100) / 100;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "dccba389e9d69fd9",
+                "9d90e263a552e194"
+            ]
+        ]
+    },
+    {
+        "id": "6b325822ce8b9f4d",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "d": true,
+        "name": "extract pow",
+        "func": "var data = msg.payload;\n\nvar power = data.cur * data.vol\nvar power_kw = power / 1000;\n\nmsg.payload = Math.round((power_kw) * 100) / 100;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 420,
+        "wires": [
+            [
+                "a15e1ce6745478a4"
+            ]
+        ]
+    },
+    {
+        "id": "e872ce4fe057d096",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "pepare influxdb payload",
+        "func": "// Get data from payload from the payload\nvar data = msg.payload;\n\n// Extract values\nvar temperature = data.tem;\nvar humidity = data.hum;\nvar weight = data.wei;\nvar current = data.cur;\nvar voltage = data.vol;\n\n// Set data to context\nglobal.set(\"temperature\", temperature);\nglobal.set(\"humidity\", humidity);\nglobal.set(\"weight\", weight);\nglobal.set(\"current\", current);\nglobal.set(\"voltage\", voltage);\n\n// Get heater state and timer value from context\nvar heater_state = global.get(\"heater_state\") || \"false\";\nvar timer_value = global.get(\"timer_value\") || 0;\nvar timer_state = timer_value >= 1 ? true : false;\n\n// Format data for InfluxDB\nmsg.payload = [{\n    tem: temperature,\n    hum: humidity,\n    wei: weight,\n    cur: current,\n    vol: voltage,\n},\n{\n    timer: timer_state,\n    heater: heater_state\n}];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 40,
+        "wires": [
+            [
+                "976830442150c06d"
+            ]
+        ]
+    },
+    {
+        "id": "40c7f34230068fd6",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "timer_value to context",
+        "func": "var data = msg.payload;\n\nglobal.set(\"timer_value\", data);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a15e1ce6745478a4",
+        "type": "ui-gauge",
+        "z": "917f4a933091bb50",
+        "d": true,
+        "name": "Power Gauge",
+        "group": "",
+        "order": 1,
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "",
+        "units": "",
+        "icon": "flash",
+        "prefix": "",
+        "suffix": "kW",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "500",
+                "color": "#ffc800"
+            },
+            {
+                "from": "800",
+                "color": "#ea5353"
+            }
+        ],
+        "min": 0,
+        "max": "1000",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 560,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "814f0326dfed2d3a",
+        "type": "ui-chart",
+        "z": "917f4a933091bb50",
+        "group": "abdab87339b7bc42",
+        "name": "Temp Chart",
+        "label": "Temperature Chart",
+        "order": 4,
+        "chartType": "line",
+        "category": "Temperature",
+        "categoryType": "str",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "mm:ss",
+        "xAxisFormatType": "custom",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Temperature",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "20",
+        "ymax": "80",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": "4",
+        "showLegend": false,
+        "removeOlder": "2",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "9",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 550,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a680d3e6a8552282",
+        "type": "ui-chart",
+        "z": "917f4a933091bb50",
+        "group": "abdab87339b7bc42",
+        "name": "Humi Chart",
+        "label": "Humidity Chart",
+        "order": 5,
+        "chartType": "line",
+        "category": "Humidity",
+        "categoryType": "str",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "mm:ss",
+        "xAxisFormatType": "custom",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Humidity",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "100",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": "4",
+        "showLegend": false,
+        "removeOlder": "2",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "9",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 550,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9d90e263a552e194",
+        "type": "ui-chart",
+        "z": "917f4a933091bb50",
+        "group": "abdab87339b7bc42",
+        "name": "Weight Chart",
+        "label": "Weight Chart",
+        "order": 6,
+        "chartType": "line",
+        "category": "Weight",
+        "categoryType": "str",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "mm:ss",
+        "xAxisFormatType": "custom",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Weight (g)",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "1000",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": "4",
+        "showLegend": false,
+        "removeOlder": "2",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "9",
+        "height": "6",
+        "className": "",
+        "interpolation": "linear",
+        "x": 550,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f29743421c7b75cd",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "d": true,
+        "group": "",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "name": "",
+        "label": "Voltage (V)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 550,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "b08daa32971cb791",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "d": true,
+        "name": "extract vol",
+        "func": "var data = msg.payload;\n\nmsg.payload = Math.round((data.vol) * 100) / 100;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 460,
+        "wires": [
+            [
+                "f29743421c7b75cd"
+            ]
+        ]
+    },
+    {
+        "id": "66f9548c0af61c80",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "d": true,
+        "group": "",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "name": "",
+        "label": "Current (A)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 550,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "937a023c64583e1a",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "d": true,
+        "name": "extract cur",
+        "func": "var data = msg.payload;\n\nmsg.payload = Math.round((data.cur) * 100) / 100;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 500,
+        "wires": [
+            [
+                "66f9548c0af61c80"
+            ]
+        ]
+    },
+    {
+        "id": "53cc048a3785347e",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/fan",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 460,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "90c95bf334459278",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "Fan Switch",
+        "group": "39a50896b157996d",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 250,
+        "y": 580,
+        "wires": [
+            [
+                "53cc048a3785347e"
+            ]
+        ]
+    },
+    {
+        "id": "376401f575720e85",
+        "type": "ui-switch",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "label": "Heater Switch",
+        "group": "39a50896b157996d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "label",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 260,
+        "y": 640,
+        "wires": [
+            [
+                "32c666856190e24b"
+            ]
+        ]
+    },
+    {
+        "id": "32c666856190e24b",
+        "type": "mqtt out",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/heater",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c22cbfaf233a6e9b",
+        "x": 470,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "ca64badfb8e78568",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/fan",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 80,
+        "y": 580,
+        "wires": [
+            [
+                "90c95bf334459278"
+            ]
+        ]
+    },
+    {
+        "id": "207fb449606e47ed",
+        "type": "mqtt in",
+        "z": "917f4a933091bb50",
+        "name": "",
+        "topic": "esp32/heater",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c22cbfaf233a6e9b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 70,
+        "y": 640,
+        "wires": [
+            [
+                "376401f575720e85",
+                "095209d92f06736b"
+            ]
+        ]
+    },
+    {
+        "id": "095209d92f06736b",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "heater_state to context",
+        "func": "var data = msg.payload;\n\nglobal.set(\"heater_state\", data);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ec04d2c8a71c96c3",
+        "type": "ui-notification",
+        "z": "917f4a933091bb50",
+        "ui": "a5d0a76114c2a2c4",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "5",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "",
+        "x": 1430,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "50e67c0b09fb46ae",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "timerSet-notif",
+        "func": "msg.payload = \"Timer set.\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 800,
+        "wires": [
+            [
+                "ec04d2c8a71c96c3"
+            ]
+        ]
+    },
+    {
+        "id": "f5cca74242e5af26",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 1,
+        "width": "1",
+        "height": "1",
+        "name": "Drying status",
+        "label": "Dryer Status",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1270,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "762ceb46fc8b96e2",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "getDryerStatus",
+        "func": "const is_active = global.get('is_active');\n\nif (is_active){\n    msg.payload = 'Active';\n} else {\n    msg.payload = 'Ready';\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 480,
+        "wires": [
+            [
+                "f5cca74242e5af26"
+            ]
+        ]
+    },
+    {
+        "id": "813a66a89b905b24",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "name": "timer-status",
+        "label": "Timer",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1270,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "895c72bf793786c1",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "getTraysUsed",
+        "func": "const trays_used = global.get('trays_used');\n\nmsg.payload = trays_used;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 520,
+        "wires": [
+            [
+                "00f61c6e23c376b7"
+            ]
+        ]
+    },
+    {
+        "id": "f4ecfe24b2bb709f",
+        "type": "function",
+        "z": "917f4a933091bb50",
+        "name": "getFishType",
+        "func": "function toProperCase(str) {\n    return str.replace(/\\w\\S*/g, function(txt) {\n        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();\n    });\n}\n\nconst fish_type = global.get('fish_type');\n\nmsg.payload = toProperCase(fish_type);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 560,
+        "wires": [
+            [
+                "a5308e2531c99290"
+            ]
+        ]
+    },
+    {
+        "id": "00f61c6e23c376b7",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 4,
+        "width": "1",
+        "height": "1",
+        "name": "traysUsed",
+        "label": "No. of Trays",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1260,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "a5308e2531c99290",
+        "type": "ui-text",
+        "z": "917f4a933091bb50",
+        "group": "10b994ecd314583f",
+        "order": 3,
+        "width": "1",
+        "height": "1",
+        "name": "fishType",
+        "label": "Fish Type",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 1260,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "c22cbfaf233a6e9b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "6927b59262e6befa",
+        "type": "ui-group",
+        "name": "Control Timer",
+        "page": "f7c89c2c63c4096e",
+        "width": "3",
+        "height": "2",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "abdab87339b7bc42",
+        "type": "ui-group",
+        "name": "Sensor Readings",
+        "page": "f7c89c2c63c4096e",
+        "width": "9",
+        "height": "8",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "623d44022ea29544",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "smfds_db",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "39a50896b157996d",
+        "type": "ui-group",
+        "name": "Control Chamber",
+        "page": "f7c89c2c63c4096e",
+        "width": "3",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a5d0a76114c2a2c4",
+        "type": "ui-base",
+        "name": "SMFDS Dashboard",
+        "path": "/dashboard",
+        "appIcon": "https://github.com/HyperVx2/mechanicalFishDryer/blob/main/data/favicon.png?raw=true",
+        "includeClientData": false,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": true,
+        "showPageTitle": true,
+        "navigationStyle": "icon",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": "1",
+        "showDisconnectNotification": true
+    },
+    {
+        "id": "10b994ecd314583f",
+        "type": "ui-group",
+        "name": "Dryer Status",
+        "page": "f7c89c2c63c4096e",
+        "width": "4",
+        "height": "1",
+        "order": 1,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f7c89c2c63c4096e",
+        "type": "ui-page",
+        "name": "Home",
+        "ui": "a5d0a76114c2a2c4",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "notebook",
+        "theme": "e717cb789e5b76fb",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "e717cb789e5b76fb",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    }
+]

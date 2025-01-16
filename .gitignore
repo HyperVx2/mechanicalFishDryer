@@ -4,3 +4,5 @@
 .vscode/launch.json
 .vscode/ipch
 scripts/node_modules/
+data/gauge.min.js
+data/gauge.min.js.map

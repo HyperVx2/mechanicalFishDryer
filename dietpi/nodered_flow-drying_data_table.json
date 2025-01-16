@@ -1,0 +1,617 @@
+[
+    {
+        "id": "99573b3adee0132c",
+        "type": "tab",
+        "label": "Drying Data Table",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "469cce9e5aa2f8c3",
+        "type": "ui-table",
+        "z": "99573b3adee0132c",
+        "group": "d632f08ecb93a8c5",
+        "name": "data_drying",
+        "label": "",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "maxrows": "10",
+        "passthru": false,
+        "autocols": true,
+        "showSearch": true,
+        "selectionType": "none",
+        "columns": [],
+        "mobileBreakpoint": "sm",
+        "mobileBreakpointType": "defaults",
+        "action": "replace",
+        "x": 910,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7715bce262e6fbee",
+        "type": "ui-table",
+        "z": "99573b3adee0132c",
+        "group": "a6a07827f9f64881",
+        "name": "post_drying_data",
+        "label": "",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "maxrows": "10",
+        "passthru": false,
+        "autocols": true,
+        "showSearch": true,
+        "selectionType": "none",
+        "columns": [],
+        "mobileBreakpoint": "sm",
+        "mobileBreakpointType": "defaults",
+        "action": "replace",
+        "x": 930,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "31276d67e9cfefc8",
+        "type": "ui-event",
+        "z": "99573b3adee0132c",
+        "ui": "a5d0a76114c2a2c4",
+        "name": "",
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "9b290bf839c00989",
+                "c65f7e890fc47f8a"
+            ]
+        ]
+    },
+    {
+        "id": "9b290bf839c00989",
+        "type": "function",
+        "z": "99573b3adee0132c",
+        "name": "query drying_session",
+        "func": "msg.topic = \"SELECT * FROM `drying_session`\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 200,
+        "wires": [
+            [
+                "63d85d9abe1beb5b"
+            ]
+        ]
+    },
+    {
+        "id": "63d85d9abe1beb5b",
+        "type": "mysql",
+        "z": "99573b3adee0132c",
+        "mydb": "c7bae59f6a7a43c0",
+        "name": "",
+        "x": 550,
+        "y": 220,
+        "wires": [
+            [
+                "6c9697a14cb52feb"
+            ]
+        ]
+    },
+    {
+        "id": "6c9697a14cb52feb",
+        "type": "function",
+        "z": "99573b3adee0132c",
+        "name": "formatQuery",
+        "func": "function formatValue(key, value) {\n    if (value === null) return \"N/A\";\n    \n    switch(key) {\n        case \"weight_start\":\n        case \"weight_end\":\n            return `${value.toFixed(2)} g`;\n        case \"humidity_start\":\n        case \"humidity_end\":\n            return `${value.toFixed(1)}%`;\n        case \"start_timestamp\":\n        case \"end_timestamp\":\n            return new Date(value).toLocaleString();\n        default:\n            return value;\n    }\n}\n\nconst columnMapping = {\n    \"id\": \"Session ID\",\n    \"type\": \"Fish Type\",\n    \"trays_used\": \"Trays Used\",\n    \"start_timestamp\": \"Start Time\",\n    \"weight_start\": \"Starting Weight\",\n    \"humidity_start\": \"Starting Humidity\",\n    \"end_timestamp\": \"End Time\",\n    \"weight_end\": \"Final Weight\",\n    \"humidity_end\": \"Final Humidity\"\n};\n\nmsg.payload = msg.payload.map(record => {\n    let formattedRecord = {};\n    for (let [key, value] of Object.entries(record)) {\n        const newKey = columnMapping[key] || key;\n        formattedRecord[newKey] = formatValue(key, value);\n    }\n    return formattedRecord;\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 220,
+        "wires": [
+            [
+                "469cce9e5aa2f8c3"
+            ]
+        ]
+    },
+    {
+        "id": "c65f7e890fc47f8a",
+        "type": "function",
+        "z": "99573b3adee0132c",
+        "name": "query post_drying_session",
+        "func": "msg.topic = \"SELECT * FROM `post_drying_session`\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 280,
+        "wires": [
+            [
+                "dcf7844e767b84b4"
+            ]
+        ]
+    },
+    {
+        "id": "dcf7844e767b84b4",
+        "type": "mysql",
+        "z": "99573b3adee0132c",
+        "mydb": "c7bae59f6a7a43c0",
+        "name": "",
+        "x": 590,
+        "y": 280,
+        "wires": [
+            [
+                "1e13d4be0ef3a36a"
+            ]
+        ]
+    },
+    {
+        "id": "1e13d4be0ef3a36a",
+        "type": "function",
+        "z": "99573b3adee0132c",
+        "name": "formatQuery",
+        "func": "function formatDuration(minutes) {\n    const hours = Math.floor(minutes / 60);\n    const remainingMinutes = Math.floor(minutes % 60);\n    const seconds = Math.floor((minutes * 60) % 60);\n    \n    let result = '';\n    if (hours > 0) result += `${hours}hr `;\n    if (remainingMinutes > 0) result += `${remainingMinutes}m `;\n    if (seconds > 0) result += `${seconds}s`;\n    \n    return result.trim();\n}\n\nfunction formatValue(key, value) {\n    if (value === null) return \"N/A\";\n    \n    switch(key) {\n        case \"time_duration\":\n            return formatDuration(value);\n        case \"weight_loss\":\n            return `${value.toFixed(2)}%`;\n        case \"humidity_loss\":\n            return `${value.toFixed(1)}%`;\n        case \"assessment_date\":\n            return new Date(value).toLocaleString();\n        case \"mold_growth\":\n        case \"pinking_reddening\":\n        case \"souring\":\n        case \"case_hardening\":\n        case \"rancidity\":\n        case \"dun_pepperyspots\":\n        case \"stains\":\n        case \"tough_texture\":\n            return value === 1 ? \"Yes\" : value === 0 ? \"No\" : \"N/A\";\n        default:\n            return value;\n    }\n}\n\nconst columnMapping = {\n    \"id\": \"Session ID\",\n    \"time_duration\": \"Duration\",\n    \"weight_loss\": \"Weight Loss\",\n    \"humidity_loss\": \"Humidity Loss\",\n    \"assessment_date\": \"Assessment Date\",\n    \"mold_growth\": \"Mold Growth\",\n    \"pinking_reddening\": \"Pinking/Reddening\",\n    \"souring\": \"Souring\",\n    \"case_hardening\": \"Case Hardening\",\n    \"rancidity\": \"Rancidity\",\n    \"dun_pepperyspots\": \"Dun/Peppery Spots\",\n    \"stains\": \"Stains\",\n    \"tough_texture\": \"Tough Texture\",\n    \"remarks\": \"Remarks\"\n};\n\nmsg.payload = msg.payload.map(record => {\n    let formattedRecord = {};\n    for (let [key, value] of Object.entries(record)) {\n        const newKey = columnMapping[key] || key;\n        formattedRecord[newKey] = formatValue(key, value);\n    }\n    return formattedRecord;\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 280,
+        "wires": [
+            [
+                "7715bce262e6fbee"
+            ]
+        ]
+    },
+    {
+        "id": "c83811fae0c5292f",
+        "type": "ui-form",
+        "z": "99573b3adee0132c",
+        "name": "",
+        "group": "a6a07827f9f64881",
+        "label": "Review Session",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Session ID",
+                "key": "session_id",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Assessment Date",
+                "key": "date_assessment",
+                "type": "date",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Mold Growth",
+                "key": "mold_growth",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Pinking/Redding",
+                "key": "pinking_redding",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Souring",
+                "key": "souring",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Case Hardening",
+                "key": "case_hardening",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Rancidity",
+                "key": "rancidity",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Dun/Peppery Spots",
+                "key": "dun_peperyspots",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Stains",
+                "key": "stains",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Tough Texture",
+                "key": "tough_texture",
+                "type": "checkbox",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Remarks",
+                "key": "remarks",
+                "type": "text",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "session_id": "",
+            "date_assessment": "",
+            "mold_growth": false,
+            "pinking_redding": false,
+            "souring": false,
+            "case_hardening": false,
+            "rancidity": false,
+            "dun_peperyspots": false,
+            "stains": false,
+            "tough_texture": false,
+            "remarks": ""
+        },
+        "payload": "",
+        "submit": "submit",
+        "cancel": "clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 240,
+        "y": 400,
+        "wires": [
+            [
+                "6b4a3183b6bdc188",
+                "84aa54b3f1a1ab01"
+            ]
+        ]
+    },
+    {
+        "id": "6b4a3183b6bdc188",
+        "type": "function",
+        "z": "99573b3adee0132c",
+        "name": "sendNotif",
+        "func": "msg.payload = \"Drying session modified.\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 460,
+        "wires": [
+            [
+                "a977897cfe0ca311"
+            ]
+        ]
+    },
+    {
+        "id": "a977897cfe0ca311",
+        "type": "ui-notification",
+        "z": "99573b3adee0132c",
+        "ui": "a5d0a76114c2a2c4",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "#000000",
+        "displayTime": "3",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "Close",
+        "allowConfirm": false,
+        "confirmText": "Confirm",
+        "raw": false,
+        "className": "",
+        "name": "",
+        "x": 590,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "84aa54b3f1a1ab01",
+        "type": "function",
+        "z": "99573b3adee0132c",
+        "name": "prepareQuery-postDryingData",
+        "func": "function prepareUpdateQuery(msg) {\n    const data = msg.payload;\n    \n    // Format assessment date to MySQL format YYYY-MM-DD HH:MM:SS\n    const formatDate = (dateStr) => {\n        if (!dateStr) return null;\n        return new Date(dateStr)\n            .toISOString()\n            .slice(0, 19)\n            .replace('T', ' ');\n    };\n\n    // Define fields and their transformations\n    const updateFields = {\n        assessment_date: formatDate(data.date_assessment),\n        mold_growth: data.mold_growth ? 1 : 0,\n        pinking_reddening: data.pinking_redding ? 1 : 0, // Note: corrected field name\n        souring: data.souring ? 1 : 0,\n        case_hardening: data.case_hardening ? 1 : 0,\n        rancidity: data.rancidity ? 1 : 0,\n        dun_pepperyspots: data.dun_pepperyspots ? 1 : 0,\n        stains: data.stains ? 1 : 0,\n        tough_texture: data.tough_texture ? 1 : 0,\n        remarks: data.remarks || null\n    };\n\n    // Build SET clause and params\n    const setClause = [];\n    const params = [];\n    \n    for (const [field, value] of Object.entries(updateFields)) {\n        if (value !== undefined) {\n            setClause.push(`${field} = ?`);\n            params.push(value);\n        }\n    }\n\n    // Add WHERE parameter\n    params.push(data.session_id);\n\n    msg.topic = `UPDATE post_drying_session SET ${setClause.join(', ')} WHERE id = ?`;\n    msg.payload = params;\n\n    return msg;\n}\n\nreturn prepareUpdateQuery(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 400,
+        "wires": [
+            [
+                "78c7dd54c3165ea6"
+            ]
+        ]
+    },
+    {
+        "id": "78c7dd54c3165ea6",
+        "type": "mysql",
+        "z": "99573b3adee0132c",
+        "mydb": "c7bae59f6a7a43c0",
+        "name": "",
+        "x": 770,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "846756a615c4515d",
+        "type": "ui-form",
+        "z": "99573b3adee0132c",
+        "d": true,
+        "name": "",
+        "group": "d632f08ecb93a8c5",
+        "label": "Modify Session",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Session ID",
+                "key": "session_id",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Fish Type",
+                "key": "fish_type",
+                "type": "text",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Trays Used",
+                "key": "trays_used",
+                "type": "number",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Starting Weight (g)",
+                "key": "weight_start",
+                "type": "number",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Starting Humidity",
+                "key": "humidity_start",
+                "type": "number",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "End Date",
+                "key": "date_end",
+                "type": "date",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "End Time",
+                "key": "time_end",
+                "type": "time",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Final Humidity",
+                "key": "humidity_final",
+                "type": "number",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "Final Weight (g)",
+                "key": "weight_final",
+                "type": "number",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "session_id": "",
+            "fish_type": "",
+            "trays_used": "",
+            "weight_start": "",
+            "humidity_start": "",
+            "date_end": "",
+            "time_end": "",
+            "humidity_final": "",
+            "weight_final": ""
+        },
+        "payload": "",
+        "submit": "submit",
+        "cancel": "clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": true,
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [],
+        "x": 240,
+        "y": 520,
+        "wires": [
+            [
+                "0a2d66f5cda0316b",
+                "6b4a3183b6bdc188"
+            ]
+        ]
+    },
+    {
+        "id": "0a2d66f5cda0316b",
+        "type": "function",
+        "z": "99573b3adee0132c",
+        "d": true,
+        "name": "prepareQuery-dryingData",
+        "func": "function prepareUpdateQuery(msg) {\n    // 1. Extract and validate session_id\n    if (!msg.payload.session_id) {\n        msg.error = \"Session ID is required\";\n        return msg;\n    }\n\n    // 2. Create field mappings\n    const fieldMappings = new Map([\n        ['fish_type', 'type'],\n        ['trays_used', 'trays_used'],\n        ['weight_start', 'weight_start'],\n        ['humidity_start', 'humidity_start'],\n        ['weight_final', 'weight_end'],\n        ['humidity_final', 'humidity_end']\n    ]);\n\n    // 3. Build update fields\n    const updates = new Map();\n    fieldMappings.forEach((dbField, formField) => {\n        if (msg.payload[formField] !== \"\" && msg.payload[formField] !== undefined) {\n            updates.set(dbField, msg.payload[formField]);\n        }\n    });\n\n    // 4. Handle end timestamp\n    if (msg.payload.date_end && msg.payload.time_end) {\n        updates.set('end_timestamp', `${msg.payload.date_end} ${msg.payload.time_end}:00`);\n    }\n\n    // 5. Generate query\n    const setClause = Array.from(updates.keys())\n        .map(key => `${key} = ?`)\n        .join(', ');\n\n    // 6. Prepare output\n    msg.topic = `UPDATE drying_session SET ${setClause} WHERE id = ?`;\n    msg.payload = [...updates.values(), msg.payload.session_id];\n\n    return msg;\n}\n\nreturn prepareUpdateQuery(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d632f08ecb93a8c5",
+        "type": "ui-group",
+        "name": "Drying Data",
+        "page": "bcb5410c21f10d0b",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a6a07827f9f64881",
+        "type": "ui-group",
+        "name": "Post Drying Data",
+        "page": "bcb5410c21f10d0b",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a5d0a76114c2a2c4",
+        "type": "ui-base",
+        "name": "SMFDS Dashboard",
+        "path": "/dashboard",
+        "appIcon": "https://github.com/HyperVx2/mechanicalFishDryer/blob/main/data/favicon.png?raw=true",
+        "includeClientData": false,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": true,
+        "showPageTitle": true,
+        "navigationStyle": "icon",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": "1",
+        "showDisconnectNotification": true
+    },
+    {
+        "id": "c7bae59f6a7a43c0",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "sensor_data",
+        "tz": "+08:00",
+        "charset": "UTF8"
+    },
+    {
+        "id": "bcb5410c21f10d0b",
+        "type": "ui-page",
+        "name": "Historical Data",
+        "ui": "a5d0a76114c2a2c4",
+        "path": "/page2",
+        "icon": "table",
+        "layout": "tabs",
+        "theme": "e717cb789e5b76fb",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "e717cb789e5b76fb",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    }
+]
